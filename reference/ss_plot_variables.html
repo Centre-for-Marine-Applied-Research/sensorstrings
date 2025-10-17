@@ -9,7 +9,7 @@ ss_ggplot_variables() to work with those functions."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">sensorstrings</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,13 +92,15 @@ more than 6 levels in <code>sensor_depth_at_low_tide_m</code>. Default is
 <dt id="arg-standard-do-ylims">standard_do_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-do-ylims"></a></dt>
 <dd><p>If <code>TRUE</code>, the y-limits for dissolved oxygen
 are set to c(60, 130) % or c(0, 15) mg/L. If <code>FALSE</code>, the y-limits
-are set to the <code>ggplot</code> default.</p></dd>
+are set to the <code>ggplot</code> default. Alternatively, a vector giving custom
+y-limits for the dissolved oxygen panel.</p></dd>
 
 
 <dt id="arg-standard-sal-ylims">standard_sal_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-sal-ylims"></a></dt>
 <dd><p>If <code>TRUE</code>, the y-limits for salinity are set
 to c(0, 35) PSU. If <code>FALSE</code>, the y-limits are set to the <code>ggplot</code>
-default.</p></dd>
+default. Alternatively, a vector giving custom y-limits for the salinity
+panel.</p></dd>
 
 
 <dt id="arg-yaxis-newline">yaxis_newline<a class="anchor" aria-label="anchor" href="#arg-yaxis-newline"></a></dt>
