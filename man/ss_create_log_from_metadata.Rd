@@ -7,6 +7,8 @@
 ss_create_log_from_metadata(
   path_metadata = NULL,
   sheet = "tracker",
+  google_sheet = FALSE,
+  google_sheet_link = NULL,
   path_export,
   station,
   deployment_date,
@@ -18,6 +20,12 @@ ss_create_log_from_metadata(
 name and extension). This must be a .xlsx file.}
 
 \item{sheet}{Name of the tab with the deployment information.}
+
+\item{google_sheet}{Logical argument indicating whether metadata is stored in
+a google sheet. If \code{TRUE}, \code{path_metadata} is not required.}
+
+\item{google_sheet_link}{Link the to metadata sheet on google drive. If
+\code{NULL}, the New Brunswick metadata sheet will be imported.}
 
 \item{path_export}{Path to the station deployment folder.}
 
@@ -37,7 +45,7 @@ Returns deployment log in .csv format.
 Writes a deployment log from the metadata tracking sheet
 }
 \details{
-Imports the NSDFA tracking sheet, filters for the station and date
-  of interest, re-formats into the deployment log format, and exports to the
-  Log folder.
+Imports the water quality metadata tracking sheet, filters for the
+  station and date of interest, re-formats into the deployment log format,
+  and exports to the Log folder.
 }

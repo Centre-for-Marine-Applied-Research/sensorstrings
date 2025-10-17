@@ -106,8 +106,7 @@ ss_check_station_in_ocean <- function(
   station_name <- log_coords$station
 
   if(is.null(coast_shp)) {
-    coast_shp <- read_sf(
-      "R:/data_branches/ns_coast/ns_coast.shp") %>%
+    coast_shp <- read_sf("R:/data_branches/ns_coast/ns_coast.shp") %>%
       na.omit()
   }
 

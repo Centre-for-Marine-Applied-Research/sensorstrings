@@ -1,13 +1,19 @@
 #' @title Writes a deployment log from the metadata tracking sheet
 #'
-#' @details Imports the NSDFA tracking sheet, filters for the station and date
-#'   of interest, re-formats into the deployment log format, and exports to the
-#'   Log folder.
+#' @details Imports the water quality metadata tracking sheet, filters for the
+#'   station and date of interest, re-formats into the deployment log format,
+#'   and exports to the Log folder.
 #'
 #' @param path_metadata Path to the metadata tracking sheet (including the file
 #'   name and extension). This must be a .xlsx file.
 #'
 #' @param sheet Name of the tab with the deployment information.
+#'
+#' @param google_sheet Logical argument indicating whether metadata is stored in
+#'   a google sheet. If \code{TRUE}, \code{path_metadata} is not required.
+#'
+#' @param google_sheet_link Link the to metadata sheet on google drive. If
+#'   \code{NULL}, the New Brunswick metadata sheet will be imported.
 #'
 #' @param path_export Path to the station deployment folder.
 #'
@@ -22,10 +28,11 @@
 #'
 #' @return Returns deployment log in .csv format.
 #'
-#' @importFrom readxl read_excel
-#' @importFrom lubridate as_date
-#' @importFrom stringr str_to_title
 #' @importFrom dplyr %>% if_else filter mutate transmute
+#' @importFrom lubridate as_date
+#' @importFrom googlesheets4 read_sheet gs4_deauth
+#' @importFrom readxl read_excel
+#' @importFrom stringr str_to_title
 #' @importFrom utils write.csv
 #'
 #' @export
@@ -33,23 +40,37 @@
 ss_create_log_from_metadata <- function(
     path_metadata = NULL,
     sheet = "tracker",
+    google_sheet = FALSE,
+    google_sheet_link = NULL,
     path_export,
     station,
     deployment_date,
     to_title = TRUE
 ){
 
-  if(is.null(path_metadata)) {
-    path_metadata <- file.path(
-      "R:/tracking_sheets/metadata_tracking/water_quality_deployment_tracking.xlsx"
+  if(isFALSE(google_sheet)) {
+    if(is.null(path_metadata)) {
+      path_metadata <- file.path(
+        "R:/tracking_sheets/metadata_tracking/water_quality_deployment_tracking.xlsx"
+      )
+    }
+
+    dat_raw <- read_excel(
+      path_metadata,
+      sheet = sheet,
+      na = ""
     )
   }
 
-  dat_raw <- read_excel(
-    path_metadata,
-    sheet = sheet,
-    na = ""
-  )
+  if(isTRUE(google_sheet)) {
+    gs4_deauth()
+
+    if(is.null(google_sheet_link)) {
+      google_sheet_link <- "https://docs.google.com/spreadsheets/d/1KDM8a-PkP30NNJNQMbK3SPt0tAAr3R2MeqHgIBYSVg8/edit?gid=149994636#gid=149994636"
+    }
+
+    dat_raw <- read_sheet(google_sheet_link, sheet = sheet)
+  }
 
   if(isTRUE(to_title)) {
     station_title <- str_to_title(station)
@@ -58,6 +79,9 @@ ss_create_log_from_metadata <- function(
   if(!(station_title %in% dat_raw$station)) {
     stop(paste0(station_title, " not found in metatdata tracking sheet"))
   }
+
+  # remove _dd from NB metadata sheet
+  colnames(dat_raw) <- gsub("tude_dd", "tude", colnames(dat_raw))
 
   dat <- dat_raw %>%
     mutate(
@@ -83,6 +107,8 @@ ss_create_log_from_metadata <- function(
       )
     )
 
+  #are_out <- any_of(c("county", "region"))
+
   # make log
   log <- dat %>%
     filter(
@@ -90,7 +116,8 @@ ss_create_log_from_metadata <- function(
       deployment_date == !!as_date(deployment_date)
     ) %>%
     select(
-      county, waterbody, station, lease,
+      any_of(c("county", "region")),
+      waterbody, station, lease,
 
       deployment_date, retrieval_date,
 

@@ -39,11 +39,13 @@ more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 
 \item{standard_do_ylims}{If \code{TRUE}, the y-limits for dissolved oxygen
 are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
-are set to the \code{ggplot} default.}
+are set to the \code{ggplot} default. Alternatively, a vector giving custom
+y-limits for the dissolved oxygen panel.}
 
 \item{standard_sal_ylims}{If \code{TRUE}, the y-limits for salinity are set
 to c(0, 35) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
-default.}
+default. Alternatively, a vector giving custom y-limits for the salinity
+panel.}
 
 \item{yaxis_newline}{Logical argument indicating whether the units in the
 y-axis label should be on a new line. Default is \code{TRUE}.}
