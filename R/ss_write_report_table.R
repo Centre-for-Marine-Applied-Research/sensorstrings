@@ -17,9 +17,10 @@
 ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
 
   all_vars <- c(
+    "sensor_depth_measured_m",
     "dissolved_oxygen_percent_saturation",
     "dissolved_oxygen_uncorrected_mg_per_l",
-    "sensor_depth_measured_m",
+    "ph_ph",
     "salinity_psu",
     "temperature_degree_c"
   )
@@ -27,11 +28,12 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
   vars <- data.frame(vars = all_vars[all_vars %in% colnames(dat)]) %>%
     mutate(
       vars = case_when(
+        vars == "sensor_depth_measured_m" ~ "depth",
         vars == "dissolved_oxygen_percent_saturation" ~
           "dissolved oxygen (% sat)",
         vars == "dissolved_oxygen_uncorrected_mg_per_l" ~
           "dissolved oxygen (mg/L)",
-        vars == "sensor_depth_measured_m" ~ "depth",
+        vars == "ph_ph" ~ "pH",
         vars == "salinity_psu" ~ "salinity",
         vars == "temperature_degree_c" ~ "temperature"
       )
@@ -62,6 +64,7 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
         variable == "dissolved_oxygen_uncorrected_mg_per_l" ~
           "dissolved oxygen (mg/L)",
         variable == "sensor_depth_measured_m" ~ "depth",
+        variable == "ph_ph" ~ "pH",
         variable == "salinity_psu" ~ "salinity",
         variable == "temperature_degree_c" ~ "temperature"
       ),

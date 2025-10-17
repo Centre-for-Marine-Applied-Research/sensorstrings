@@ -4,8 +4,9 @@
 #'
 #'   All of the csv files in the hobo_ph folder will be compiled.
 #'
-#'   The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p", "Ymd
-#'   HM", "Ymd HMS", "dmY HM", or "dmY HMS".
+#'   The timestamp column must be in the order "mdY HMS".
+#'
+#'   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 #'
 #' @param path File path to the hobo_ph folder.
 #'
@@ -37,7 +38,7 @@
 #'
 #' @importFrom dplyr %>% contains everything filter if_all mutate rename select
 #'   tibble
-#' @importFrom lubridate force_tz with_tz
+#' @importFrom lubridate dst force_tz with_tz
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit
 #' @importFrom stringr regex str_extract str_remove

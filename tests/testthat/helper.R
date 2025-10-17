@@ -119,6 +119,14 @@ hobo_ph1 <- ss_read_hobo_data(path_hobo_ph, "hobo_ph/22058687.csv") %>%
   # the degree symbol was causing a problem
   dplyr::rename(temperature = 3)
 
+hobo_ph_ast <- hobo_ph1 %>%
+  filter(if_all(everything(), ~ !grepl("Logged", .))) %>%
+  select(timestamp_ = `Date-Time (AST/ADT)`) %>%
+  sensorstrings:::convert_timestamp_to_datetime(parse_orders = "mdY HMS") %>%
+  mutate(
+    timestamp_at = force_tz(timestamp_, tzone = "America/Halifax"),
+    is_dst = dst(timestamp_at)
+  )
 
 # # ss_compile_hobo_data ----------------------------------------------------
 deployment_dates_ph <- data.frame(START = "2025-03-08", END = "2025-03-09")
@@ -143,6 +151,14 @@ hobo_ph_trim <- ss_compile_hobo_ph_data(
   trim = TRUE
 )
 
+ts_check <- cbind(hobo_ph_all$timestamp_utc, hobo_ph_ast) %>%
+  rename(timestamp_utc = 1) %>%
+  mutate(
+    ts_check = force_tz(timestamp_at, tzone = "UTC"),
+    ts_check = if_else(
+      is_dst == TRUE, ts_check + hours(3), ts_check + hours(4)
+    )
+  )
 
 # Vemco -------------------------------------------------------------------
 

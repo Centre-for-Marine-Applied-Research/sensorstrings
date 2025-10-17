@@ -46,8 +46,9 @@ Exported data must be saved in a folder named hobo_ph in csv format.
 
   All of the csv files in the hobo_ph folder will be compiled.
 
-  The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p", "Ymd
-  HM", "Ymd HMS", "dmY HM", or "dmY HMS".
+  The timestamp column must be in the order "mdY HMS".
+
+  If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 }
 \seealso{
 Other compile: 

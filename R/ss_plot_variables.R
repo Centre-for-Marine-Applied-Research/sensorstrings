@@ -22,11 +22,13 @@
 #'
 #' @param standard_do_ylims If \code{TRUE}, the y-limits for dissolved oxygen
 #'   are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
-#'   are set to the \code{ggplot} default.
+#'   are set to the \code{ggplot} default. Alternatively, a vector giving custom
+#'   y-limits for the dissolved oxygen panel.
 #'
 #' @param standard_sal_ylims If \code{TRUE}, the y-limits for salinity are set
 #'   to c(0, 35) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
-#'   default.
+#'   default. Alternatively, a vector giving custom y-limits for the salinity
+#'   panel.
 #'
 #' @param yaxis_newline Logical argument indicating whether the units in the
 #'   y-axis label should be on a new line. Default is \code{TRUE}.
@@ -82,6 +84,7 @@ ss_plot_variables <- function(
       "chlorophyll_blue_ug_per_l",
       "chlorophyll_red_ug_per_l",
       "dissolved_oxygen_percent_saturation",
+      "ph_ph",
       "salinity_psu",
       "sensor_depth_measured_m",
       "temperature_degree_c"
@@ -156,6 +159,7 @@ ss_plot_variables <- function(
         "dissolved_oxygen_uncorrected_mg_per_l",
         "dissolved_oxygen_mg_per_l",
         "salinity_psu",
+        "ph_ph",
         "chlorophyll_blue_ug_per_l",
         "chlorophyll_red_ug_per_l",
         "sensor_depth_measured_m"))
@@ -174,18 +178,30 @@ ss_plot_variables <- function(
 
     y_lab <- unique(dat_i$variable_label)
 
-    if(isTRUE(standard_do_ylims)) {
-      if(var_i == "dissolved_oxygen_percent_saturation") {
-        y_limits <- c(60, 130)
-      } else if(var_i == "dissolved_oxygen_mg_per_l"){
-        y_limits <- c(0, 15)
-      } else y_limits <- NULL
-    } else y_limits <- NULL
+    y_limits <- NULL
 
-    if(isTRUE(standard_sal_ylims)) {
-      if(var_i == "salinity_psu") {
+    if(var_i == "dissolved_oxygen_percent_saturation") {
+      if(isTRUE(standard_do_ylims)) {
+        y_limits <- c(60, 160)
+      } else if(isFALSE(standard_do_ylims)) {
+        y_limits <- NULL
+      } else y_limits <- standard_do_ylims
+    }
+
+    if(var_i == "dissolved_oxygen_mg_per_l") {
+      if(isTRUE(standard_do_ylims)) {
+        y_limits <- c(0, 15)
+      } else if(isFALSE(standard_do_ylims)) {
+        y_limits <- NULL
+      } else y_limits <- standard_do_ylims
+    }
+
+    if(var_i == "salinity_psu") {
+      if(isTRUE(standard_sal_ylims)) {
         y_limits <- c(25, 34)
-      }
+      } else if(isFALSE(standard_sal_ylims)) {
+        y_limits <- NULL
+      } else y_limits <- standard_sal_ylims
     }
 
     # plot var.i

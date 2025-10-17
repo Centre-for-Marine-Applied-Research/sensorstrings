@@ -54,3 +54,10 @@ test_that("ss_compile_hobo_ph_data() returns Error if trimming removes all rows"
     )
   )
 })
+
+
+test_that("ss_compile_hobo_ph_data() converts time zone from ast/adt to utc", {
+
+  expect_equal(ts_check$timestamp_utc, ts_check$ts_check)
+
+})
