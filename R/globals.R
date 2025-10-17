@@ -162,6 +162,8 @@ utils::globalVariables(
     ## ss_hobo_ph
     "ph_ph",
     "timestamp_ast/adt",
-    "timestamp_at"
+    "timestamp_at",
+
+    "region"
   )
 )
