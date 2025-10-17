@@ -274,6 +274,12 @@ ss_parse_log <- function(
       county <- NA
     }
 
+    if("region" %in% cols) {
+      region <- unique(log$region)
+    } else {
+      region <- NA
+    }
+
     if("waterbody" %in% cols) {
       wb <- unique(log$waterbody)
       if (length(wb) > 1) warning("Multiple waterbodies in log")
@@ -328,6 +334,7 @@ ss_parse_log <- function(
     }
 
     area_info <- data.frame(
+      region = region,
       county = county,
       waterbody = wb,
       latitude = lat,

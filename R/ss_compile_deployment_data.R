@@ -133,6 +133,7 @@ ss_compile_deployment_data <- function(
   # add area info columns and export ----------------------------------------
   depl_data %>%
     mutate(
+      region = area_info$region,
       county = area_info$county,
       waterbody = area_info$waterbody,
       latitude = as.numeric(area_info$latitude),
@@ -143,7 +144,7 @@ ss_compile_deployment_data <- function(
     ) %>%
     arrange(sensor_depth_at_low_tide_m) %>%
     select(
-      county, waterbody, station, lease, latitude, longitude,
+      region, county, waterbody, station, lease, latitude, longitude,
       deployment_range,
       string_configuration,
       sensor_type, sensor_serial_number,

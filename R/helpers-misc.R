@@ -59,9 +59,10 @@ ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
   if (is.null(sub_folder)) sub_folder <- "new"
 
   info <- dat %>%
-    distinct(county, station, deployment_range) %>%
+    distinct(region, county, station, deployment_range) %>%
     separate("deployment_range", into = c("depl_date", NA, NA), sep = " ") %>%
     mutate(
+      region = tolower(region),
       county = tolower(county),
       station = tolower(station),
       station = str_replace_all(station, " ", "_"),
@@ -70,7 +71,12 @@ ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
 
   file_name <- paste0(paste(info$station, info$depl_date, sep = "_"), ".", ext)
 
-  path <- file.path(paste(path, info$county, sub_folder, sep = "/"))
+  if(prov == "ns") {
+    path <- file.path(paste(path, info$county, sub_folder, sep = "/"))
+  }
+  if(prov == "nb") {
+    path <- file.path(paste(path, info$region, sub_folder, sep = "/"))
+  }
 
   if (isFALSE(dir.exists(path))) {
     stop("File path << ", path, " >> does not exist.\nCan't export file << ", file_name, " >>")
