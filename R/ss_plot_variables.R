@@ -84,6 +84,7 @@ ss_plot_variables <- function(
       "chlorophyll_blue_ug_per_l",
       "chlorophyll_red_ug_per_l",
       "dissolved_oxygen_percent_saturation",
+      "dissolved_oxygen_mg_per_l",
       "ph_ph",
       "salinity_psu",
       "sensor_depth_measured_m",

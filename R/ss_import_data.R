@@ -17,6 +17,7 @@
 ss_import_data <- function(input_path = NULL, county = "all") {
 
   county <- tolower(county)
+  county <- gsub(" ", "_", county)
 
   message("importing ", paste(county, collapse = " and "), " data...")
 

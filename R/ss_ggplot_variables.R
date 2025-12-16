@@ -164,7 +164,9 @@ ss_ggplot_variables <- function(
     geom_point(size = point_size, show.legend = TRUE) +
     scale_colour +
     x_axis_date +
-    facet_wrap(~variable_label, scales = "free_y", ncol = 1, strip.position = "left") +
+    facet_wrap(
+      ~variable_label, scales = "free_y", ncol = 1, strip.position = "left"
+      ) +
     theme(
       axis.title.y = element_blank(),
       strip.placement = "outside",
