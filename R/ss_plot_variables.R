@@ -67,7 +67,7 @@ ss_plot_variables <- function(
     standard_do_ylims = TRUE,
     standard_sal_ylims = TRUE,
 
-    yaxis_newline = TRUE,
+    yaxis_newline = FALSE,
 
     alpha = 1,
 
@@ -117,7 +117,7 @@ ss_plot_variables <- function(
   if(!is.null(date_labels_format)) axis_breaks$date_labels_format <- date_labels_format
 
   x_axis_date <- scale_x_datetime(
-    name = "Date",
+    #name = "Date",
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,     # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
@@ -126,12 +126,14 @@ ss_plot_variables <- function(
 
   # theme
   string_theme <- theme(
-    plot.title = element_text(face = "bold"),                # plot title format
-    axis.title = element_text(size = 10),                    # axis titles size & color
+    #plot.title = element_text(face = "bold"),                # plot title format
+    #axis.title = element_text(size = 10),                    # axis titles size & color
+    axis.title.x = element_blank(),
     axis.text = element_text(size = 9, colour = "black"),    # axis text size & color
     legend.title = element_text(size = 10) ,                 # legend title size
-    legend.text = element_text(size = 10)                    # legend text size
-  )
+    legend.text = element_text(size = 10)                   # legend text size
+
+    )
 
   # color scale
   if(is.null(color_palette)){
@@ -224,19 +226,20 @@ ss_plot_variables <- function(
   # RETURN TO GLOBAL ENV ----------------------------------------------------
 
   # add plot title to the top plot (first variable in last variable in vars_to_plot)
-  figs[[1]] <- figs[[1]] + labs(title = title)
+  #figs[[1]] <- figs[[1]] + labs(title = title)
 
   # remove x-axis title from all except the bottom plot (last variable in vars_to_plot)
-  if(n_vars > 1){
-    for(j in 1:(n_vars - 1)) {
-      figs[[j]] <- figs[[j]] + theme(axis.title.x = element_blank())
-    }
-  }
+  # if(n_vars > 1){
+  #   for(j in 1:(n_vars - 1)) {
+  #     figs[[j]] <- figs[[j]] + theme(axis.title.x = element_blank())
+  #   }
+  # }
 
   # arrange and export
   ggarrange(
     plotlist = figs,
-    ncol = 1, common.legend = TRUE, legend = legend_position
+    ncol = 1, common.legend = TRUE, legend = legend_position,
+    align = "v", heights = c(1, 1, 1, 1)
   )
 
 }
