@@ -420,7 +420,7 @@ extract_hobo_ph_units <- function(dat) {
     select(contains("Date"), contains("Temp"), contains("pH")) %>%
     colnames() %>%
     data.frame() %>%
-    separate(col = ".", into = c("variable", "units"), " \\(") %>%
+    separate(col = ".", into = c("variable", "units"), " \\(|, ") %>%
     mutate(
       variable = str_remove_all(variable, " "),
       units = str_remove(units, "\\)"),

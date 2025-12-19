@@ -68,6 +68,7 @@ ss_compile_hobo_ph_data <- function(path,
   # initialize list for storing the output
   hobo_dat <- list(NULL)
 
+ # browser()
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
@@ -111,11 +112,20 @@ ss_compile_hobo_ph_data <- function(path,
 
     colnames(hobo_i) <- new_col_names$col_name
 
+    # could combine these if statements
     if(tz_i$units == "ast/adt") {
       hobo_i <- hobo_i %>%
         mutate(
           timestamp_at = force_tz(`timestamp_ast/adt`, tzone = "America/Halifax"),
-          #is_dst = dst(timestamp_at),
+          timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
+        ) %>%
+        select(timestamp_utc, ph_ph, temperature_degree_c)
+    }
+
+    if(tz_i$units == "adt") {
+      hobo_i <- hobo_i %>%
+        mutate(
+          timestamp_at = force_tz(timestamp_adt, tzone = "America/Halifax"),
           timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
         ) %>%
         select(timestamp_utc, ph_ph, temperature_degree_c)
