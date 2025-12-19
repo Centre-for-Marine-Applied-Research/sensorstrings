@@ -1,0 +1,8 @@
+﻿county,waterbody,station,lease,deployment_date,retrieval_date,deployment_latitude,deployment_longitude,sensor_type,sensor_serial_number,sensor_depth_m,string_configuration
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,HOBO Pro V2,10755220,2,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,aquaMeasure DOT,670364,5,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,aquaMeasure SAL,680154,10,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,aquaMeasure DOT,675008,15,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,HOBO DO,20827226,20,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,VR2AR,547109,25,sub-surface buoy
+Halifax,Shoal Bay,Borgles Island,n/a,2019-05-30,2019-10-19,44.77241,-62.72608,hobo ph,22058687,22,sub-surface buoy

@@ -55,11 +55,7 @@ ss_create_log_from_metadata <- function(
       )
     }
 
-    dat_raw <- read_excel(
-      path_metadata,
-      sheet = sheet,
-      na = ""
-    )
+    dat_raw <- read_excel(path_metadata, sheet = sheet, na = "")
   }
 
   if(isTRUE(google_sheet)) {
@@ -84,6 +80,18 @@ ss_create_log_from_metadata <- function(
   colnames(dat_raw) <- gsub("tude_dd", "tude", colnames(dat_raw))
 
   dat <- dat_raw %>%
+    filter(
+      station == !!station_title,
+      deployment_date == !!as_date(deployment_date)
+    )
+
+  if (nrow(dat) == 0) {
+    warning(
+      paste("No rows found in metatdata for << ", station, deployment_date, " >>")
+    )
+  }
+
+  dat <- dat %>%
     mutate(
       deployment_latitude = if_else(
         is.na(deployment_latitude),
@@ -111,10 +119,6 @@ ss_create_log_from_metadata <- function(
 
   # make log
   log <- dat %>%
-    filter(
-      station == !!station_title,
-      deployment_date == !!as_date(deployment_date)
-    ) %>%
     select(
       any_of(c("county", "region")),
       waterbody, station, lease,
@@ -133,12 +137,6 @@ ss_create_log_from_metadata <- function(
       deployment_date = format(as_date(deployment_date), "%Y-%m-%d"),
       retrieval_date = format(as_date(retrieval_date), "%Y-%m-%d"),
     )
-
-  if (nrow(log) == 0) {
-    warning(
-      paste("No rows found in metatdata for << ", station, deployment_date, " >>")
-    )
-  }
 
   # Format & Export ---------------------------------------------------------
   file_name <- paste(

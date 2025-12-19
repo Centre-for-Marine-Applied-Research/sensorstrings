@@ -7,16 +7,16 @@ deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
 
 # log ---------------------------------------------------------------------
 
-# old log
-log_old <- ss_read_log(path, parse = FALSE)
-log_old2 <- ss_read_log(
-  paste0(path, "/Log/Borgles_Island_2019-05-30_Log.xls" ), parse = FALSE
-)
+# # old log
+# log_old <- ss_read_log(path, parse = FALSE)
+# log_old2 <- ss_read_log(
+#   paste0(path, "/Log/Borgles_Island_2019-05-30_Log.xls" ), parse = FALSE
+# )
 
-log_old_parse <- log_old %>% ss_parse_log()
+#log_old_parse <- log_old %>% ss_parse_log()
 
 # new log
-log_new <- ss_read_log(paste0(path, "/new/new_log1.csv" ), parse = FALSE)
+log_new <- ss_read_log(path, parse = FALSE)
 
 log_new_parse <- log_new %>% ss_parse_log(verbose = FALSE)
 

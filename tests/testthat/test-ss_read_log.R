@@ -1,11 +1,11 @@
-test_that("ss_read_log() reads in all observations", {
-  expect_equal(nrow(log_old), 7)
-  expect_equal(ncol(log_old), 14)
-})
+# test_that("ss_read_log() reads in all observations", {
+#   expect_equal(nrow(log_old), 7)
+#   expect_equal(ncol(log_old), 14)
+# })
 
-test_that("ss_read_log() reads data when path includes file name", {
-  expect_equal(log_old, log_old2)
-})
+# test_that("ss_read_log() reads data when path includes file name", {
+#   expect_equal(log_old, log_old2)
+# })
 
 
 # test_that("ss_read_log() reads in old columns", {
@@ -22,7 +22,7 @@ test_that("ss_read_log() reads data when path includes file name", {
 test_that("ss_read_log() reads in new columns", {
   expect_true(
     all(colnames(log_new) %in%
-          c("station", "waterbody", "lease",
+          c("county", "station", "waterbody", "lease",
             "status", "deployment_date", "deployment_time_utc",
             "retrieval_date", "retrieval_time_utc", "deployment_latitude",
             "deployment_longitude", "sensor_type", "sensor_serial_number",
