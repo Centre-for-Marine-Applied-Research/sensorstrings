@@ -13,7 +13,7 @@ ss_plot_variables(
   date_labels_format = "\%Y-\%m-\%d",
   standard_do_ylims = TRUE,
   standard_sal_ylims = TRUE,
-  yaxis_newline = TRUE,
+  yaxis_newline = FALSE,
   alpha = 1,
   legend_name = "Depth (m)",
   legend_position = "right"
