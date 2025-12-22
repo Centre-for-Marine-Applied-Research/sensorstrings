@@ -163,6 +163,7 @@ utils::globalVariables(
     "ph_ph",
     "timestamp_ast/adt",
     "timestamp_at",
+    "timestamp_adt",
 
     "region"
   )
