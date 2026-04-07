@@ -56,6 +56,7 @@ Other compile:
 \code{\link{ss_compile_deployment_data}()},
 \code{\link{ss_compile_hobo_data}()},
 \code{\link{ss_compile_vemco_data}()},
+\code{\link{ss_compile_vr2ar_data}()},
 \code{\link{ss_read_log_old}()}
 }
 \author{

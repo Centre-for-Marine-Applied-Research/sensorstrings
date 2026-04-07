@@ -165,6 +165,16 @@ utils::globalVariables(
     "timestamp_at",
     "timestamp_adt",
 
+    # ss_vr2ar
+    "DEPTH_DESC",
+    "Device Time (UTC)",
+    "FIELD.6",
+    "Model",
+    "RECORD TYPE",
+    "Serial Number",
+    "Time Correction (s)",
+    "timestamp_utc_uncorrected",
+
     "region"
   )
 )

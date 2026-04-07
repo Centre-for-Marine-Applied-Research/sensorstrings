@@ -51,7 +51,10 @@ set_up_compile <- function(path,
   }
 
   # name of folder (case-insensitive)
+
+  # vr2 folders have strange names because of changes in sensor manufacturer and software
   if (sensor_make == "VR2AR") sensor_make <- "vemco"
+  if (sensor_make == "VR2AR-69") sensor_make <- "vr2ar"
 
   # if file path already includes file names
   if (all(utils::file_test("-f", path))) {
