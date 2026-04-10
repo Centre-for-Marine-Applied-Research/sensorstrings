@@ -50,6 +50,9 @@ Reads the deployment log and then calls
   sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in the
   same folder.
 
+  VR2AR data processed with the Fathom software must be in a folder called
+  vr2ar.
+
   Columns with deployment details are added (e.g., county, waterbody,
   latitude, longitude, station, lease, string_configuration).
 }
@@ -58,6 +61,7 @@ Other compile:
 \code{\link{ss_compile_aquameasure_data}()},
 \code{\link{ss_compile_hobo_data}()},
 \code{\link{ss_compile_hobo_ph_data}()},
+\code{\link{ss_compile_vdat_data}()},
 \code{\link{ss_compile_vemco_data}()},
 \code{\link{ss_compile_vr2ar_data}()},
 \code{\link{ss_read_log_old}()}

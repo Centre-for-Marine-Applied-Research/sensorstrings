@@ -12,6 +12,9 @@
 #'   sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in the
 #'   same folder.
 #'
+#'   VR2AR data processed with the Fathom software must be in a folder called
+#'   vr2ar.
+#'
 #'   Columns with deployment details are added (e.g., county, waterbody,
 #'   latitude, longitude, station, lease, string_configuration).
 #'
@@ -115,9 +118,12 @@ ss_compile_deployment_data <- function(
     depl_data <- bind_rows(depl_data, tidbit)
   }
 
-  # vemco -------------------------------------------------------------------
+  # vemco .vrl files -------------------------------------------------------------------
   sn_vem <- sn_table %>%
-    filter(str_detect(log_sensor, regex("VR2AR", ignore_case = TRUE)))
+    filter(
+      str_detect(log_sensor, regex("VR2AR", ignore_case = TRUE)),
+      !str_detect(log_sensor, regex("-69"))
+    )
 
   if (nrow(sn_vem) > 0) {
     vemco <- ss_compile_vemco_data(
@@ -128,6 +134,20 @@ ss_compile_deployment_data <- function(
       depth_override = depth_override
     )
     depl_data <- bind_rows(depl_data, vemco)
+  }
+
+  # vemco .vdat -------------------------------------------------------------------
+  sn_vdat <- sn_table %>%
+    filter(str_detect(log_sensor, regex("VR2AR-69", ignore_case = TRUE)))
+
+  if (nrow(sn_vdat) > 0) {
+    vdat <- ss_compile_vdat_data(
+      path = path,
+      sn_table = sn_vdat,
+      deployment_dates = deployment_dates,
+      trim = trim
+    )
+    depl_data <- bind_rows(depl_data, vdat)
   }
 
   # add area info columns and export ----------------------------------------

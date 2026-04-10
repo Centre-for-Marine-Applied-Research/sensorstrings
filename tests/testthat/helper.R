@@ -209,49 +209,35 @@ vem_trim2 <- ss_compile_vemco_data(
   trim = TRUE
 )
 
-# vr2ar - Fathom ----------------------------------------------------------
+# vdat - Fathom ----------------------------------------------------------
 
-# ss_read_vr2ar_data ------------------------------------------------
+# ss_read_vdat_data ------------------------------------------------
 
-path_vr2 <- system.file("testdata/vr2ar", package = "sensorstrings")
+path_vdat <- system.file("testdata/vdat", package = "sensorstrings")
 
-vr2ar1 <- ss_read_vr2ar_data(path_vr2, "VR2AR-69_555438.csv")
+vdat1 <- ss_read_vdat_data(path_vdat, "VR2AR-69_555438.csv")
 
-vr2ar2 <- ss_read_vr2ar_data(paste0(path_vr2, "/VR2AR-69_555438.csv"))
+vdat2 <- ss_read_vdat_data(paste0(path_vdat, "/VR2AR-69_555438.csv"))
 
 # ss_compile_vr2ar_data ---------------------------------------------
 
-sn_vr2 <- data.frame(
+sn_vdat <- data.frame(
   sensor_type = "VR2AR-69",
   sensor_serial_number = 555438,
   depth = 5
 )
 
-sn_table <- data.frame(
-  sensor_type = "VR2AR-69",
-  sensor_serial_number = 555438,
-  depth = 5
-)
-
-deployment_dates <- data.frame(
-  start = as_date("2024-11-06"), end = as_date("2024-11-12")
-)
-
-depl_dates_vr2 <- data.frame(
-  start = as_date("2024-11-06"), end = as_date("2024-11-12")
-)
-
-vr2_all <- ss_compile_vr2ar_data(
-  path = paste0(path_vr2, "/VR2AR-69_555438.csv"),
-  sn_table = sn_vr2,
-  deployment_dates = depl_dates_vr2,
+vdat_all <- ss_compile_vdat_data(
+  path = paste0(path_vdat, "/VR2AR-69_555438.csv"),
+  sn_table = sn_vdat,
+  deployment_dates = deployment_dates,
   trim = FALSE
 )
 
-vr2_trim <- ss_compile_vr2ar_data(
-  path = paste0(path_vr2, "/VR2AR-69_555438.csv"),
-  sn_table = sn_vr2,
-  deployment_dates = depl_dates_vr2,
+vdat_trim <- ss_compile_vdat_data(
+  path = paste0(path_vdat, "/VR2AR-69_555438.csv"),
+  sn_table = sn_vdat,
+  deployment_dates = deployment_dates,
   trim = TRUE
 )
 
