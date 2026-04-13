@@ -227,6 +227,12 @@ sn_vdat <- data.frame(
   depth = 5
 )
 
+sn_table <- data.frame(
+  log_sensor = "VR2AR-69",
+  sensor_serial_number = 555438,
+  depth = 5
+)
+
 vdat_all <- ss_compile_vdat_data(
   path = paste0(path_vdat, "/VR2AR-69_555438.csv"),
   sn_table = sn_vdat,

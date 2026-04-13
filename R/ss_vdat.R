@@ -139,15 +139,15 @@ ss_compile_vdat_data <- function(
     dat_i <- dat_i %>%
       slice(-c(1:2)) %>%
       select(
-        timestamp_utc = `Device Time (UTC)`,
-       # time_correction_s = `Time Correction (s)`,
+        timestamp_ = `Device Time (UTC)`,
         sensor_type = Model,
         sensor_serial_number = `Serial Number`,
         variable = DEPTH_DESC,
         value = `Depth (m)`
       ) %>%
+      convert_timestamp_to_datetime() %>%
       mutate(
-        timestamp_utc = as_datetime(paste0(timestamp_utc, ":00")),
+        timestamp_utc = timestamp_,
         # time_correction_s = as.numeric(time_correction_s),
         # timestamp_utc = timestamp_utc_uncorrected + lubridate::seconds(time_correction_s))
 
@@ -158,7 +158,8 @@ ss_compile_vdat_data <- function(
           variable == "TEMP" ~ "temperature_degree_c",
           TRUE ~ NA
         )
-      )
+      ) %>%
+      select(-timestamp_)
 
     # serial number from data file
     sn_i <- unique(dat_i$sensor_serial_number)
@@ -199,7 +200,6 @@ ss_compile_vdat_data <- function(
       filter(!(timestamp_utc %in% bad_ts$timestamp_utc)) %>%
       pivot_wider(values_from = value, names_from = variable) %>%
       add_deployment_columns(start_date, end_date,  sensor_info_i)
-
 
     vem_dat[[i]] <- dat_i
 
