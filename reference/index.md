@@ -73,6 +73,9 @@
 - [`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md)
   : Compile and format data from hobo pH sensors (MX2501)
 
+- [`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md)
+  : Format temperature data from VR2AR deployment
+
 - [`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md)
   : Format temperature data from Vemco deployment
 
@@ -151,6 +154,9 @@
 
 - [`ss_read_nsdfa_metadata()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_nsdfa_metadata.md)
   : Import TempMetaData tab from the NSDFA tracking sheet
+
+- [`ss_read_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_vdat_data.md)
+  : Import data from VR2AR csv files exported from Fathom
 
 - [`ss_read_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_vemco_data.md)
   : Import data from vemco csv files

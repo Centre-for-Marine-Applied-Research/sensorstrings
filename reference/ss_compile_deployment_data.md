@@ -61,6 +61,9 @@ and vemco data must be in a folder name vemco (folder names are not case
 sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in
 the same folder.
 
+VR2AR data processed with the Fathom software must be in a folder called
+vr2ar.
+
 Columns with deployment details are added (e.g., county, waterbody,
 latitude, longitude, station, lease, string_configuration).
 
@@ -70,6 +73,7 @@ Other compile:
 [`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
 [`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
 [`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
+[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md),
 [`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md),
 [`ss_read_log_old()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_log_old.md)
 

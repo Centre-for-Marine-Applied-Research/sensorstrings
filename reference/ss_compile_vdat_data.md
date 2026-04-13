@@ -1,19 +1,21 @@
-# Compile data from aquameasure sensors
+# Format temperature data from VR2AR deployment
 
-Compile and format temperature, dissolved oxygen, salinity, and/or
-device depth data from aquameasure sensors.
+Compiles and formats temperature and depth data from VR2AR data
+offloaded in the new .vdat format and exported with Fathom software.
 
 ## Usage
 
 ``` r
-ss_compile_aquameasure_data(path, sn_table, deployment_dates, trim = TRUE)
+ss_compile_vdat_data(path, sn_table, deployment_dates, trim = TRUE)
 ```
 
 ## Arguments
 
 - path:
 
-  File path to the hobo or tidbit folder.
+  File path to the vdat folder. This folder should have one csv file
+  that was extracted using Fathom software. Other file types in the
+  folder will be ignored.
 
 - sn_table:
 
@@ -38,30 +40,24 @@ ss_compile_aquameasure_data(path, sn_table, deployment_dates, trim = TRUE)
 
 ## Value
 
-Returns a tibble with the compiled data from each of the aquameasure
-files saved in path/aquameasure.
+Returns a tibble with the data compiled from the file in path/vdat.
 
 ## Details
 
-The raw aquameasure data must be saved in a folder named aquameasure in
-csv format. Folder name is not case-sensitive.
+The raw VR2AR data must be saved in a folder named vdat in csv format.
+Folder name is not case-sensitive.
 
-Rows with `undefined` and `... (time not set)` values in the
-`Timestamp(UTC)` column are filtered out.
-
-The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p",
-"Ymd HM", "Ymd HMS", "dmY HM", or "dmY HMS".
-
-"ERR" values are converted to `-111` (to distinguish from sensor error
-value of -101.5).
+The device timestamp is used here. This may drift over time. Corrected
+time stamp is included in the .vdat file, but the date is not always
+appended.
 
 ## See also
 
 Other compile:
+[`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
 [`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
 [`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
 [`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
-[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md),
 [`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md),
 [`ss_read_log_old()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_log_old.md)
 
