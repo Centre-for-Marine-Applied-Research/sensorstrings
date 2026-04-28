@@ -15,6 +15,7 @@ ss_plot_variables(
   date_breaks_minor = NULL,
   date_labels_format = "%Y-%m-%d",
   standard_do_ylims = TRUE,
+  standard_ph_ylims = TRUE,
   standard_sal_ylims = TRUE,
   yaxis_newline = FALSE,
   alpha = 1,
@@ -60,9 +61,15 @@ ss_plot_variables(
   default. Alternatively, a vector giving custom y-limits for the
   dissolved oxygen panel.
 
+- standard_ph_ylims:
+
+  If `TRUE`, the y-limits for pH are set to c(7.5, 8.5) pH units. If
+  `FALSE`, the y-limits are set to the `ggplot` default. Alternatively,
+  a vector giving custom y-limits for the pH panel.
+
 - standard_sal_ylims:
 
-  If `TRUE`, the y-limits for salinity are set to c(0, 35) PSU. If
+  If `TRUE`, the y-limits for salinity are set to c(25, 34) PSU. If
   `FALSE`, the y-limits are set to the `ggplot` default. Alternatively,
   a vector giving custom y-limits for the salinity panel.
 
