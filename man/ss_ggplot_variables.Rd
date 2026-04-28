@@ -14,7 +14,7 @@ ss_ggplot_variables(
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
-  axis_label_newline = TRUE,
+  axis_label_newline = FALSE,
   point_size = 0.25,
   convert_sn_to_factor = TRUE
 )
