@@ -12,6 +12,7 @@ ss_plot_variables(
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
   standard_do_ylims = TRUE,
+  standard_ph_ylims = TRUE,
   standard_sal_ylims = TRUE,
   yaxis_newline = FALSE,
   alpha = 1,
@@ -41,6 +42,11 @@ more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
 are set to the \code{ggplot} default. Alternatively, a vector giving custom
 y-limits for the dissolved oxygen panel.}
+
+\item{standard_ph_ylims}{If \code{TRUE}, the y-limits for pH are set to
+c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
+\code{ggplot} default. Alternatively, a vector giving custom y-limits for
+the pH panel.}
 
 \item{standard_sal_ylims}{If \code{TRUE}, the y-limits for salinity are set
 to c(0, 35) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}

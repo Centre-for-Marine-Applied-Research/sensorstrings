@@ -25,8 +25,13 @@
 #'   are set to the \code{ggplot} default. Alternatively, a vector giving custom
 #'   y-limits for the dissolved oxygen panel.
 #'
+#' @param standard_ph_ylims If \code{TRUE}, the y-limits for pH are set to
+#'   c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
+#'   \code{ggplot} default. Alternatively, a vector giving custom y-limits for
+#'   the pH panel.
+#'
 #' @param standard_sal_ylims If \code{TRUE}, the y-limits for salinity are set
-#'   to c(0, 35) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
+#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
 #'   default. Alternatively, a vector giving custom y-limits for the salinity
 #'   panel.
 #'
@@ -65,6 +70,7 @@ ss_plot_variables <- function(
     date_labels_format = "%Y-%m-%d",
 
     standard_do_ylims = TRUE,
+    standard_ph_ylims = TRUE,
     standard_sal_ylims = TRUE,
 
     yaxis_newline = FALSE,
@@ -197,6 +203,14 @@ ss_plot_variables <- function(
       } else if(isFALSE(standard_do_ylims)) {
         y_limits <- NULL
       } else y_limits <- standard_do_ylims
+    }
+
+    if(var_i == "ph_ph") {
+      if(isTRUE(standard_ph_ylims)) {
+        y_limits <- c(7.5, 8.5)
+      } else if(isFALSE(standard_ph_ylims)) {
+        y_limits <- NULL
+      } else y_limits <- standard_ph_ylims
     }
 
     if(var_i == "salinity_psu") {
