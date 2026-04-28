@@ -49,7 +49,7 @@ c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
 the pH panel.}
 
 \item{standard_sal_ylims}{If \code{TRUE}, the y-limits for salinity are set
-to c(0, 35) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
+to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
 default. Alternatively, a vector giving custom y-limits for the salinity
 panel.}
 
