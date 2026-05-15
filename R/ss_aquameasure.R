@@ -65,7 +65,7 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @importFrom dplyr %>% across all_of any_of bind_rows distinct group_by mutate
 #'   n select slice summarise tibble
 #' @importFrom lubridate parse_date_time
-#' @importFrom stringr str_detect str_replace
+#' @importFrom stringr str_detect str_remove str_replace
 #' @importFrom tidyr separate pivot_wider
 #'
 #' @export
@@ -104,8 +104,10 @@ ss_compile_aquameasure_data <- function(path,
     am_i <- ss_read_aquameasure_data(file_i) %>%
       filter(!str_detect(`Record Type`, "aquaMeasure-"))
 
-    am_colnames <- colnames(am_i)
+    # remove "Water" from colnames of files downloaded from new app
+    colnames(am_i) <- str_remove(colnames(am_i), "Water ")
 
+    am_colnames <- colnames(am_i)
     if("Record Number" %in% am_colnames) am_i <- select(am_i, -`Record Number`)
 
     # sn and timezone checks --------------------------------------------------
@@ -170,7 +172,9 @@ ss_compile_aquameasure_data <- function(path,
         !str_detect(timestamp_, "undefined"),
         `Record Type` %in% vars
       ) %>%
-      convert_timestamp_to_datetime()
+      convert_timestamp_to_datetime() %>%
+      # remove "Water" from colnames of files downloaded from new app
+      mutate(`Record Type` = str_remove(`Record Type`, "Water "))
 
     # check there are more than 0 rows in am_i
     check_n_rows(am_i, file_name = file_name, trimmed = FALSE)
