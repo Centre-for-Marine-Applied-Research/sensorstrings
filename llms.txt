@@ -28,6 +28,7 @@ You can install the development version of `sensorstrings` from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("dempsey-CMAR/sensorstrings")
 ```
@@ -76,13 +77,13 @@ aquaculture operators (Table 1). Strings are deployed at a station for
 several months and data are typically measured every 10 minutes to 1
 hour, depending on the sensor.
 
-| Sensor                                                                                                                                  | Variable(s) Measured          |
-|:----------------------------------------------------------------------------------------------------------------------------------------|:------------------------------|
-| [HOBO Pro V2](https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ) | Temperature                   |
-| [HOBO DO](https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x)     | Temperature, Dissolved Oxygen |
-| [aquaMeasure DOT](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf)        | Temperature, Dissolved Oxygen |
-| [aquaMeasure SAL](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf)        | Temperature, Salinity         |
-| [VR2AR](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf)                         | Temperature                   |
+| Sensor | Variable(s) Measured |
+|:---|:---|
+| [HOBO Pro V2](https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ) | Temperature |
+| [HOBO DO](https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x) | Temperature, Dissolved Oxygen |
+| [aquaMeasure DOT](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Dissolved Oxygen |
+| [aquaMeasure SAL](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Salinity |
+| [VR2AR](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf) | Temperature |
 
 After retrieval, data from each sensor is exported to a separate csv
 file using manufacturer-specific software. Each type of sensor generates
@@ -104,6 +105,7 @@ Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_W
 ## Example
 
 ``` r
+
 library(sensorstrings)
 ```
 
@@ -124,6 +126,7 @@ manufacturer-specific columns.
 Import raw data files:
 
 ``` r
+
 path <- system.file("extdata", package = "sensorstrings")
 
 aquameasure_raw <- ss_read_aquameasure_data(
@@ -147,6 +150,7 @@ Examine the first rows of each raw data file:
 #### AquaMeasure data
 
 ``` r
+
 head(aquameasure_raw)
 #>                       Timestamp(UTC) Time Corrected(seconds)             Sensor
 #> 1  209s after startup (time not set)                      NA aquaMeasure-670364
@@ -174,6 +178,7 @@ head(aquameasure_raw)
 #### Hobo data
 
 ``` r
+
 head(hobo_raw)
 #>    # Date Time, GMT+00:00 Temp, °C (LGR S/N: 10755220, SEN S/N: 10755220) V4
 #> 1  4     2019-05-30 21:00                                           6.661 NA
@@ -201,6 +206,7 @@ head(hobo_raw)
 #### Vemco data
 
 ``` r
+
 head(vemco_raw)
 #>   Date and Time (UTC)     Receiver    Description  Data Units
 #> 1    2019-05-30 18:06 VR2AR-547109          Noise 207.6    mV
@@ -229,24 +235,28 @@ information on where the string was deployed, and the depth of each
 sensor.
 
 ``` r
+
 log <- ss_read_log(path)
 #> ✔ Reading from "STRING TRACKING".
 #> ✔ Range ''Area Info''.
 ```
 
 ``` r
+
 log$deployment_dates
 #>   start_date   end_date
 #> 1 2019-05-30 2019-10-19
 ```
 
 ``` r
+
 log$area_info
 #>    county waterbody latitude longitude        station lease
 #> 1 Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA
 ```
 
 ``` r
+
 log$sn_table
 #> # A tibble: 3 × 3
 #>   log_sensor      sensor_serial_number depth
@@ -263,6 +273,7 @@ reads in the log and the data for each sensor and exports a single data
 frame.
 
 ``` r
+
 dat <- ss_compile_deployment_data(path)
 #> ✔ Reading from "STRING TRACKING".
 #> ✔ Range ''Area Info''.
@@ -273,22 +284,23 @@ dat <- ss_compile_deployment_data(path)
 kable(dat[1:10, ])
 ```
 
-| county  | waterbody | station        | lease | latitude | longitude | deployment_range           | string_configuration | sensor_type | sensor_serial_number | timestamp_utc       | sensor_depth_at_low_tide_m | dissolved_oxygen_percent_saturation | sensor_depth_measured_m | temperature_degree_c |
-|:--------|:----------|:---------------|:------|---------:|----------:|:---------------------------|:---------------------|:------------|---------------------:|:--------------------|---------------------------:|------------------------------------:|------------------------:|---------------------:|
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-30 21:00:00 |                          2 |                                  NA |                      NA |                6.661 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 01:00:00 |                          2 |                                  NA |                      NA |                7.695 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 05:00:00 |                          2 |                                  NA |                      NA |                7.569 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 09:00:00 |                          2 |                                  NA |                      NA |                6.509 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 13:00:00 |                          2 |                                  NA |                      NA |                6.788 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 17:00:00 |                          2 |                                  NA |                      NA |                6.839 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-05-31 21:00:00 |                          2 |                                  NA |                      NA |                7.192 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-06-01 01:00:00 |                          2 |                                  NA |                      NA |                7.594 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-06-01 05:00:00 |                          2 |                                  NA |                      NA |                7.544 |
-| Halifax | Shoal Bay | Borgles Island | NA    | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy     | hobo        |             10755220 | 2019-06-01 09:00:00 |                          2 |                                  NA |                      NA |                6.661 |
+| county | waterbody | station | lease | latitude | longitude | deployment_range | string_configuration | sensor_type | sensor_serial_number | timestamp_utc | sensor_depth_at_low_tide_m | dissolved_oxygen_percent_saturation | sensor_depth_measured_m | temperature_degree_c |
+|:---|:---|:---|:---|---:|---:|:---|:---|:---|---:|:---|---:|---:|---:|---:|
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-30 21:00:00 | 2 | NA | NA | 6.661 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 01:00:00 | 2 | NA | NA | 7.695 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 05:00:00 | 2 | NA | NA | 7.569 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 09:00:00 | 2 | NA | NA | 6.509 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 13:00:00 | 2 | NA | NA | 6.788 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 17:00:00 | 2 | NA | NA | 6.839 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 21:00:00 | 2 | NA | NA | 7.192 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 01:00:00 | 2 | NA | NA | 7.594 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 05:00:00 | 2 | NA | NA | 7.544 |
+| Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 09:00:00 | 2 | NA | NA | 6.661 |
 
 ### Plot
 
 ``` r
+
 ss_ggplot_variables(dat)
 ```
 
