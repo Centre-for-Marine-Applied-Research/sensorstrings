@@ -174,7 +174,9 @@ ss_compile_aquameasure_data <- function(path,
         !str_detect(timestamp_, "undefined"),
         `Record Type` %in% vars
       ) %>%
-      convert_timestamp_to_datetime()
+      convert_timestamp_to_datetime() %>%
+      # remove "Water" from colnames of files downloaded from new app
+      mutate(`Record Type` = str_remove(`Record Type`, "Water "))
 
     # check there are more than 0 rows in am_i
     check_n_rows(am_i, file_name = file_name, trimmed = FALSE)
