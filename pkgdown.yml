@@ -2,7 +2,7 @@ pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2026-05-19T13:51Z
+last_built: 2026-05-21T18:43Z
 urls:
   reference: https://dempsey-cmar.github.io/sensorstrings/reference
   article: https://dempsey-cmar.github.io/sensorstrings/articles

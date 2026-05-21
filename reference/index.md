@@ -94,6 +94,9 @@
 - [`ss_create_old_log_from_metadata()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_old_log_from_metadata.md)
   : Writes a deployment log from the metadata tracking sheet
 
+- [`ss_create_template()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_template.md)
+  : Create file to compile and trim sensor string data
+
 - [`ss_create_variable_labels()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_variable_labels.md)
   : Create plot labels from variable names
 
