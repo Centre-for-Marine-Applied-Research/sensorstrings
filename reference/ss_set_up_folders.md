@@ -26,8 +26,7 @@ ss_set_up_folders(path = NULL, station, depl_date, sensor_folders = FALSE)
 
   Logical argument indicating whether to create the aquameasure, hobo,
   log, and vemco folders in the deployment folder. These folders may
-  also be created using
-  [`ss_download_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_download_data.md).
+  also be created using `ss_download_data()`.
 
 ## Value
 

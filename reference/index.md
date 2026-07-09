@@ -91,9 +91,6 @@
 - [`ss_create_log_from_metadata()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_log_from_metadata.md)
   : Writes a deployment log from the metadata tracking sheet
 
-- [`ss_create_old_log_from_metadata()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_old_log_from_metadata.md)
-  : Writes a deployment log from the metadata tracking sheet
-
 - [`ss_create_template()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_template.md)
   : Create file to compile and trim sensor string data
 
@@ -102,9 +99,6 @@
 
 - [`ss_create_variable_labels_no_newline()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_create_variable_labels_no_newline.md)
   : Create plot labels from variable names without new lines
-
-- [`ss_download_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_download_data.md)
-  : Download deployment data from Google drive to the shared CMAR server
 
 - [`ss_export_county_files()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_export_county_files.md)
   : Export data into a csv and/or rds file
@@ -152,9 +146,6 @@
 - [`ss_read_log()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_log.md)
   : Read in deployment log
 
-- [`ss_read_log_old()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_log_old.md)
-  : Extract information from old deployment log
-
 - [`ss_read_nsdfa_metadata()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_nsdfa_metadata.md)
   : Import TempMetaData tab from the NSDFA tracking sheet
 
@@ -163,9 +154,6 @@
 
 - [`ss_read_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_vemco_data.md)
   : Import data from vemco csv files
-
-- [`ss_reformat_old_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_reformat_old_data.md)
-  : Convert old data structure to sensorstrings format
 
 - [`ss_set_up_folders()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_set_up_folders.md)
   : Create folders for the raw sensor string data from a given

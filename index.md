@@ -12,8 +12,7 @@ New features:
 - More straightforward workflow
   - don’t need to export intermediate “raw” and “trim” files
   - few arguments to specify in templates
-- Additional functions (e.g.,
-  [`ss_download_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_download_data.md))
+- Additional functions (e.g., `ss_download_data()`)
 - Variable names consistent with [Climate
   Forecast](https://cfconventions.org/) conventions
 - Formal tests
