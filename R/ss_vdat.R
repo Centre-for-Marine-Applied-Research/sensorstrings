@@ -64,8 +64,7 @@ ss_read_vdat_data <- function(path, file_name) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% case_when filter group_by mutate select summarise
-#'   tibble
+#' @importFrom dplyr %>% case_when filter group_by mutate select summarise tibble
 #' @importFrom lubridate as_datetime
 #' @importFrom purrr list_rbind
 #'

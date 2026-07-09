@@ -74,8 +74,8 @@ Output is not compatible with ggplot2 functions or ggplotly(). Use
 \code{ss_ggplot_variables()} to work with those functions.
 }
 \seealso{
-Other plot: 
-\code{\link{ss_get_colour_palette}()}
+Other plot:
+\code{\link[=ss_get_colour_palette]{ss_get_colour_palette()}}
 }
 \author{
 Danielle Dempsey

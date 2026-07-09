@@ -41,13 +41,12 @@ The raw VR2AR data must be saved in a folder named vdat in csv
   stamp is included in the .vdat file, but the date is not always appended.
 }
 \seealso{
-Other compile: 
-\code{\link{ss_compile_aquameasure_data}()},
-\code{\link{ss_compile_deployment_data}()},
-\code{\link{ss_compile_hobo_data}()},
-\code{\link{ss_compile_hobo_ph_data}()},
-\code{\link{ss_compile_vemco_data}()},
-\code{\link{ss_read_log_old}()}
+Other compile:
+\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
+\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
+\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
+\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
+\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }
 \author{
 Danielle Dempsey

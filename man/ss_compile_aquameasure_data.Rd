@@ -46,13 +46,12 @@ The raw aquameasure data must be saved in a folder named aquameasure
   value of -101.5).
 }
 \seealso{
-Other compile: 
-\code{\link{ss_compile_deployment_data}()},
-\code{\link{ss_compile_hobo_data}()},
-\code{\link{ss_compile_hobo_ph_data}()},
-\code{\link{ss_compile_vdat_data}()},
-\code{\link{ss_compile_vemco_data}()},
-\code{\link{ss_read_log_old}()}
+Other compile:
+\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
+\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
+\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
+\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
+\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }
 \author{
 Danielle Dempsey

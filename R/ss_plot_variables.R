@@ -55,8 +55,7 @@
 
 #' @importFrom dplyr any_of filter
 #' @importFrom ggpubr ggarrange
-#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime
-#'   scale_y_continuous theme theme_set theme_light
+#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_set theme_light
 #' @importFrom viridis viridis
 #' @export
 

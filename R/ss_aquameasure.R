@@ -13,7 +13,6 @@
 #' @author Danielle Dempsey
 #'
 #' @importFrom data.table fread
-#'
 #' @export
 
 ss_read_aquameasure_data <- function(path, file_name = NULL) {
@@ -62,8 +61,7 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% across all_of any_of bind_rows distinct group_by mutate
-#'   n select slice summarise tibble
+#' @importFrom dplyr %>% across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect str_remove str_replace
 #' @importFrom tidyr separate pivot_wider

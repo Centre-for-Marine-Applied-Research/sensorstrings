@@ -10,8 +10,7 @@
 #'
 #' @importFrom tidyr separate unite
 #' @importFrom lubridate as_date
-#' @importFrom dplyr %>% all_of any_of arrange case_when distinct mutate
-#'   relocate select
+#' @importFrom dplyr %>% all_of any_of arrange case_when distinct mutate relocate select
 #' @export
 
 ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){

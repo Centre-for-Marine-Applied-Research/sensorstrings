@@ -5,8 +5,7 @@
 #'
 #' @returns A leaflet object.
 #'
-#' @importFrom leaflet leaflet addProviderTiles addCircleMarkers addScaleBar
-#'   scaleBarOptions
+#' @importFrom leaflet leaflet addProviderTiles addCircleMarkers addScaleBar scaleBarOptions
 #'
 #' @export
 #'

@@ -83,8 +83,7 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
 #'
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select
-#'   tibble
+#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate hours
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit

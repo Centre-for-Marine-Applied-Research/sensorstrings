@@ -37,9 +37,7 @@
 #'   coloured by sensor depth.
 #'
 #' @importFrom dplyr %>% contains select mutate
-#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point
-#'   geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime
-#'   scale_y_continuous theme theme_set theme_light
+#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_set theme_light
 #' @importFrom grDevices colorRampPalette
 #' @importFrom lubridate as_datetime
 #' @importFrom RColorBrewer brewer.pal

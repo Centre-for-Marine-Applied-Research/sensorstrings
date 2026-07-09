@@ -54,13 +54,12 @@ This code does not correct dissolved oxygen data for salinity.
   HM", "Ymd HMS", "dmY HM", or "dmY HMS".
 }
 \seealso{
-Other compile: 
-\code{\link{ss_compile_aquameasure_data}()},
-\code{\link{ss_compile_deployment_data}()},
-\code{\link{ss_compile_hobo_ph_data}()},
-\code{\link{ss_compile_vdat_data}()},
-\code{\link{ss_compile_vemco_data}()},
-\code{\link{ss_read_log_old}()}
+Other compile:
+\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
+\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
+\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
+\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
+\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }
 \author{
 Danielle Dempsey

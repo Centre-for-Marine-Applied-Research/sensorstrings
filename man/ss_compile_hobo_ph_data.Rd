@@ -51,13 +51,12 @@ Exported data must be saved in a folder named hobo_ph in csv format.
   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 }
 \seealso{
-Other compile: 
-\code{\link{ss_compile_aquameasure_data}()},
-\code{\link{ss_compile_deployment_data}()},
-\code{\link{ss_compile_hobo_data}()},
-\code{\link{ss_compile_vdat_data}()},
-\code{\link{ss_compile_vemco_data}()},
-\code{\link{ss_read_log_old}()}
+Other compile:
+\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
+\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
+\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
+\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
+\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }
 \author{
 Danielle Dempsey

@@ -36,8 +36,7 @@
 #'
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select
-#'   tibble
+#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate dst force_tz with_tz
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit

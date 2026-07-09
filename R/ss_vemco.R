@@ -76,8 +76,7 @@ ss_read_vemco_data <- function(path, file_name) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% case_when contains filter group_by mutate select
-#'   summarise tibble
+#' @importFrom dplyr %>% case_when contains filter group_by mutate select summarise tibble
 #' @importFrom purrr list_rbind
 #'
 #' @export

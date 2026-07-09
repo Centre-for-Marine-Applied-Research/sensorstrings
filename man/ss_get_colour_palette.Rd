@@ -27,8 +27,8 @@ Returns a discrete colour scale palette from the viridis package
   there will be one colour for each depth.
 }
 \seealso{
-Other plot: 
-\code{\link{ss_plot_variables}()}
+Other plot:
+\code{\link[=ss_plot_variables]{ss_plot_variables()}}
 }
 \author{
 Danielle Dempsey
