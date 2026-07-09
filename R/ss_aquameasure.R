@@ -161,6 +161,8 @@ ss_compile_aquameasure_data <- function(path,
     # variables to process
     vars <- extract_aquameasure_vars(colnames(am_i))
 
+   # browser()
+
     am_i <- am_i %>%
       select(
         timestamp_ = contains("stamp"),
@@ -214,7 +216,8 @@ ss_compile_aquameasure_data <- function(path,
         salinity_psu = contains("Salinity_Salinity"),
         sensor_depth_measured_m = contains("Device Depth_Device Depth"),
         chlorophyll_blue_ug_per_l = contains("Chlorophyll Blue_Chlorophyll Blue"),
-        chlorophyll_red_ug_per_l = contains("Chlorophyll Red_Chlorophyll Red")
+        chlorophyll_red_ug_per_l = contains("Chlorophyll Red_Chlorophyll Red"),
+        tilt_degree = contains("Device Tilt_device Tilt")
       ) %>%
       add_deployment_columns(start_date, end_date, sensor_info_i)
 
@@ -228,7 +231,8 @@ ss_compile_aquameasure_data <- function(path,
       "dissolved_oxygen_percent_saturation",
       "salinity_psu",
       "sensor_depth_measured_m",
-      "temperature_degree_c"
+      "temperature_degree_c",
+      "tilt_degree"
     )
 
     am_i <- am_i %>%

@@ -131,6 +131,7 @@ add_deployment_columns <- function(
     start_date,
     end_date,
     sn_table) {
+
   dat %>%
     mutate(
       deployment_range = paste(
@@ -153,23 +154,9 @@ add_deployment_columns <- function(
       sensor_depth_measured_m = contains("sensor_depth_measured"),
       contains("ph"),
       contains("psu"),
-      contains("degree_c")
+      contains("degree_c"),
+      contains("tilt")
     )
-    # select(
-    #   deployment_range,
-    #   contains("timestamp"),
-    #   sensor_type,
-    #   sensor_serial_number,
-    #   sensor_depth_at_low_tide_m,
-    #   chlorophyll_blue_ug_per_l = contains("blue_ug"),
-    #   chlorophyll_red_ug_per_l = contains("red_ug"),
-    #   dissolved_oxygen_percent_saturation = contains("percent_sat"),
-    #   dissolved_oxygen_uncorrected_mg_per_l = contains("uncorrected_mg_per_l"),
-    #   sensor_depth_measured_m = contains("sensor_depth_measured"),
-    #   ph_ph = contains("ph"),
-    #   salinity_psu = contains("psu"),
-    #   temperature_degree_c = contains("degree_c")
-    # )
 }
 
 
@@ -338,10 +325,11 @@ extract_aquameasure_vars <- function(am_colnames) {
   sensor_depth <- ifelse("Device Depth" %in% am_colnames, "Device Depth", NA)
   chl_blue <- ifelse("Chlorophyll Blue" %in% am_colnames, "Chlorophyll Blue", NA)
   chl_red <- ifelse("Chlorophyll Red" %in% am_colnames, "Chlorophyll Red", NA)
+  tilt <- ifelse("Device Tilt" %in% am_colnames, "Device Tilt", NA)
 
 
   # create vector of the variables in this file by removing NA
-  vars <- c(temp, DO, sal, sensor_depth, chl_blue, chl_red)
+  vars <- c(temp, DO, sal, sensor_depth, chl_blue, chl_red, tilt)
   vars[which(!is.na(vars))]
 }
 

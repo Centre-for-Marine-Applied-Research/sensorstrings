@@ -178,6 +178,7 @@ ss_compile_deployment_data <- function(
       contains("ph"),
       contains("salinity"),
       contains("sensor_depth_measured"),
-      contains("temperature")
+      contains("temperature"),
+      contains("tilt")
     )
 }

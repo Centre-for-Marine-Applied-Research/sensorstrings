@@ -171,7 +171,8 @@ ss_create_variable_labels <- function(dat) {
     "Salinity \n(PSU)",
     "Chlorophyll Blue \n(\u03BCg/L)",
     "Chlorophyll Red \n(\u03BCg/L)",
-    "Sensor Depth \n(m)"
+    "Sensor Depth \n(m)",
+    "Tilt \n(\u00B0)"
   )
 
   dat %>%
@@ -193,6 +194,7 @@ ss_create_variable_labels <- function(dat) {
         variable == "salinity_psu" ~ "Salinity \n(PSU)",
         variable == "sensor_depth_measured_m" ~ "Sensor Depth \n(m)",
         variable == "temperature_degree_c" ~ "Temperature \n(\u00B0C)",
+        variable == "tilt_degree" ~ "Tilt \n(\u00B0)",
         TRUE ~ variable
       ),
       variable_label = factor(
@@ -227,7 +229,8 @@ ss_create_variable_labels_no_newline <- function(dat) {
     "Salinity (PSU)",
     "Chlorophyll Blue (\u03BCg / L)",
     "Chlorophyll Red (\u03BCg / L)",
-    "Sensor Depth (m)"
+    "Sensor Depth (m)",
+    "Tilt (\u00B0)"
   )
 
   dat %>%
@@ -247,6 +250,7 @@ ss_create_variable_labels_no_newline <- function(dat) {
         variable == "salinity_psu" ~ "Salinity (PSU)",
         variable == "sensor_depth_measured_m" ~ "Sensor Depth (m)",
         variable == "temperature_degree_c" ~ "Temperature (\u00B0C)",
+        variable == "tilt_degree" ~ "Tilt (\u00B0)",
         TRUE ~ variable
       ),
       variable_label = factor(

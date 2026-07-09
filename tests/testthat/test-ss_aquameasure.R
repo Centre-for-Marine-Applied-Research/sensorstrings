@@ -38,12 +38,13 @@ test_that("ss_compile_aquameasure_data() returns correct classes", {
   expect_equal(class(am_all$temperature_degree_c), "numeric")
   expect_equal(class(am_all$dissolved_oxygen_percent_saturation), "numeric")
   expect_equal(class(am_all$salinity_psu), "numeric")
+  expect_equal(class(am_all$tilt_degree), "numeric")
 })
 
 test_that("ss_compile_aquameasure_data() reads in all observations", {
-  expect_equal(nrow(am_all), 64)
-  expect_equal(nrow(am_all2), 64)
-  expect_equal(nrow(am_trim), 55)
+  expect_equal(nrow(am_all), 80)
+  expect_equal(nrow(am_all2), 80)
+  expect_equal(nrow(am_trim), 71)
 })
 
 test_that("ss_compile_aquameasure_data() returns Error if trimming removes all rows", {

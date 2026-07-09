@@ -164,11 +164,16 @@ ss_compile_vemco_data <- function(path,
       stop("Could not find Seawater depth or Average seawater depth in vemco_dat. Check file.")
     }
 
+    if ("Tilt angle" %in% vars_desc) {
+      tilt_var <- "Tilt angle"
+    }
+
+
     if ("Date and Time (UTC)" %in% dat_colnames & "Date/Time" %in% dat_colnames) {
       warning("There are two datetime columns in the Vemco data")
     }
 
-    vars <- c(depth_var, temperature_var)
+    vars <- c(depth_var, temperature_var, tilt_var)
 
     # extract sensor depth
     dat_i <- dat_i %>%
@@ -184,12 +189,14 @@ ss_compile_vemco_data <- function(path,
           Description == "Average seawater depth" ~ "sensor_depth_measured",
           Description == "Seawater depth" ~ "sensor_depth_measured",
           Description == "Temperature" ~ "temperature",
-          Description == "Average temperature" ~ "temperature"
+          Description == "Average temperature" ~ "temperature",
+          Description == "Tilt angle" ~ "tilt"
         ),
-        Units = if_else(
-          Units == "\u00B0C" | # if csv is saved with ANSI encoding
-            Units == "\u00C2\u00B0C", # if csv is saved with UTF-8 encoding
-          "degree_c", Units
+        Units = case_when(
+          # if csv is saved with ANSI encoding vs # if csv is saved with UTF-8 encoding
+          Units == "\u00B0C" | Units == "\u00C2\u00B0C" ~ "degree_c",
+          Units == "\u00B0" | Units == "\u00C2\u00B0" ~ "degree",
+          TRUE ~ Units
         ),
         Description = paste(Description, Units, sep = "_"),
         Data = as.numeric(Data)

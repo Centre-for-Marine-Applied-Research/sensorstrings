@@ -23,7 +23,8 @@ ss_pivot_longer <- function(dat_wide) {
         contains("dissolved_oxygen"),
         contains("ph"),
         contains("salinity"),
-        contains("temperature")
+        contains("temperature"),
+        contains("tilt")
       ),
       names_to = "variable",
       values_to = "value",
