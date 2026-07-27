@@ -12,7 +12,7 @@
 #' Assumptions:
 #'
 #' In the case where a hobo sensor was attached to the VR2AR sensor, the hobo
-#' hobo sensor is not included.
+#' sensor is not included.
 #'
 #' Does not distinguish between VR2AR and VR2AR-X sensors.
 #'
@@ -21,6 +21,8 @@
 #' The rope length from the float to the shallowest sensor is hard-coded at 0.05
 #' m.
 #'
+#' If the sounding is shallower than the deepest sensor, the sounding is set to
+#' the deepest depth + 2 m.
 #'
 #' @param station Character string. Station name, as it appears in
 #'   \code{metadata}.
@@ -46,13 +48,11 @@
 #' @export
 #'
 
-model_mooring <- function(
+ss_model_mooring <- function(
     station,
     depl_date,
     metadata = NULL,
     rope_type = "3/8in leaded polypropylene"
-    #segmentize_length = 1,
-    #with_current = TRUE
 ) {
 
   if(is.null(metadata)) {
@@ -79,7 +79,6 @@ model_mooring <- function(
           str_detect(sensor_type, "VR2AR") ~ "VR2AR reciever",
           TRUE ~ sensor_type
         ),
-
         # might make more sense to do this after unique() so only making the conversiom
         # once
         primary_buoy_type = gsub("\"", "in", primary_buoy_type),
@@ -94,16 +93,29 @@ model_mooring <- function(
   metadata <- metadata |>
     arrange(desc(sensor_depth_m))
 
+  deepest_sensor_m <- metadata[1, ]$sensor_depth_m
+
   # add warning if converted to NA or more than one value
   sounding_m <- unique(as.numeric(metadata$sounding_m))
-  first_rope_length_m <- unique(as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
 
-  #anchor_type <- gsub("[s]$", "", unique(metadata$anchor_type))
+  if(sounding_m < deepest_sensor_m) {
+
+    warning(
+      "sounding_m: ", sounding_m,
+      " is less than deepest recorded sensor: ",
+      deepest_sensor_m, ". sounding_m adjusted to ", deepest_sensor_m + 2, " m"
+    )
+    sounding_m <- deepest_sensor_m + 2
+  }
+
+  first_rope_length_m <- unique(
+    as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
+
   anchor_type <- anchor(gsub("[s]$", "", unique(metadata$anchor_type)))
 
   float_type <- float(unique(metadata$float_type))
 
-  ss <- NULL
+  ss <- list()
   ss[[1]] <- anchor_type
 
   j <- 2
@@ -116,7 +128,6 @@ model_mooring <- function(
     if (i == 1) {
       wire_i <- wire(model = rope_type, length = first_rope_length_m)
     } else {
-
       # from sensor i-1 to sensor i
       wire_i <- wire(
         model = rope_type,
@@ -138,9 +149,6 @@ model_mooring <- function(
   m <- do.call(mooring, ss)
 
   m
-
-  # could add plot and/or segmentize + current here.
-  # leaving in the mooring package for now
 }
 
 # m <- model_mooring(station, depl_date)
