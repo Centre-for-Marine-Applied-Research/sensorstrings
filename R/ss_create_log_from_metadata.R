@@ -20,7 +20,7 @@
 #' @param station Station name.
 #'
 #' @param deployment_date Date of deployment as a character string in the format
-#'   "YYYY-mm-dd"
+#'   "yyyy-mm-dd"
 #'
 #' @param to_title Logical argument indicating whether to convert the station
 #'   name to title case. Default is \code{TRUE}. Set to \code{FALSE} for
@@ -65,11 +65,16 @@ ss_create_log_from_metadata <- function(
       google_sheet_link <- "https://docs.google.com/spreadsheets/d/1KDM8a-PkP30NNJNQMbK3SPt0tAAr3R2MeqHgIBYSVg8/edit?gid=149994636#gid=149994636"
     }
 
-    dat_raw <- read_sheet(google_sheet_link, sheet = sheet)
+    dat_raw <- read_sheet(google_sheet_link, sheet = sheet, col_types = "c") |>
+      mutate(
+        deployment_date = as_date(deployment_date),
+        across(contains("tude_dd"), ~as.numeric(.x))
+      )
   }
 
   if(isTRUE(to_title)) {
-    station_title <- str_to_title(station)
+    station_title <- gsub("_", " ", station)
+    station_title <- str_to_title(station_title)
   } else station_title <- station
 
   if(!(station_title %in% dat_raw$station)) {
@@ -115,8 +120,6 @@ ss_create_log_from_metadata <- function(
       )
     )
 
-  #are_out <- any_of(c("county", "region"))
-
   # make log
   log <- dat %>%
     select(
@@ -140,7 +143,8 @@ ss_create_log_from_metadata <- function(
 
   # Format & Export ---------------------------------------------------------
   file_name <- paste(
-    station, format(as_date(deployment_date), "%Y-%m-%d"),
+    tolower(gsub(pattern = " ", "_", station)),
+    format(as_date(deployment_date), "%Y-%m-%d"),
     "log.csv", sep = "_"
   )
 

@@ -32,7 +32,7 @@ a google sheet. If \code{TRUE}, \code{path_metadata} is not required.}
 \item{station}{Station name.}
 
 \item{deployment_date}{Date of deployment as a character string in the format
-"YYYY-mm-dd"}
+"yyyy-mm-dd"}
 
 \item{to_title}{Logical argument indicating whether to convert the station
 name to title case. Default is \code{TRUE}. Set to \code{FALSE} for
