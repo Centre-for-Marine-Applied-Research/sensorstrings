@@ -67,7 +67,7 @@ ss_compile_hobo_ph_data <- function(path,
   # initialize list for storing the output
   hobo_dat <- list(NULL)
 
- # browser()
+  #browser()
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
@@ -107,7 +107,7 @@ ss_compile_hobo_ph_data <- function(path,
     hobo_i <- hobo_i %>%
       select(contains("Date"), contains("pH"), contains("Temp")) %>%
       rename(timestamp_ = 1) %>%
-      convert_timestamp_to_datetime(parse_orders = "mdY HMS")
+      convert_timestamp_to_datetime(parse_orders = c("mdY HMS", "Ymd HMS", "Ymd"))
 
     colnames(hobo_i) <- new_col_names$col_name
 
