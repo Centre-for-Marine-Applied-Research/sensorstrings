@@ -175,6 +175,14 @@ utils::globalVariables(
     "Time Correction (s)",
     "timestamp_utc_uncorrected",
 
-    "region"
+    "region",
+
+    # ss_model_mooring
+    "anchor_weight_kg",
+    "bottom_buoy_type",
+    "deployment_date",
+    "primary_buoy_type",
+    "secondary_buoy_type",
+    "vr2ar_lug_height_above_seafloor_m"
   )
 )
