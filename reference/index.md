@@ -122,6 +122,9 @@
 - [`ss_leaflet_station_map()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_leaflet_station_map.md)
   : Interactive map of station location
 
+- [`ss_model_mooring()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_model_mooring.md)
+  : Model sensor string
+
 - [`ss_open_trimdates_app()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_open_trimdates_app.md)
   : Open interactive plot
 

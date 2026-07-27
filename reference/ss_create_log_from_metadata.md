@@ -48,7 +48,7 @@ ss_create_log_from_metadata(
 
 - deployment_date:
 
-  Date of deployment as a character string in the format "YYYY-mm-dd"
+  Date of deployment as a character string in the format "yyyy-mm-dd"
 
 - to_title:
 
