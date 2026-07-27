@@ -58,7 +58,7 @@ log <- read.csv(
 )
 
 st_location <- data.frame(
-  station = tools::toTitleCase(station),
+  station = tools::toTitleCase(gsub("_", " ", station)),
   latitude = unique(log$deployment_latitude),
   longitude = unique(log$deployment_longitude),
   retrieval_latitude = unique(log$retrieval_latitude),
