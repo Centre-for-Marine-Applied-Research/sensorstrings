@@ -26,8 +26,6 @@ Imports:
     tidyr,
     utils,
     viridis
-Remotes: 
-    https://github.com/https://github.com/dankelley/mooring
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -35,3 +33,5 @@ Encoding: UTF-8
 LazyData: true
 URL: https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/
 Config/roxygen2/version: 8.0.0
+Remotes:  
+    dankelley/mooring
