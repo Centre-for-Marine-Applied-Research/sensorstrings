@@ -14,7 +14,7 @@ Imports:
     janitor,
     leaflet,
     lubridate,
-    mooring,
+    mooring (>= 0.1.11),
     plotly,
     purrr,
     RColorBrewer,
