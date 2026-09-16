@@ -32,16 +32,26 @@ set_up_compile <- function(path,
                            deployment_dates,
                            sensor_make) {
 
-  if(sensor_make == "ph") sensor_make <- "hobo ph"
+  if("ph" %in% sensor_make) sensor_make <- "hobo ph"
 
   # make sure columns of sn_table are named correctly
   # log_sensor is the Logger_Model from the deployment log
   names(sn_table) <- c("log_sensor", "sensor_serial_number", "depth")
+
+ # browser()
+
   sn_table <- sn_table %>%
-    filter(str_detect(log_sensor, regex(sensor_make, ignore_case = TRUE))) %>%
-    # this standardizes the sensor_type column,
-    ## e.g., replaces "HOBO PRO V2" with "hobo"
-    mutate(sensor_type = tolower(sensor_make))
+    filter(
+      str_detect(log_sensor, regex(paste0(sensor_make, collapse = "|"),
+                                   ignore_case = TRUE))
+    ) %>%
+    # this standardizes the sensor_type column, e.g., replaces "HOBO PRO V2"
+    # with "hobo"
+    mutate(
+      sensor_type = if_else(
+        str_detect(log_sensor, "VR2AR"), tolower(log_sensor),
+        tolower(sensor_make[1]))
+    )
 
   # extract the deployment start and end dates from deployment_dates
   dates <- extract_deployment_dates(deployment_dates)
@@ -53,8 +63,8 @@ set_up_compile <- function(path,
   # name of folder (case-insensitive)
 
   # vr2 folders have strange names because of changes in sensor manufacturer and software
-  if (sensor_make == "VR2AR") sensor_make <- "vemco"
-  if (sensor_make == "VR2AR-69") sensor_make <- "vdat"
+  if ("VR2AR" %in% sensor_make | "VR2ARX" %in% sensor_make) sensor_make <- "vemco"
+  if ("VR2AR-69" %in% sensor_make | "VR2ARX-69" %in% sensor_make) sensor_make <- "vdat"
 
   # if file path already includes file names
   if (all(utils::file_test("-f", path))) {

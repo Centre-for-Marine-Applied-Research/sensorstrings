@@ -138,7 +138,10 @@ ss_compile_deployment_data <- function(
 
   # vemco .vdat -------------------------------------------------------------------
   sn_vdat <- sn_table %>%
-    filter(str_detect(log_sensor, regex("VR2AR-69", ignore_case = TRUE)))
+    filter(
+      str_detect(log_sensor, regex("VR2AR-69|VR2ARX-69", ignore_case = TRUE)
+      )
+    )
 
   if (nrow(sn_vdat) > 0) {
     vdat <- ss_compile_vdat_data(

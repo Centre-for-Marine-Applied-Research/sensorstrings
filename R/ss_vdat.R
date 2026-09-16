@@ -79,7 +79,7 @@ ss_compile_vdat_data <- function(
     path = path,
     sn_table = sn_table,
     deployment_dates = deployment_dates,
-    sensor_make = "VR2AR-69"
+    sensor_make = c("VR2AR-69", "VR2ARX-69")
   )
 
   path <- setup$path

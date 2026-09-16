@@ -91,7 +91,7 @@ ss_compile_vemco_data <- function(path,
     path = path,
     sn_table = sn_table,
     deployment_dates = deployment_dates,
-    sensor_make = "VR2AR"
+    sensor_make = c("VR2AR", "VR2ARX")
   )
 
   path <- setup$path
