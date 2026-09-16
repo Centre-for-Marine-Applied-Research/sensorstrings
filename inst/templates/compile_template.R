@@ -69,7 +69,7 @@ st_location <- data.frame(
 ss_leaflet_station_map(st_location)
 
 ss_check_station_radius(st_location)
-ss_check_station_in_ocean(st_location) # slow because reads in shape file
+#ss_check_station_in_ocean(st_location) # slow because reads in shape file
 ss_check_station_drift(st_location, return_drift = TRUE) # need retrieval coords
 
 # SECTION 4: Identify Trim Dates --------------------------------------------------------------
