@@ -2,9 +2,17 @@ Type: Package
 Package: sensorstrings
 Title: Compile, Format, and Visualize Sensor String Data
 Version: 1.5.5
-Authors@R: person("Danielle", "Dempsey", email = "ddempsey@perennia.ca", role = c("aut", "cre"))
-Description: Facilitates wrangling and analysis of Water Quality data collected as part of the Centre for Marine Applied Research's Coastal Monitoring Program.
+Authors@R: 
+    person("Danielle", "Dempsey", , "ddempsey@perennia.ca", role = c("aut", "cre"))
+Description: Facilitates wrangling and analysis of Water Quality data
+    collected as part of the Centre for Marine Applied Research's Coastal
+    Monitoring Program.
 License: GPL (>= 3)
+URL: https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/
+BugReports: 
+    https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/issues
+Depends: 
+    R (>= 4.3)
 Imports:
     data.table,
     dplyr (>= 1.0.4),
@@ -30,13 +38,9 @@ Imports:
     viridis
 Suggests: 
     testthat (>= 3.0.0)
+Remotes: 
+    dankelley/mooring
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-URL: https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/
-Config/roxygen2/version: 8.0.0
-Remotes: 
-    dankelley/mooring
-Depends: 
-    R (>= 4.3)
-BugReports: https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/issues
