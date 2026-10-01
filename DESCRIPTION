@@ -7,23 +7,25 @@ Description: Facilitates wrangling and analysis of Water Quality data collected 
 License: GPL (>= 3)
 Imports:
     data.table,
-    dplyr,
+    dplyr (>= 1.0.4),
     ggplot2,
     ggpubr,
     googlesheets4,
+    grDevices,
     janitor,
     leaflet,
     lubridate,
     mooring (>= 0.1.11),
     plotly,
-    purrr,
+    purrr (>= 1.0.0),
     RColorBrewer,
     readxl,
     rlang,
     sf,
     shiny,
+    stats,
     stringr,
-    tidyr,
+    tidyr (>= 1.0.0),
     utils,
     viridis
 Suggests: 
@@ -33,5 +35,8 @@ Encoding: UTF-8
 LazyData: true
 URL: https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/
 Config/roxygen2/version: 8.0.0
-Remotes:  
+Remotes: 
     dankelley/mooring
+Depends: 
+    R (>= 4.3)
+BugReports: https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/issues
