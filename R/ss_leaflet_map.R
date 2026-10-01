@@ -13,7 +13,7 @@
 ss_leaflet_station_map <- function(dat) {
 
   leaflet(dat) %>%
-    addProviderTiles("CartoDB.Positron") %>%
+    addProviderTiles("Esri.OceanBasemap") %>%
     addCircleMarkers(
       data = dat,
       lng = ~longitude, lat = ~latitude, label = ~station,
