@@ -84,7 +84,7 @@ ss_read_log <- function(
 
     path <- paste0(path, "/", folder)
 
-    dat_files <- list.files(path, all.files = FALSE, pattern = "*xlsx|*xls|*csv")
+    dat_files <- list.files(path, all.files = FALSE, pattern = "\\.xlsx$|\\.xls$|\\.csv$")
 
     # remove files that start with "~"
     if (any(substring(dat_files, 1, 1) == "~")) {

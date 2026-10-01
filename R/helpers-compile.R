@@ -85,14 +85,14 @@ set_up_compile <- function(path,
     path <- paste0(path, "/", folder)
 
     # list files in the sensor folder
-    dat_files <- list.files(path, all.files = FALSE, pattern = "*csv")
+    dat_files <- list.files(path, all.files = FALSE, pattern = "\\.csv$")
 
     if (length(dat_files) == 0) {
       stop(paste0("Can't find csv files in ", path))
     }
 
     # check for excel files
-    excel_files <- list.files(path, all.files = FALSE, pattern = "*xlsx|xls")
+    excel_files <- list.files(path, all.files = FALSE, pattern = "\\.xlsx$|\\.xls$")
 
     dat_files <- paste0(path, "/", dat_files)
   }
