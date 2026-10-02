@@ -1,9 +1,14 @@
 # extract_file_extension()
 test_that("extract_file_extension() identifies correct extension", {
   expect_equal(extract_file_extension("fake_file.csv"), "csv")
+  expect_equal(extract_file_extension("fake.file.csv"), "csv")
   expect_equal(extract_file_extension("folder/fake_file.xlsx"), "xlsx")
-  expect_message(extract_file_extension("folder/fake_file"))
+  expect_equal(extract_file_extension("folder/fake_file"), "")
   expect_error(extract_file_extension(NULL))
+
+  # vectorized
+  expect_equal(
+    extract_file_extension(c("a.csv", "b.XLSX", "noext")), c("csv", "xlsx", ""))
 })
 
 # ss_coords_from_ddm_to_dd()

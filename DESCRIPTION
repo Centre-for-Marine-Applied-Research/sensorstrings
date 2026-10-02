@@ -34,6 +34,7 @@ Imports:
     stats,
     stringr,
     tidyr (>= 1.0.0),
+    tools,
     utils,
     viridis
 Suggests: 

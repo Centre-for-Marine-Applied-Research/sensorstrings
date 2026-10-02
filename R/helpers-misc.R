@@ -6,23 +6,12 @@
 #' @param file_input Character string of a file name or path. Must only include
 #'   one ".", which is used as the separator.
 #'
-#' @importFrom tidyr separate
+#' @importFrom tools file_ext
 
 extract_file_extension <- function(file_input) {
 
-  if(length(file_input) == 0) {
-    stop(file_input, " must not be NULL.")
-  }
-
-  extension <- file_input %>%
-    data.frame() %>%
-    separate(col = 1, into = c(NA, NA, "EXT"), sep = "\\.", fill = "left")
-
-  extension <- extension$EXT
-
-  if(file_input == extension) {
-    message("no extension found in file ", file_input)
-  } else extension
+  if (length(file_input) == 0) stop("`file_input` must not be empty.")
+  tolower(tools::file_ext(file_input))
 
 }
 
