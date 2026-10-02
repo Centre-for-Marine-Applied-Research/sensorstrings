@@ -36,6 +36,7 @@ test_that("ss_compile_vemco_data() returns correct classes", {
   expect_equal(class(vem_all$sensor_depth_at_low_tide_m), "numeric")
   expect_equal(class(vem_all$sensor_depth_measured_m), "numeric")
   expect_equal(class(vem_all$temperature_degree_c), "numeric")
+  expect_equal(class(vem_all$tilt_degree), "numeric")
 })
 
 test_that("ss_compile_vemco_data() reads in all observations", {
@@ -43,12 +44,18 @@ test_that("ss_compile_vemco_data() reads in all observations", {
   expect_equal(nrow(vem_all2), 17)
   expect_equal(nrow(vem_trim), 16)
   expect_equal(nrow(vem_trim2), 15)
+  expect_equal(nrow(vem_no_tilt), 15)
 })
 
 test_that("ss_compile_vemco_data() fixes degree symbol for UTF-8 and ANSI encoding", {
   expect_true("temperature_degree_c" %in% colnames(vem_trim))
   expect_true("temperature_degree_c" %in% colnames(vem_trim2))
 })
+
+test_that("ss_compile_vemco_data() does not add a tilt_degree column if there is no tilt data", {
+  expect_false("tilt_degree" %in% colnames(vem_no_tilt))
+})
+
 
 test_that("ss_compile_vemco_data() returns Error and Warnings", {
   expect_error(
@@ -67,4 +74,7 @@ test_that("ss_compile_vemco_data() returns Error and Warnings", {
     )
   )
 })
+
+
+
 

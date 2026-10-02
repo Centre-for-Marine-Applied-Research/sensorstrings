@@ -199,6 +199,12 @@ vem_trim <- ss_compile_vemco_data(
   trim = TRUE
 )
 
+vem_no_tilt <- ss_compile_vemco_data(
+  path = file.path(path, "vemco_no_tilt"),
+  deployment_dates = deployment_dates,
+  sn_table = sn_vem
+)
+
 # make sure UTF-8 encoding works too
 path_vem2 <- system.file("testdata/test7", package = "sensorstrings")
 

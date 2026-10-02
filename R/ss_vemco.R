@@ -165,14 +165,14 @@ ss_compile_vemco_data <- function(path,
 
     if ("Tilt angle" %in% vars_desc) {
       tilt_var <- "Tilt angle"
-    }
+    } else tilt_var <- NULL
 
 
     if ("Date and Time (UTC)" %in% dat_colnames & "Date/Time" %in% dat_colnames) {
       warning("There are two datetime columns in the Vemco data")
     }
 
-    vars <- c(depth_var, temperature_var, tilt_var)
+    vars <- na.omit(c(depth_var, temperature_var, tilt_var))
 
     # extract sensor depth
     dat_i <- dat_i %>%
