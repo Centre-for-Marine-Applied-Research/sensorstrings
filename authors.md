@@ -6,6 +6,9 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/blob/main/DESCRIPTION)
+
 Dempsey D (2026). *sensorstrings: Compile, Format, and Visualize Sensor
 String Data*. R package version 1.5.5,
 <https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/>.
