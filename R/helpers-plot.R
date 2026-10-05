@@ -284,25 +284,26 @@ filter_dat_to_plot <- function(
 
   filter_to <- match.arg(filter_to)
 
+  ts_col <- colnames(dat_app)[grep("timestamp", colnames(dat_app))]
+  dat <- rename(dat, timestamp_ = contains("timestamp"))
+
   if (filter_to == "start") {
     dat <- dat %>%
       filter(
-        timestamp_utc <=
-          (na.omit(min(dat$timestamp_utc)) %m+% lubridate::period(period))
+        timestamp_ <=
+          (na.omit(min(dat$timestamp_)) %m+% lubridate::period(period))
       )
   }
 
   if (filter_to == "end") {
     dat <- dat %>%
       filter(
-        timestamp_utc >=
-          (na.omit(max(dat$timestamp_utc)) %m-% lubridate::period(period))
+        timestamp_ >=
+          (na.omit(max(dat$timestamp_)) %m-% lubridate::period(period))
       )
   }
 
   if (filter_to == "custom") {
-    # assert_that(is.POSIXct(custom_start))
-    # assert_that(is.POSIXct(custom_end))
     if(!is.POSIXct(custom_start)) {
       stop("'custom_start' must be of type 'POSIXct', not ", class(custom_start))
     }
@@ -312,9 +313,10 @@ filter_dat_to_plot <- function(
 
     dat <- dat %>%
       filter(
-        timestamp_utc >= custom_start & timestamp_utc <= custom_end
+        timestamp_ >= custom_start & timestamp_ <= custom_end
       )
   }
 
-  dat
+  dat |>
+    rename(!!sym(ts_col) := timestamp_)
 }

@@ -113,7 +113,7 @@ ss_plot_variables <- function(
 
   dat <- dat %>%
     ss_convert_depth_to_ordered_factor() |>
-    rename(Date = contains("timestamp_"))
+    rename(timestamp_ = contains("timestamp"))
 
   # Common plot elements ----------------------------------------------------
   #  x-axis
@@ -124,11 +124,11 @@ ss_plot_variables <- function(
   if(!is.null(date_labels_format)) axis_breaks$date_labels_format <- date_labels_format
 
   x_axis_date <- scale_x_datetime(
-    #name = "Date",
+    name = "Date",
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,     # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$Date), max(dat$Date))
+    limits = c(min(dat$timestamp_), max(dat$timestamp_))
   )
 
   # theme
@@ -224,7 +224,7 @@ ss_plot_variables <- function(
 
     # plot var.i
     plot_i <- ggplot(
-      dat_i, aes(x = timestamp_utc, y = value, color = sensor_depth_at_low_tide_m)
+      dat_i, aes(x = timestamp_, y = value, color = sensor_depth_at_low_tide_m)
     ) +
       geom_point(size = 0.25, alpha = alpha) +
       scale_y_continuous(name = y_lab, limits = y_limits) +
@@ -243,8 +243,7 @@ ss_plot_variables <- function(
   # arrange and export
   ggarrange(
     plotlist = figs,
-    ncol = 1, common.legend = TRUE, legend = legend_position,
-    align = "v", heights = c(1, 1, 1, 1)
+    ncol = 1, common.legend = TRUE, legend = legend_position, align = "v"
   )
 
 }

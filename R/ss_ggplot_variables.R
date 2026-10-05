@@ -62,7 +62,7 @@ ss_ggplot_variables <- function(
   theme_set(theme_light())
 
   dat <- dat %>%
-    rename(Date = contains("timestamp_"))
+    rename(timestamp_ = contains("timestamp"))
 
   if (is.null(color_palette)) {
     color_palette <- ss_get_colour_palette(dat)
@@ -100,7 +100,7 @@ ss_ggplot_variables <- function(
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,    # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$Date), max(dat$Date))
+    limits = c(min(dat$timestamp_), max(dat$timestamp_))
   )
 
 #  format data -------------------------------------------------------------
@@ -149,10 +149,10 @@ ss_ggplot_variables <- function(
   p <- ggplot(
     dat,
     aes(
-      Date, value,
+     timestamp_, value,
       colour = !!sym(color_col),
       text = paste(
-        "date: ", Date, "\n",
+        "date: ", timestamp_, "\n",
         "value: ", value, "\n",
         "depth: ", sensor_depth_at_low_tide_m, "\n",
         "sensor_type: ", sensor_type, "\n",
