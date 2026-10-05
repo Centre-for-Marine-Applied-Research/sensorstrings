@@ -111,7 +111,9 @@ ss_plot_variables <- function(
       ss_create_variable_labels_no_newline()
   }
 
-  dat <- dat %>% ss_convert_depth_to_ordered_factor()
+  dat <- dat %>%
+    ss_convert_depth_to_ordered_factor() |>
+    rename(Date = contains("timestamp_"))
 
   # Common plot elements ----------------------------------------------------
   #  x-axis
@@ -126,13 +128,11 @@ ss_plot_variables <- function(
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,     # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$timestamp_utc),max(dat$timestamp_utc))
+    limits = c(min(dat$Date), max(dat$Date))
   )
 
   # theme
   string_theme <- theme(
-    #plot.title = element_text(face = "bold"),                # plot title format
-    #axis.title = element_text(size = 10),                    # axis titles size & color
     axis.title.x = element_blank(),
     axis.text = element_text(size = 9, colour = "black"),    # axis text size & color
     legend.title = element_text(size = 10) ,                 # legend title size

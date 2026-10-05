@@ -61,6 +61,9 @@ ss_ggplot_variables <- function(
     ) {
   theme_set(theme_light())
 
+  dat <- dat %>%
+    rename(Date = contains("timestamp_"))
+
   if (is.null(color_palette)) {
     color_palette <- ss_get_colour_palette(dat)
   }
@@ -97,12 +100,10 @@ ss_ggplot_variables <- function(
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,    # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$timestamp_utc),max(dat$timestamp_utc))
+    limits = c(min(dat$Date), max(dat$Date))
   )
 
 #  format data -------------------------------------------------------------
-
-  dat <- dat %>% rename(Date = contains("timestamp_"))
 
   if (!("variable" %in% colnames(dat))) {
     dat <- dat %>%
