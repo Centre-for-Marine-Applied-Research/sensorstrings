@@ -282,12 +282,7 @@ filter_dat_to_plot <- function(
     custom_start = NULL,
     custom_end = NULL) {
 
-  if(!(filter_to %in% c("start", "end", "custom"))) {
-    stop("argument << filter_to >> must be one of 'start', 'end', or 'custom'")
-  }
-
-  # assert_that(filter_to %in% c("start", "end", "custom"))
-  #dat <- dat %>% rename(timestamp_ = contains("timestamp_"))
+  filter_to <- match.arg(filter_to)
 
   if (filter_to == "start") {
     dat <- dat %>%

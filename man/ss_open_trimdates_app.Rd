@@ -20,7 +20,7 @@ sensor_depth_at_low_tide_m, sensor_type, sensor-serial number, and the
 variables to plot (e.g., temperature_degree_c).}
 
 \item{filter_to}{Shortcut for specifying where to filter \code{dat} before
-plotting. Options are "start", "end", or "custom".}
+plotting. Options are "start", "end", or "custom". Default is "start".}
 
 \item{period}{Character string that can be converted to a \code{lubridate}
 period. Default is \code{"2 days"}.}

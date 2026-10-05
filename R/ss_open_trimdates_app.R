@@ -6,7 +6,7 @@
 #'   variables to plot (e.g., temperature_degree_c).
 #'
 #' @param filter_to Shortcut for specifying where to filter \code{dat} before
-#'   plotting. Options are "start", "end", or "custom".
+#'   plotting. Options are "start", "end", or "custom". Default is "start".
 #'
 #' @param period Character string that can be converted to a \code{lubridate}
 #'   period. Default is \code{"2 days"}.
