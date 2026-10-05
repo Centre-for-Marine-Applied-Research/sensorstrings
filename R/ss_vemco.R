@@ -108,7 +108,6 @@ ss_compile_vemco_data <- function(path,
 
   # loop over each aM file
   for (i in seq_along(dat_files)) {
-    #file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
@@ -121,7 +120,7 @@ ss_compile_vemco_data <- function(path,
     date_tz <- extract_vemco_tz(dat_colnames)
 
     if (date_tz != "utc") {
-      message(paste0("Timestamp in file ", dat_files, "is in timezone: ", date_tz))
+      message(paste0("Timestamp in file ", file_i, "is in timezone: ", date_tz))
     }
 
     # serial number from data file
@@ -203,12 +202,12 @@ ss_compile_vemco_data <- function(path,
       convert_timestamp_to_datetime()
 
     # check there are more than 0 rows in dat
-    check_n_rows(dat_i, file_name = dat_files, trimmed = FALSE)
+    check_n_rows(dat_i, file_name = file_i, trimmed = FALSE)
 
     # trim to the dates in deployment_dates
     if (isTRUE(trim)) dat_i <- trim_data(dat_i, start_date, end_date)
 
-    check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
+    check_n_rows(dat_i, file_name = file_i, trimmed = trim)
 
     # find any duplicate timestamps
     bad_ts <- dat_i %>%
