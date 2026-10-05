@@ -63,10 +63,6 @@ ss_ggplot_variables <- function(
   dat <- dat %>%
     rename(timestamp_ = contains("timestamp"))
 
-  if (is.null(color_palette)) {
-    color_palette <- ss_get_colour_palette(dat)
-  }
-
   if (color_col == "sensor_serial_number") {
 
     if(isTRUE(convert_sn_to_factor)){
@@ -76,11 +72,17 @@ ss_ggplot_variables <- function(
 
     n_sensor_sn <- length(unique(dat$sensor_serial_number))
 
-    if(n_sensor_sn <= 8) {
-      color_palette <- brewer.pal(8, "Dark2")
-    } else {
-      color_palette <- colorRampPalette(brewer.pal(8, "Dark2"))(n_sensor_sn)
+    if (is.null(color_palette)){
+      if (n_sensor_sn <= 8) {
+        color_palette <- brewer.pal(8, "Dark2")
+      } else {
+        color_palette <- colorRampPalette(brewer.pal(8, "Dark2"))(n_sensor_sn)
+      }
     }
+  }
+
+  if (is.null(color_palette)) {
+    color_palette <- ss_get_colour_palette(dat)
   }
 
   scale_colour <- scale_colour_manual(
