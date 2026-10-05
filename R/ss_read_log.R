@@ -417,6 +417,10 @@ ss_parse_log <- function(
       config <- unique(log$configuration)
     } else config <- NA
 
+    if (length(config) > 1) {
+      warning("More than one configuration type entered in the Log.")
+    }
+
     if (!(config %in% config_options)) {
       warning("<< ", config, " >> is not an accepted sensor string configuration")
     }
@@ -428,9 +432,6 @@ ss_parse_log <- function(
       config <- "unknown"
     }
 
-    if (length(config) > 1) {
-      warning("More than one configuration type entered in the Log.")
-    }
   } else config <- NULL
 
   # return list of deployment info -------------------------------------------
