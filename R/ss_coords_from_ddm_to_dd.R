@@ -18,6 +18,10 @@
 #'   xx.xxxx, e.g., 45 21.651 or 64 2.063). These will be converted to decimal
 #'   degrees.
 #'
+#' @param west Logical argument indicating if the coordinates are in the Western
+#'   hemisphere. If \code{TRUE} (the default), the returned longitudes will have
+#'   a negative sign.
+#'
 #' @return Returns a vector of coordinates in decimal-degree format.
 #'
 #' @importFrom dplyr across mutate select
@@ -25,7 +29,7 @@
 #'
 #' @export
 
-ss_coords_from_ddm_to_dd <- function(coords_ddm) {
+ss_coords_from_ddm_to_dd <- function(coords_ddm, west = TRUE) {
 
   coords_out <- coords_ddm %>%
     data.frame(degree_decimal_minutes = .) %>%
@@ -38,5 +42,11 @@ ss_coords_from_ddm_to_dd <- function(coords_ddm) {
       decimal_degree = coord_deg + coord_dm / 60
     )
 
-  coords_out$decimal_degree
+  coords_out <- coords_out$decimal_degree
+
+  if(isTRUE(west)) {
+    coords_out[seq(2, length(coords_out), 2)] <- coords_out[seq(2, length(coords_out), 2)] * -1
+  }
+
+  coords_out
 }

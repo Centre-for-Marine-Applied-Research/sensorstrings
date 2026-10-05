@@ -4,12 +4,16 @@
 \alias{ss_coords_from_ddm_to_dd}
 \title{Convert coordinates from degree-minute-decimal to decimal degree}
 \usage{
-ss_coords_from_ddm_to_dd(coords_ddm)
+ss_coords_from_ddm_to_dd(coords_ddm, west = TRUE)
 }
 \arguments{
 \item{coords_ddm}{Vector of coordinate values in degree decimal minutes (xx
 xx.xxxx, e.g., 45 21.651 or 64 2.063). These will be converted to decimal
 degrees.}
+
+\item{west}{Logical argument indicating if the coordinates are in the Western
+hemisphere. If \code{TRUE} (the default), the returned longitudes will have
+a negative sign.}
 }
 \value{
 Returns a vector of coordinates in decimal-degree format.
