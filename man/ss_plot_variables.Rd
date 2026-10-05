@@ -39,7 +39,7 @@ more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
 \item{standard_do_ylims}{If \code{TRUE}, the y-limits for dissolved oxygen
-are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
+are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
 are set to the \code{ggplot} default. Alternatively, a vector giving custom
 y-limits for the dissolved oxygen panel.}
 

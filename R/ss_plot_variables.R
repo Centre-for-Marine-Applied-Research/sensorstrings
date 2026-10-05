@@ -21,7 +21,7 @@
 #' @param date_labels_format Format for the date labels. Default is YYYY-mm-dd.
 #'
 #' @param standard_do_ylims If \code{TRUE}, the y-limits for dissolved oxygen
-#'   are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
+#'   are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
 #'   are set to the \code{ggplot} default. Alternatively, a vector giving custom
 #'   y-limits for the dissolved oxygen panel.
 #'
@@ -170,7 +170,9 @@ ss_plot_variables <- function(
         "ph_ph",
         "chlorophyll_blue_ug_per_l",
         "chlorophyll_red_ug_per_l",
-        "sensor_depth_measured_m"))
+        "sensor_depth_measured_m",
+        "tilt_degree"
+        ))
     ) %>%
     arrange(variable)
   vars_to_plot <- vars_to_plot$variable
@@ -237,16 +239,6 @@ ss_plot_variables <- function(
 
 
   # RETURN TO GLOBAL ENV ----------------------------------------------------
-
-  # add plot title to the top plot (first variable in last variable in vars_to_plot)
-  #figs[[1]] <- figs[[1]] + labs(title = title)
-
-  # remove x-axis title from all except the bottom plot (last variable in vars_to_plot)
-  # if(n_vars > 1){
-  #   for(j in 1:(n_vars - 1)) {
-  #     figs[[j]] <- figs[[j]] + theme(axis.title.x = element_blank())
-  #   }
-  # }
 
   # arrange and export
   ggarrange(
