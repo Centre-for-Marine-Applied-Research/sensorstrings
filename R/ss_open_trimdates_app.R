@@ -36,7 +36,7 @@ ss_open_trimdates_app <- function(
     custom_start = NULL,
     custom_end = NULL,
     point_size = 2) {
-  # Define UI for application that draws a histogram
+
   ui <- fluidPage(
     plotlyOutput("vars_plot", height = "600px"),
     tableOutput("info")
@@ -44,7 +44,6 @@ ss_open_trimdates_app <- function(
 
   ts_save <- data.frame(ts = NA_character_)
 
-  # Define server logic required to draw a histogram
   server <- function(input, output) {
     output$vars_plot <- renderPlotly({
       dat <- dat %>%
