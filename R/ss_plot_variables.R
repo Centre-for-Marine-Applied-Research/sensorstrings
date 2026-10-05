@@ -55,7 +55,7 @@
 
 #' @importFrom dplyr any_of filter
 #' @importFrom ggpubr ggarrange
-#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_set theme_light
+#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom viridis viridis
 #' @export
 
@@ -80,8 +80,6 @@ ss_plot_variables <- function(
     legend_position = "right"
 ){
 
-  theme_set(theme_light())
-
   dat <- dat %>% select(-contains("flag"))
 
   if (!("variable" %in% colnames(dat))) {
@@ -93,7 +91,8 @@ ss_plot_variables <- function(
       "ph_ph",
       "salinity_psu",
       "sensor_depth_measured_m",
-      "temperature_degree_c"
+      "temperature_degree_c",
+      "tilt_degree"
     )
 
     dat <- dat %>%
@@ -230,6 +229,7 @@ ss_plot_variables <- function(
       scale_y_continuous(name = y_lab, limits = y_limits) +
       string_color_scale +
       x_axis_date +
+      theme_light() +
       string_theme +
       legend_size
 

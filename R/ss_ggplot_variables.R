@@ -37,7 +37,7 @@
 #'   coloured by sensor depth.
 #'
 #' @importFrom dplyr %>% contains select mutate
-#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_set theme_light
+#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom grDevices colorRampPalette
 #' @importFrom lubridate as_datetime
 #' @importFrom RColorBrewer brewer.pal
@@ -59,7 +59,6 @@ ss_ggplot_variables <- function(
     point_size = 0.25,
     convert_sn_to_factor = TRUE
     ) {
-  theme_set(theme_light())
 
   dat <- dat %>%
     rename(timestamp_ = contains("timestamp"))
@@ -166,6 +165,7 @@ ss_ggplot_variables <- function(
     facet_wrap(
       ~variable_label, scales = "free_y", ncol = 1, strip.position = "left"
       ) +
+    theme_light() +
     theme(
       axis.title.y = element_blank(),
       strip.placement = "outside",
