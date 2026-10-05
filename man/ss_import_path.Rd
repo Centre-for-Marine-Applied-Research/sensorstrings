@@ -4,7 +4,7 @@
 \alias{ss_import_path}
 \title{Generate file path to import raw sensor string deployment data}
 \usage{
-ss_import_path(station, depl_date, prov = "ns")
+ss_import_path(station, depl_date, prov = "ns", path = NULL)
 }
 \arguments{
 \item{station}{Character string of the station name. Will be converted to
@@ -14,8 +14,12 @@ lower case, and all spaces will be replaced with an underscore.}
 yyyy-mm-dd.}
 
 \item{prov}{Character string indicating which province the deployment is
-from. Options are "ns" (the default) and "nb". This dicates the file path
+from. Options are "ns" (the default) and "nb". This dictates the file path
 for where the data will be imported from on the CMAR R drive.}
+
+\item{path}{Partial path to where data is imported from. The final path
+is path/station/station_depl_date. If \code{NULL} (the default), this will
+be a folder on the CMAR shared drive, dictated by the value of \code{prov}.}
 }
 \value{
 The file path for importing raw deployment data.

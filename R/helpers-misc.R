@@ -22,8 +22,12 @@ extract_file_extension <- function(file_input) {
 #'   include columns \code{county}, \code{station}, and \code{deployment_range}.
 #'
 #' @param prov Character string indicating which province the deployment is
-#'   from. Options are "ns" (the default) and "nb". This dicates the file path
+#'   from. Options are "ns" (the default) and "nb". This dictates the file path
 #'   for where the data will be exported on the CMAR R drive.
+#'
+#' @param path File path where \code{sub-folder} is created. If \code{NULL}
+#'   (the default), this is a folder on the CMAR shared drive, dictated by
+#'   the value of \code{prov}.
 #'
 #' @param sub_folder Character string of the sub-folder name (inside county
 #'   folder) where \code{dat} should be exported. Default is \code{sub-folder =
@@ -40,10 +44,13 @@ extract_file_extension <- function(file_input) {
 #'
 #' @export
 
-ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
+ss_export_path <- function(
+    dat, prov = "ns", path = NULL, sub_folder = NULL, ext = "rds") {
 
-  if (prov == "ns")  path <- "R:/data_branches/water_quality/processed_data/deployment_data"
-  if (prov == "nb") path <- "R:/data_branches/nb_water_quality/processed_data/deployment_data"
+  if(is.null(path)) {
+    if (prov == "ns")  path <- file.path("R:/data_branches/water_quality/processed_data/deployment_data")
+    if (prov == "nb") path <- file.path("R:/data_branches/nb_water_quality/processed_data/deployment_data")
+  }
 
   if (is.null(sub_folder)) sub_folder <- "new"
 
@@ -62,9 +69,10 @@ ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
 
   if(prov == "ns") {
     path <- file.path(paste(path, info$county, sub_folder, sep = "/"))
-  }
-  if(prov == "nb") {
+  } else if(prov == "nb") {
     path <- file.path(paste(path, info$region, sub_folder, sep = "/"))
+  } else {
+    path <- file.path(paste(path, sub_folder, sep = "/"))
   }
 
   if (isFALSE(dir.exists(path))) {
@@ -80,7 +88,7 @@ ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
 #' Raw data must be saved in a folder path/station/station_yyyy-mm-dd.
 #'
 #' @param prov Character string indicating which province the deployment is
-#'   from. Options are "ns" (the default) and "nb". This dicates the file path
+#'   from. Options are "ns" (the default) and "nb". This dictates the file path
 #'   for where the data will be imported from on the CMAR R drive.
 #'
 #' @param station Character string of the station name. Will be converted to
@@ -89,15 +97,22 @@ ss_export_path <- function(dat, prov = "ns", sub_folder = NULL, ext = "rds") {
 #' @param depl_date Character string of the deployment data in the order
 #'   yyyy-mm-dd.
 #'
+#' @param path Partial path to where data is imported from. The final path
+#'   is path/station/station_depl_date. If \code{NULL} (the default), this will
+#'   be a folder on the CMAR shared drive, dictated by the value of \code{prov}.
+#'
 #' @return The file path for importing raw deployment data.
 #'
 #' @importFrom stringr str_replace_all
 #'
 #' @export
 
-ss_import_path <- function(station, depl_date, prov = "ns") {
-  if (prov == "ns") path <- "R:/data_branches/water_quality/station_folders"
-  if (prov == "nb") path <- "R:/data_branches/nb_water_quality/station_folders"
+ss_import_path <- function(station, depl_date, prov = "ns", path = NULL) {
+
+  if(is.null(path)) {
+    if (prov == "ns") path <- file.path("R:/data_branches/water_quality/station_folders")
+    if (prov == "nb") path <- file.path("R:/data_branches/nb_water_quality/station_folders")
+  }
 
   station <- tolower(station)
   station <- str_replace_all(station, " ", "_")

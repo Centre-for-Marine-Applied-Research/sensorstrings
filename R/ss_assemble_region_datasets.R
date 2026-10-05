@@ -4,6 +4,10 @@
 #'   assembled is from. Options are "ns" (the default) and "nb". This dictates
 #'   the file path for where the data will be exported on the CMAR R drive.
 #'
+#' @param path File path to \code{folder}. If \code{NULL} (the default), this
+#'   will be a folder on the CMAR shared drive, dictated by the value of
+#'   \code{prov}.
+#'
 #' @param folder Name of the folder where the rds files are saved.
 #'
 #' @return Returns a data.frame with data from all deployments in folder.
@@ -14,15 +18,11 @@
 #' @export
 #'
 
-ss_assemble_region_data <- function(prov = "ns", folder) {
+ss_assemble_region_data <- function(prov = "ns", path = NULL, folder) {
 
-  if(prov == "ns") {
-    path <- file.path(
-      "R:/data_branches/water_quality/processed_data/deployment_data")
-  }
-  if(prov == "nb") {
-    path <- file.path(
-      "R:/data_branches/nb_water_quality/processed_data/deployment_data")
+  if(is.null(path)) {
+    if(prov == "ns") path <- file.path("R:/data_branches/water_quality/processed_data/deployment_data")
+    if(prov == "nb") path <- file.path("R:/data_branches/nb_water_quality/processed_data/deployment_data")
   }
 
   # column order ------------------------------------------------------------
