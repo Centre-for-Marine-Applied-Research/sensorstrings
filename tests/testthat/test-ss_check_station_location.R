@@ -1,6 +1,8 @@
 
 test_that("ss_check_station_radius() returns correct result", {
 
+  skip_if_offline()
+
   expect_true(
     ss_check_station_radius(
       log_coords = data.frame(
