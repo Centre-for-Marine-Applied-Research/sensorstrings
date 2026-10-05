@@ -132,8 +132,8 @@ ss_read_nsdfa_metadata <- function(path) {
           (Depl_Date == as_date("2020-07-16") | Depl_Date == as_date("2020-11-29"))
         ~ "Long Island 1",
         Station_Name == "Sissiboo Dock" ~ "Sissiboo",
-        Station_Name == "The Basin South" & Depl_Date == as_date("2021-09-08") |
-          Depl_Date == as_date("2022-09-12") ~ "The Basin",
+        Station_Name == "The Basin South" & (Depl_Date == as_date("2021-09-08") |
+          Depl_Date == as_date("2022-09-12")) ~ "The Basin",
         Waterbody == "Salt Bay" & Station_Name == "Salt Bay" ~ "Big Sluice",
         Waterbody == "Strait of Canso" & Station_Name == "Loch" ~ "Canso Lock",
         Waterbody == "Hourglass Lake" &
