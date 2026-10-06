@@ -25,8 +25,9 @@ drive in folder << station >> / << station_depl_date >>. Must be connected
 to the Perennia VPN.}
 }
 \value{
-Creates an R file for compiling and trimming data for the specified
-  deployment. A message indicates if template file was successfully copied.
+Invisibly returns the path to the template file. Creates the file if
+  it doesn't already exist. Otherwise, returns a Warning and leaves the file
+  unchanged.
 }
 \description{
 Create file to compile and trim sensor string data

@@ -12,8 +12,9 @@
 #'   drive in folder << station >> / << station_depl_date >>. Must be connected
 #'   to the Perennia VPN.
 #'
-#' @return Creates an R file for compiling and trimming data for the specified
-#'   deployment. A message indicates if template file was successfully copied.
+#' @return Invisibly returns the path to the template file. Creates the file if
+#'   it doesn't already exist. Otherwise, returns a Warning and leaves the file
+#'   unchanged.
 #'
 #' @importFrom utils packageVersion
 #'
@@ -29,11 +30,10 @@ ss_create_template <- function(
 
   # check date in correct format
   if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
-    stop("'depl_date' in incorrect format. Should be yyyy-mm-dd.")
+    stop("'depl_date' in incorrect format. Must be yyyy-mm-dd.")
   }
 
   # TODO compare station to list in metadata tracking or cmpr
-
   station <- tolower(gsub(" ", "_", station))
 
   if(is.null(path)) {
@@ -91,8 +91,10 @@ ss_create_template <- function(
     message("Template created in ", path)
   } else {
     warning(
-      "New template was not generated.\nFile already exists: ", path
+      "New template was not generated.\nFile already exists: ", new_file
     )
   }
+
+  invisible(new_file)
 
 }

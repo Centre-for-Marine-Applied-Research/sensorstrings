@@ -159,6 +159,7 @@ ss_create_log_from_metadata <- function(
   )
 
   message(file_name, " exported to ", path_export)
+  invisible(path_export)
 }
 
 

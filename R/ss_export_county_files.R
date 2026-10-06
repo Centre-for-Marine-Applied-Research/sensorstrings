@@ -94,4 +94,5 @@ ss_export_county_files <- function(
 
   }
 
+  invisible(output_rds)
 }
