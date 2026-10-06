@@ -5,8 +5,6 @@
 #'
 #' @param dat Water Quality data in long or wide format.
 #'
-#' @param title Title for plot. Default is no title.
-#'
 #' @param color_palette  Color palette of hex colors onto which
 #'   \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
 #'   more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
@@ -61,7 +59,6 @@
 
 ss_plot_variables <- function(
     dat,
-    title = "",
     color_palette = NULL,
 
     date_breaks_major = NULL,
@@ -88,6 +85,7 @@ ss_plot_variables <- function(
       "chlorophyll_red_ug_per_l",
       "dissolved_oxygen_percent_saturation",
       "dissolved_oxygen_mg_per_l",
+      "dissolved_oxygen_uncorrected_mg_per_l",
       "ph_ph",
       "salinity_psu",
       "sensor_depth_measured_m",

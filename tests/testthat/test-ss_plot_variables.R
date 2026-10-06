@@ -135,7 +135,7 @@ test_that("ss_plot_variables() plots tilt_degree", {
 })
 
 test_that("ss_plot_variables() plots dissolved_oxygen_uncorrected_mg_per_l from wide data", {
-  skip("Known bug SS-12: the wide path drops dissolved_oxygen_uncorrected_mg_per_l")
+ # skip("Known bug SS-12: the wide path drops dissolved_oxygen_uncorrected_mg_per_l")
 
   dat <- dat_wide %>% mutate(dissolved_oxygen_uncorrected_mg_per_l = 9)
   expect_length(plot_panels(dat), 3)

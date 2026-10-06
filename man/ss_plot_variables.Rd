@@ -6,7 +6,6 @@
 \usage{
 ss_plot_variables(
   dat,
-  title = "",
   color_palette = NULL,
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
@@ -22,8 +21,6 @@ ss_plot_variables(
 }
 \arguments{
 \item{dat}{Water Quality data in long or wide format.}
-
-\item{title}{Title for plot. Default is no title.}
 
 \item{color_palette}{Color palette of hex colors onto which
 \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
