@@ -150,7 +150,7 @@ ss_model_mooring <- function(
   ss[[j + 1]] <- float_type
   ss[["waterDepth"]] <- sounding_m
 
-  m <- do.call(mooring, ss)
+  m <- do.call(mooring::mooring, ss)
 
   m
 }

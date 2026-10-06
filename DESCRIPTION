@@ -17,7 +17,6 @@ Imports:
     data.table,
     dplyr (>= 1.0.4),
     ggplot2,
-    ggpubr,
     googlesheets4,
     grDevices,
     janitor,
