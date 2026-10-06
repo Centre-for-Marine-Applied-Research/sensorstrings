@@ -61,6 +61,3 @@ expect_renders <- function(p) {
   expect_no_error(print(p))
 }
 
-# Tests sometimes don't work if this is only in the test-file
-dat_app <- make_wq_wide(n_days = 10)
-
