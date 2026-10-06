@@ -154,17 +154,3 @@ ss_model_mooring <- function(
 
   m
 }
-
-# m <- model_mooring(station, depl_date)
-#
-# plot(m, fancy = TRUE)
-#
-# msk <- m |>
-#   segmentize(by = 100)
-#
-# msk <- msk |>
-#   knockdown(u = 0.5)
-# plot(msk, fancy = TRUE)
-#
-#
-# plot(m, fancy = TRUE, showDepths = TRUE)

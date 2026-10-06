@@ -52,7 +52,7 @@ ss_open_trimdates_app <- function(
           custom_end = custom_end
         )
 
-      p <- ss_ggplot_variables(dat) + geom_point(size = point_size)
+      p <- ss_ggplot_variables(dat, point_size = point_size)
 
       plotly::ggplotly(p, source = "plot1", tooltip = "text")
     })

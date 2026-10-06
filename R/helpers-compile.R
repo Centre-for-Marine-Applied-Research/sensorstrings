@@ -38,8 +38,6 @@ set_up_compile <- function(path,
   # log_sensor is the Logger_Model from the deployment log
   names(sn_table) <- c("log_sensor", "sensor_serial_number", "depth")
 
- # browser()
-
   sn_table <- sn_table %>%
     filter(
       str_detect(log_sensor, regex(paste0(sensor_make, collapse = "|"),
@@ -454,23 +452,6 @@ make_column_names <- function(unit_table) {
       ),
       col_name = paste0(variable_label, units)
     )
-
-    #   variable = str_replace(
-    #     variable,
-    #     pattern = "Date Time|Date-Time", replacement = "timestamp_"
-    #   ),
-    #   variable = str_replace(
-    #     variable,
-    #     pattern = "DO conc", replacement = "dissolved_oxygen_uncorrected_"
-    #   ),
-    #   variable = str_replace(
-    #     variable,
-    #     # change this to EXACTLY Temp with regex
-    #     pattern = regex("^Temp$", ignore_case = FALSE),
-    #     replacement = "temperature_"
-    #   ),
-    #   col_name = glue("{variable}{units}")
-    # )
 
   # make ordered factor so rows will always be in this order
   ## timestamp, dissolved oxygen, ph, temperature

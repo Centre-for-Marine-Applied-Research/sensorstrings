@@ -67,7 +67,6 @@ ss_compile_hobo_ph_data <- function(path,
   # initialize list for storing the output
   hobo_dat <- list(NULL)
 
-  #browser()
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
@@ -89,7 +88,6 @@ ss_compile_hobo_ph_data <- function(path,
 
     tz_i <- filter(hobo_units, str_detect(variable, pattern = "Date"))
 
-    #browser()
     # is this file in the sn_table
     if (!(sn_i %in% sn_table$sensor_serial_number)) {
       stop(paste0("Serial number ", sn_i[1], " does not match any serial numbers in sn_table"))

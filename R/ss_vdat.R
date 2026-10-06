@@ -17,9 +17,6 @@
 #'
 #' @export
 
-# path <- "C:/Users/Danielle Dempsey/Desktop/RProjects/packages/sensorstrings/inst/testdata/vr2ar"
-# file_name <- "VR2AR-69_555438.csv"
-
 ss_read_vdat_data <- function(path, file_name) {
 
   # finish path if needed
@@ -36,7 +33,6 @@ ss_read_vdat_data <- function(path, file_name) {
     fill = TRUE,
     header = FALSE,
     data.table = FALSE,
-    # encoding = "Latin-1",
     na.strings = ""
   )
 }
@@ -147,9 +143,6 @@ ss_compile_vdat_data <- function(
       convert_timestamp_to_datetime() %>%
       mutate(
         timestamp_utc = timestamp_,
-        # time_correction_s = as.numeric(time_correction_s),
-        # timestamp_utc = timestamp_utc_uncorrected + lubridate::seconds(time_correction_s))
-
         sensor_serial_number = as.numeric(sensor_serial_number),
         value = as.numeric(value),
         variable = case_when(

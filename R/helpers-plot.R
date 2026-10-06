@@ -232,9 +232,7 @@ filter_dat_to_plot <- function(
     }
 
     dat <- dat %>%
-      filter(
-        timestamp_ >= custom_start & timestamp_ <= custom_end
-      )
+      filter(timestamp_ >= custom_start & timestamp_ <= custom_end)
   }
 
   dat |>
