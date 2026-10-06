@@ -20,7 +20,7 @@ ss_model_mooring(
 
 \item{metadata}{Default \code{NULL} will read in the metadata tracking sheet
 from the CMAR shared drive (user must be connected to the Perennia VPN).
-Otherwise, a dataframe with the relevant columns may be included
+Otherwise, a data frame with the relevant columns may be included
 (instrument, sensor_depth_m, sounding_m, vr2ar_lug_height_above_seafloor_m,
 anchor_type, float_type). Instrument, anchor type, and float_type must be
 compatible with the \code{mooring} package.}

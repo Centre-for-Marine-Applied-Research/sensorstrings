@@ -26,11 +26,13 @@
 #'
 #' @param station Character string. Station name, as it appears in
 #'   \code{metadata}.
+#'
 #' @param depl_date Character string of the deployment date, in the order
 #'   "yyyy-mm-dd".
+#'
 #' @param metadata Default \code{NULL} will read in the metadata tracking sheet
 #'   from the CMAR shared drive (user must be connected to the Perennia VPN).
-#'   Otherwise, a dataframe with the relevant columns may be included
+#'   Otherwise, a data frame with the relevant columns may be included
 #'   (instrument, sensor_depth_m, sounding_m, vr2ar_lug_height_above_seafloor_m,
 #'   anchor_type, float_type). Instrument, anchor type, and float_type must be
 #'   compatible with the \code{mooring} package.
@@ -87,6 +89,9 @@ ss_model_mooring <- function(
           primary_buoy_type == "11in hard vinyl" ~ "11in centre hole tfloat",
         )
       )
+  } else {
+    metadata <- metadata |>
+      filter(station == !!station, deployment_date == as_date(depl_date))
   }
 
   # make sure sensors are ordered from deepest to most shallow
