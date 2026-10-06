@@ -44,7 +44,7 @@ test_that("ss_ggplot_variables() colours by depth with the default palette", {
 
 test_that("ss_ggplot_variables() uses a user-supplied palette", {
   pal <- c("#000000", "#FF0000", "#0000FF")
-  b <- ggplot2::ggplot_build(ss_ggplot_variables(dat_wide, color_palette = pal))
+  b <- ggplot2::ggplot_build(ss_ggplot_variables(dat_wide, colour_palette = pal))
 
   expect_setequal(unique(b$data[[1]]$colour), pal)
 })
@@ -58,7 +58,7 @@ test_that("ss_ggplot_variables() puts units on a new line with yaxis_newline = T
 })
 
 test_that("ss_ggplot_variables() can colour by serial number", {
-  p <- ss_ggplot_variables(dat_wide, color_col = "sensor_serial_number")
+  p <- ss_ggplot_variables(dat_wide, colour_col = "sensor_serial_number")
   b <- ggplot2::ggplot_build(p)
 
   expect_s3_class(p$data$sensor_serial_number, "factor")
@@ -71,7 +71,7 @@ test_that("ss_ggplot_variables() can colour by serial number", {
 test_that("ss_ggplot_variables() works without the sensor and depth columns", {
   dat <- select(dat_wide, timestamp_utc, temperature_degree_c)
 
-  p <- ss_ggplot_variables(dat, color_palette = "#000000")
+  p <- ss_ggplot_variables(dat, colour_palette = "#000000")
   expect_renders(p)
 })
 
@@ -119,11 +119,11 @@ test_that("ss_ggplot_variables() accepts data with timestamp_ast", {
   expect_renders(p)
 })
 
-test_that("ss_ggplot_variables() respects a user palette with color_col = 'sensor_serial_number'", {
+test_that("ss_ggplot_variables() respects a user palette with colour_col = 'sensor_serial_number'", {
     pal <- c("#000000", "#FF0000", "#0000FF")
   b <- ggplot2::ggplot_build(
     ss_ggplot_variables(
-      dat_wide, color_col = "sensor_serial_number", color_palette = pal
+      dat_wide, colour_col = "sensor_serial_number", colour_palette = pal
     )
   )
   expect_setequal(unique(b$data[[1]]$colour), pal)

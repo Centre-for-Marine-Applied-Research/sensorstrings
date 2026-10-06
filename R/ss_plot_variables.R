@@ -5,7 +5,7 @@
 #'
 #' @param dat Water Quality data in long or wide format.
 #'
-#' @param color_palette  Color palette of hex colors onto which
+#' @param colour_palette  Colour palette of hex colours onto which
 #'   \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
 #'   more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 #'   \code{pal = rev(viridis(6, option = "D"))}.
@@ -59,7 +59,7 @@
 
 ss_plot_variables <- function(
     dat,
-    color_palette = NULL,
+    colour_palette = NULL,
 
     date_breaks_major = NULL,
     date_breaks_minor = NULL,
@@ -81,18 +81,6 @@ ss_plot_variables <- function(
     select(-contains("flag"))
 
   if (!("variable" %in% colnames(dat))) {
-    # vars_ss <- c(
-    #   "chlorophyll_blue_ug_per_l",
-    #   "chlorophyll_red_ug_per_l",
-    #   "dissolved_oxygen_percent_saturation",
-    #   "dissolved_oxygen_mg_per_l",
-    #   "dissolved_oxygen_uncorrected_mg_per_l",
-    #   "ph_ph",
-    #   "salinity_psu",
-    #   "sensor_depth_measured_m",
-    #   "temperature_degree_c",
-    #   "tilt_degree"
-    # )
     vars_ss <- ss_vars$variable
 
     dat <- dat %>%
@@ -109,7 +97,7 @@ ss_plot_variables <- function(
 
   # Common plot elements ----------------------------------------------------
   #  x-axis
-  axis_breaks <- ss_xaxis_breaks(dat)
+  axis_breaks <- ss_get_xaxis_breaks(dat)
 
   if(!is.null(date_breaks_major)) axis_breaks$date_breaks_major <- date_breaks_major
   if(!is.null(date_breaks_minor)) axis_breaks$date_breaks_minor <- date_breaks_minor
@@ -132,16 +120,16 @@ ss_plot_variables <- function(
 
     )
 
-  # color scale
-  if(is.null(color_palette)){
-    color_palette <- ss_get_colour_palette(dat)
+  # colour scale
+  if(is.null(colour_palette)){
+    colour_palette <- ss_get_colour_palette(dat)
   }
-  string_color_scale <- scale_colour_manual(
-    name = legend_name, values = color_palette, drop = FALSE
+  string_colour_scale <- scale_colour_manual(
+    name = legend_name, values = colour_palette, drop = FALSE
   )
 
   # size of the points in the legend
-  legend_size <-  guides(color = guide_legend(override.aes = list(size = 5)))
+  legend_size <-  guides(colour = guide_legend(override.aes = list(size = 5)))
 
   # Loop over unique VARIABLE values --------------------------------------------------
 
@@ -216,11 +204,11 @@ ss_plot_variables <- function(
 
     # plot var.i
     plot_i <- ggplot(
-      dat_i, aes(x = timestamp_, y = value, color = sensor_depth_at_low_tide_m)
+      dat_i, aes(x = timestamp_, y = value, colour = sensor_depth_at_low_tide_m)
     ) +
       geom_point(size = 0.25, alpha = alpha) +
       scale_y_continuous(name = y_lab, limits = y_limits) +
-      string_color_scale +
+      string_colour_scale +
       x_axis_date +
       theme_light() +
       string_theme +

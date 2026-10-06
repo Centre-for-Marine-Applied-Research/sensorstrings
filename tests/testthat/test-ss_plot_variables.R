@@ -99,7 +99,7 @@ test_that("ss_plot_variables() uses mg/L limits for dissolved_oxygen_mg_per_l", 
 
 test_that("ss_plot_variables() colours by depth", {
   pal <- c("#000000", "#FF0000", "#0000FF")
-  panels <- plot_panels(dat_wide, color_palette = pal)
+  panels <- plot_panels(dat_wide, colour_palette = pal)
   b <- ggplot2::ggplot_build(panels[[1]])
 
   expect_setequal(unique(b$data[[1]]$colour), pal)

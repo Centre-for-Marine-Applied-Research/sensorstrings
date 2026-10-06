@@ -6,7 +6,7 @@
 \usage{
 ss_plot_variables(
   dat,
-  color_palette = NULL,
+  colour_palette = NULL,
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
@@ -22,7 +22,7 @@ ss_plot_variables(
 \arguments{
 \item{dat}{Water Quality data in long or wide format.}
 
-\item{color_palette}{Color palette of hex colors onto which
+\item{colour_palette}{Colour palette of hex colours onto which
 \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
 more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 \code{pal = rev(viridis(6, option = "D"))}.}

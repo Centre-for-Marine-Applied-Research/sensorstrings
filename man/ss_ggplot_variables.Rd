@@ -7,8 +7,8 @@
 ss_ggplot_variables(
   dat,
   superchill = NULL,
-  color_palette = NULL,
-  color_col = "sensor_depth_at_low_tide_m",
+  colour_palette = NULL,
+  colour_col = "sensor_depth_at_low_tide_m",
   legend_name = "Depth (m)",
   legend_position = "right",
   date_breaks_major = NULL,
@@ -27,10 +27,10 @@ indicate temperatures below the superchill threshold (<= - 0.7 degrees C).
 If \code{superchill = NULL} (the default), shading will be applied if any
 temperature values are less than or equal to the threshold.}
 
-\item{color_palette}{Optional vector of hex colors onto which depth will be
+\item{colour_palette}{Optional vector of hex colors onto which depth will be
 mapped.}
 
-\item{color_col}{Character string indicating the column to use to colour the
+\item{colour_col}{Character string indicating the column to use to colour the
 observations.}
 
 \item{legend_name}{Name for the depth legend. Default is \code{legend_name =
@@ -54,7 +54,7 @@ y-axis label should be on a new line. Default is \code{TRUE}.}
 
 \item{convert_sn_to_factor}{Logical argument indicating whether to convert
 column \code{sensor_serial_number} to a factor. Only used when
-\code{color_col = "sensor_serial_number"}. Set to \code{FALSE} if making
+\code{colour_col = "sensor_serial_number"}. Set to \code{FALSE} if making
 separate plots with some overlapping serial numbers. In this case, the
 \code{sensor_serial_number} should be converted to a factor before calling
 the plot function.}
