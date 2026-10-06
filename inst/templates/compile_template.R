@@ -43,7 +43,7 @@ path <- ss_import_path(station, depl_date)
 ss_create_log_from_metadata(
   station = station,
   deployment_date = depl_date,
-  path_export = path
+  output_path = path
 )
 
 dat_raw <- ss_compile_deployment_data(path)
@@ -69,7 +69,6 @@ st_location <- data.frame(
 ss_leaflet_station_map(st_location)
 
 ss_check_station_radius(st_location)
-#ss_check_station_in_ocean(st_location) # slow because reads in shape file
 ss_check_station_drift(st_location, return_drift = TRUE) # need retrieval coords
 
 # SECTION 4: Identify Trim Dates --------------------------------------------------------------

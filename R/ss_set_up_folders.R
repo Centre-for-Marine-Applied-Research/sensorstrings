@@ -1,6 +1,6 @@
 #' Create folders for the raw sensor string data from a given deployment
 #'
-#' @param path File path to where the deployment folder should be created.
+#' @param path_output File path to where the station folder should be created.
 #'
 #' @param station Station name.
 #'
@@ -19,7 +19,10 @@
 #' @export
 
 ss_set_up_folders <- function(
-    path = NULL, station, depl_date, sensor_folders = FALSE) {
+    station,
+    depl_date,
+    path_output = NULL,
+    sensor_folders = FALSE) {
   parse_orders <- c("Ymd", "ymd", "dmY", "dmy", "mdY", "mdy")
 
   # will give an error if depl_date is not in the correct order
@@ -31,37 +34,36 @@ ss_set_up_folders <- function(
     stop("depl_date << ", depl_date, " >> could not be converted to a date in format yyyy-mm-dd")
   }
 
-  station_folders <- list.files(path)
+  station_folders <- list.files(path_output)
 
   # ensure station is converted to snake case
-  station_snake <- str_to_lower(station)
-  station_snake <- str_replace_all(station_snake, " ", "_")
+  station_snake <-  str_replace_all(str_to_lower(station), " ", "_")
 
   # if the station folder does not exist, create it
   if (!any(str_detect(station_folders, station_snake))) {
-    dir.create(paste0(path, "/", station_snake))
+    dir.create(paste0(path_output, "/", station_snake))
 
-    message("Created folder << ", station_snake, " >> in <<", path, " >>")
+    message("Created folder << ", station_snake, " >> in <<", path_output, " >>")
   }
 
-  path <- paste0(path, "/", station_snake)
+  path_output <- paste0(path_output, "/", station_snake)
 
-  depl_folders <- list.files(path)
+  depl_folders <- list.files(path_output)
 
   new_folder <- paste(station_snake, depl_date_out, sep = "_")
 
   if (any(str_detect(depl_folders, new_folder))) {
-    stop("Deployment folder << ", new_folder, " >> already exists in << ", path, " >>")
+    stop("Deployment folder << ", new_folder, " >> already exists in << ", path_output, " >>")
   }
 
-  path <- paste0(path, "/", new_folder)
+  path_output <- paste0(path_output, "/", new_folder)
 
-  dir.create(path)
+  dir.create(path_output)
 
   if (isTRUE(sensor_folders)) {
-    dir.create(paste0(path, "/log"))
-    dir.create(paste0(path, "/aquameasure"))
-    dir.create(paste0(path, "/hobo"))
-    dir.create(paste0(path, "/vemco"))
+    dir.create(paste0(path_output, "/log"))
+    dir.create(paste0(path_output, "/aquameasure"))
+    dir.create(paste0(path_output, "/hobo"))
+    dir.create(paste0(path_output, "/vemco"))
   }
 }

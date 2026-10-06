@@ -3,14 +3,16 @@ test_that("ss_set_up_folders() returns expected Errors", {
     ss_set_up_folders(station = "test", depl_date = "not a date")
   )
   expect_error(
-    ss_set_up_folders(path = system.file("testdata", package = "sensorstrings"), station = "test1", depl_date = "2022-08-31")
+    ss_set_up_folders(path_output = system.file(
+      "testdata", package = "sensorstrings"),
+      station = "test1", depl_date = "2022-08-31")
   )
 })
 
 test_that("ss_set_up_folders() creates expected folders", {
   expect_message(
     ss_set_up_folders(
-      path = path,
+      path_output = path,
       station = "Station Name",
       depl_date = "2022-08-31",
       sensor_folders = TRUE

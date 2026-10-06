@@ -5,34 +5,34 @@
 \title{Writes a deployment log from the metadata tracking sheet}
 \usage{
 ss_create_log_from_metadata(
-  path_metadata = NULL,
+  output_path,
+  station,
+  deployment_date,
+  path = NULL,
   sheet = "tracker",
   google_sheet = FALSE,
   google_sheet_link = NULL,
-  path_export,
-  station,
-  deployment_date,
   to_title = TRUE
 )
 }
 \arguments{
-\item{path_metadata}{Path to the metadata tracking sheet (including the file
-name and extension). This must be a .xlsx file.}
-
-\item{sheet}{Name of the tab with the deployment information.}
-
-\item{google_sheet}{Logical argument indicating whether metadata is stored in
-a google sheet. If \code{TRUE}, \code{path_metadata} is not required.}
-
-\item{google_sheet_link}{Link the to metadata sheet on google drive. If
-\code{NULL}, the New Brunswick metadata sheet will be imported.}
-
-\item{path_export}{Path to the station deployment folder.}
+\item{output_path}{Path to the station deployment folder.}
 
 \item{station}{Station name.}
 
 \item{deployment_date}{Date of deployment as a character string in the format
 "yyyy-mm-dd"}
+
+\item{path}{Path to the metadata tracking sheet (including the file
+name and extension). This must be a .xlsx file.}
+
+\item{sheet}{Name of the tab with the deployment information.}
+
+\item{google_sheet}{Logical argument indicating whether metadata is stored in
+a google sheet. If \code{TRUE}, \code{path} is not required.}
+
+\item{google_sheet_link}{Link the to metadata sheet on google drive. If
+\code{NULL}, the New Brunswick metadata sheet will be imported.}
 
 \item{to_title}{Logical argument indicating whether to convert the station
 name to title case. Default is \code{TRUE}. Set to \code{FALSE} for

@@ -4,18 +4,18 @@
 #'   station and date of interest, re-formats into the deployment log format,
 #'   and exports to the Log folder.
 #'
-#' @param path_metadata Path to the metadata tracking sheet (including the file
+#' @param path Path to the metadata tracking sheet (including the file
 #'   name and extension). This must be a .xlsx file.
 #'
 #' @param sheet Name of the tab with the deployment information.
 #'
 #' @param google_sheet Logical argument indicating whether metadata is stored in
-#'   a google sheet. If \code{TRUE}, \code{path_metadata} is not required.
+#'   a google sheet. If \code{TRUE}, \code{path} is not required.
 #'
 #' @param google_sheet_link Link the to metadata sheet on google drive. If
 #'   \code{NULL}, the New Brunswick metadata sheet will be imported.
 #'
-#' @param path_export Path to the station deployment folder.
+#' @param output_path Path to the station deployment folder.
 #'
 #' @param station Station name.
 #'
@@ -38,24 +38,23 @@
 #' @export
 
 ss_create_log_from_metadata <- function(
-    path_metadata = NULL,
+    output_path,
+    station,
+    deployment_date,
+    path = NULL,
     sheet = "tracker",
     google_sheet = FALSE,
     google_sheet_link = NULL,
-    path_export,
-    station,
-    deployment_date,
     to_title = TRUE
 ){
 
   if(isFALSE(google_sheet)) {
-    if(is.null(path_metadata)) {
-      path_metadata <- file.path(
+    if(is.null(path)) {
+      path <- file.path(
         "R:/tracking_sheets/metadata_tracking/water_quality_deployment_tracking.xlsx"
       )
     }
-
-    dat_raw <- read_excel(path_metadata, sheet = sheet, na = "")
+    dat_raw <- read_excel(path, sheet = sheet, na = "")
   }
 
   if(isTRUE(google_sheet)) {
@@ -100,22 +99,22 @@ ss_create_log_from_metadata <- function(
     mutate(
       deployment_latitude = if_else(
         is.na(deployment_latitude),
-        ss_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
+        ss_convert_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
         deployment_latitude
       ),
       deployment_longitude = if_else(
         is.na(deployment_longitude),
-        -ss_coords_from_ddm_to_dd(deployment_longitude_w_ddm),
+        ss_convert_coords_from_ddm_to_dd(deployment_longitude_w_ddm, west = TRUE),
         deployment_longitude
       ),
       retrieval_latitude = if_else(
         is.na(retrieval_latitude),
-        ss_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
+        ss_convert_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
         retrieval_latitude
       ),
       retrieval_longitude = if_else(
         is.na(retrieval_longitude),
-        -ss_coords_from_ddm_to_dd(retrieval_longitude_w_ddm),
+        ss_convert_coords_from_ddm_to_dd(retrieval_longitude_w_ddm, west = TRUE),
         retrieval_longitude
       )
     )
@@ -148,18 +147,18 @@ ss_create_log_from_metadata <- function(
     "log.csv", sep = "_"
   )
 
-  path_export <- file.path(paste0(path_export, "/log"))
+  output_path <- file.path(paste0(output_path, "/log"))
 
-  if (!dir.exists(path_export)) dir.create(path_export)
+  if (!dir.exists(output_path)) dir.create(output_path)
 
   write.csv(
     log,
-    file = paste(path_export, file_name, sep = "/"),
+    file = paste(output_path, file_name, sep = "/"),
     row.names = FALSE
   )
 
-  message(file_name, " exported to ", path_export)
-  invisible(path_export)
+  message(file_name, " exported to ", output_path)
+  invisible(output_path)
 }
 
 

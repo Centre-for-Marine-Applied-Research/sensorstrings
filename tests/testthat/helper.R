@@ -329,5 +329,5 @@ long_trim2 <- ss_pivot_longer(depl_trim)
 # convert coordinates -----------------------------------------------------
 
 coords_ddm <- c("45 21.651", "61 24.407", "44 26.238", "64 15.038")
-#coords_dd <- ss_coords_from_ddm_to_dd(coords_ddm)
+#coords_dd <- ss_convert_coords_from_ddm_to_dd(coords_ddm)
 

@@ -4,14 +4,19 @@
 \alias{ss_set_up_folders}
 \title{Create folders for the raw sensor string data from a given deployment}
 \usage{
-ss_set_up_folders(path = NULL, station, depl_date, sensor_folders = FALSE)
+ss_set_up_folders(
+  station,
+  depl_date,
+  path_output = NULL,
+  sensor_folders = FALSE
+)
 }
 \arguments{
-\item{path}{File path to where the deployment folder should be created.}
-
 \item{station}{Station name.}
 
 \item{depl_date}{Deployment start date as a character string.}
+
+\item{path_output}{File path to where the station folder should be created.}
 
 \item{sensor_folders}{Logical argument indicating whether to create the
 aquameasure, hobo, log, and vemco folders in the deployment folder. These

@@ -4,10 +4,10 @@
 \alias{ss_import_data}
 \title{Import Water Quality data from rds files}
 \usage{
-ss_import_data(input_path = NULL, county = "all")
+ss_import_data(path = NULL, county = "all")
 }
 \arguments{
-\item{input_path}{Path to the *.rds files to be assembled. Default is the
+\item{path}{Path to the *.rds files to be assembled. Default is the
 assembled_data folder on the CMAR R drive (user must be connected to the
 Perennia VPN).}
 

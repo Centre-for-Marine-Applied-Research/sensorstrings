@@ -1,6 +1,6 @@
 #' @title Import Water Quality data from rds files
 #'
-#' @param input_path Path to the *.rds files to be assembled. Default is the
+#' @param path Path to the *.rds files to be assembled. Default is the
 #'   assembled_data folder on the CMAR R drive (user must be connected to the
 #'   Perennia VPN).
 #'
@@ -14,24 +14,23 @@
 #' @importFrom dplyr %>%
 #' @export
 
-ss_import_data <- function(input_path = NULL, county = "all") {
+ss_import_data <- function(path = NULL, county = "all") {
 
   county <- tolower(county)
   county <- gsub(" ", "_", county)
 
   message("importing ", paste(county, collapse = " and "), " data...")
 
-  # Input path --------------------------------------------------------------
+  # path --------------------------------------------------------------
 
-  if(is.null(input_path)){
-    input_path <- file.path(
+  if(is.null(path)){
+    path <- file.path(
       "R:/data_branches/water_quality/processed_data/assembled_data")
-
-  } else input_path <- input_path
+  }
 
   # list rds files on the path and import -----------------------------------
 
-  dat <- list.files(input_path, full.names = TRUE, pattern = ".rds")
+  dat <- list.files(path, full.names = TRUE, pattern = ".rds")
 
   # filter for specified county(ies)
   # format county argument as a regular expression for use in str_subset
