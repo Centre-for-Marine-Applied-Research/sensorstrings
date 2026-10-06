@@ -21,16 +21,12 @@ Imports:
     googlesheets4,
     grDevices,
     janitor,
-    leaflet,
     lubridate,
-    mooring (>= 0.1.11),
-    plotly,
+    patchwork,
     purrr (>= 1.0.0),
     RColorBrewer,
     readxl,
     rlang,
-    sf,
-    shiny,
     stats,
     stringr,
     tidyr (>= 1.0.0),
@@ -38,6 +34,11 @@ Imports:
     utils,
     viridis
 Suggests: 
+    leaflet,
+    mooring (>= 0.1.11),
+    plotly,
+    sf,
+    shiny,
     testthat (>= 3.0.0)
 Remotes: 
     dankelley/mooring

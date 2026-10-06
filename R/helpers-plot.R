@@ -270,7 +270,6 @@ ss_create_variable_labels_no_newline <- function(dat) {
 #' @return Returns \code{dat} filtered to the specified dates.
 #'
 #' @importFrom lubridate period is.POSIXct  %m+% %m-%
-#' @importFrom plotly ggplotly
 #' @importFrom dplyr %>% filter
 #' @importFrom rlang :=
 #'

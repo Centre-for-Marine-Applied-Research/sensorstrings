@@ -5,22 +5,20 @@
 #'
 #' @returns A leaflet object.
 #'
-#' @importFrom leaflet leaflet addProviderTiles addCircleMarkers addScaleBar scaleBarOptions
-#'
 #' @export
 #'
 
 ss_leaflet_station_map <- function(dat) {
 
-  leaflet(dat) %>%
-    addProviderTiles("Esri.OceanBasemap") %>%
-    addCircleMarkers(
+  leaflet::leaflet(dat) %>%
+    leaflet::addProviderTiles("Esri.OceanBasemap") %>%
+    leaflet::addCircleMarkers(
       data = dat,
       lng = ~longitude, lat = ~latitude, label = ~station,
       weight = 1, fillOpacity = 0.75, radius = 5
     ) %>%
-    addScaleBar(
+    leaflet::addScaleBar(
       position = "bottomleft",
-      options = scaleBarOptions(imperial = FALSE)
+      options = leaflet::scaleBarOptions(imperial = FALSE)
     )
 }

@@ -44,7 +44,6 @@
 #'   package.
 #'
 #' @importFrom dplyr case_when desc filter group_by mutate select ungroup
-#' @importFrom mooring anchor float instrument mooring wire
 #' @importFrom readxl read_excel
 #'
 #' @export
@@ -116,9 +115,9 @@ ss_model_mooring <- function(
   first_rope_length_m <- unique(
     as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
 
-  anchor_type <- anchor(gsub("[s]$", "", unique(metadata$anchor_type)))
+  anchor_type <- mooring::anchor(gsub("[s]$", "", unique(metadata$anchor_type)))
 
-  float_type <- float(unique(metadata$float_type))
+  float_type <- mooring::float(unique(metadata$float_type))
 
   ss <- list()
   ss[[1]] <- anchor_type
@@ -127,14 +126,14 @@ ss_model_mooring <- function(
   # must start from BOTTOM UP
   for (i in 1:nrow(metadata)) {
 
-    inst_i <- instrument(model = metadata[i, ]$instrument)
+    inst_i <- mooring::instrument(model = metadata[i, ]$instrument)
 
     # from anchor to vr2
     if (i == 1) {
-      wire_i <- wire(model = rope_type, length = first_rope_length_m)
+      wire_i <- mooring::wire(model = rope_type, length = first_rope_length_m)
     } else {
       # from sensor i-1 to sensor i
-      wire_i <- wire(
+      wire_i <- mooring::wire(
         model = rope_type,
         length = metadata[i-1, ]$sensor_depth_m - metadata[i, ]$sensor_depth_m - inst_i@height)
     }
@@ -147,7 +146,7 @@ ss_model_mooring <- function(
   }
 
   # rope from shallowest sensor to the float
-  ss[[j]] <- wire(model = rope_type, length = 0.05)
+  ss[[j]] <- mooring::wire(model = rope_type, length = 0.05)
   ss[[j + 1]] <- float_type
   ss[["waterDepth"]] <- sounding_m
 

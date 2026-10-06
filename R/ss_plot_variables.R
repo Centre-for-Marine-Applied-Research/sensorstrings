@@ -51,8 +51,8 @@
 #' @family plot
 #' @author Danielle Dempsey
 
-#' @importFrom dplyr any_of filter
-#' @importFrom ggpubr ggarrange
+#' @importFrom dplyr any_of filter select
+#' @importFrom patchwork wrap_plots
 #' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom viridis viridis
 #' @export
@@ -130,7 +130,7 @@ ss_plot_variables <- function(
 
   # theme
   string_theme <- theme(
-    axis.title.x = element_blank(),
+  #  axis.title.x = element_blank(),
     axis.text = element_text(size = 9, colour = "black"),    # axis text size & color
     legend.title = element_text(size = 10) ,                 # legend title size
     legend.text = element_text(size = 10)                   # legend text size
@@ -238,11 +238,15 @@ ss_plot_variables <- function(
 
   # RETURN TO GLOBAL ENV ----------------------------------------------------
 
+  patchwork::wrap_plots(
+    figs, ncol = 1, guides = "collect", axes = "collect", axis_titles = "collect"
+    ) &
+    theme(legend.position = legend_position)
   # arrange and export
-  ggarrange(
-    plotlist = figs,
-    ncol = 1, common.legend = TRUE, legend = legend_position, align = "v"
-  )
+  # ggarrange(
+  #   plotlist = figs,
+  #   ncol = 1, common.legend = TRUE, legend = legend_position, align = "v"
+  # )
 
 }
 

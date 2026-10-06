@@ -22,8 +22,6 @@
 #' @return Opens a shiny app displaying an interactive plot of variables in
 #'   \code{dat}, coloured by depth.
 #'
-#' @importFrom shiny fluidPage renderTable shinyApp tableOutput
-#' @importFrom plotly ggplotly event_data plotlyOutput renderPlotly
 #' @importFrom lubridate as_datetime
 #'
 #' @export
@@ -37,15 +35,15 @@ ss_open_trimdates_app <- function(
     custom_end = NULL,
     point_size = 2) {
 
-  ui <- fluidPage(
-    plotlyOutput("vars_plot", height = "600px"),
-    tableOutput("info")
+  ui <- shiny::fluidPage(
+    plotly::plotlyOutput("vars_plot", height = "600px"),
+    shiny::tableOutput("info")
   )
 
   ts_save <- data.frame(ts = NA_character_)
 
   server <- function(input, output) {
-    output$vars_plot <- renderPlotly({
+    output$vars_plot <- plotly::renderPlotly({
       dat <- dat %>%
         filter_dat_to_plot(
           filter_to = filter_to,
@@ -56,11 +54,11 @@ ss_open_trimdates_app <- function(
 
       p <- ss_ggplot_variables(dat) + geom_point(size = point_size)
 
-      ggplotly(p, source = "plot1", tooltip = "text")
+      plotly::ggplotly(p, source = "plot1", tooltip = "text")
     })
 
-    output$info <- renderTable({
-      ts_info <- event_data("plotly_click", source = "plot1")
+    output$info <- shiny::renderTable({
+      ts_info <- plotly::event_data("plotly_click", source = "plot1")
 
       if (is.null(ts_info)) {
         "Click events appear here (double-click chart to clear)"
@@ -76,5 +74,5 @@ ss_open_trimdates_app <- function(
   }
 
   # Run the application
-  shinyApp(ui = ui, server = server)
+  shiny::shinyApp(ui = ui, server = server)
 }

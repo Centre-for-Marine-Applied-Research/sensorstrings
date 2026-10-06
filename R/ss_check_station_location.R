@@ -18,7 +18,6 @@
 #'   the buffer radius. Returns \code{FALSE} and a Warning if the coordinates
 #'   are outside the buffer.
 #'
-#' @importFrom sf st_as_sf st_buffer st_intersection st_transform
 #' @importFrom dplyr %>% contains filter mutate select
 #' @importFrom googlesheets4 gs4_deauth read_sheet
 #'
@@ -56,16 +55,16 @@ ss_check_station_radius <- function(
   }
 
   station_coords_sf <- station_coords %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
-  station_buffer <- st_buffer(station_coords_sf, dist = station_radius)
+  station_buffer <- sf::st_buffer(station_coords_sf, dist = station_radius)
 
   log_coords_sf <- log_coords %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   #check_location <- st_within(log_coords_sf, station_buffer)
   location_check <- suppressWarnings(
-    st_intersection(log_coords_sf, station_buffer))
+    sf::st_intersection(log_coords_sf, station_buffer))
 
 
   if(nrow(location_check) == 0) {
@@ -93,8 +92,6 @@ ss_check_station_radius <- function(
 #'   ocean. Returns \code{FALSE} and a Warning if the coordinates overlap with
 #'   land.
 #'
-#' @importFrom sf st_as_sf st_intersection read_sf
-#'
 #' @export
 
 ss_check_station_in_ocean <- function(
@@ -111,12 +108,12 @@ ss_check_station_in_ocean <- function(
   }
 
   coast_shp <- coast_shp %>%
-    st_transform(crs = log_crs)
+    sf::st_transform(crs = log_crs)
 
   log_coords_sf <- log_coords %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
-  overlap <- suppressWarnings(st_intersection(log_coords_sf, coast_shp))
+  overlap <- suppressWarnings(sf::st_intersection(log_coords_sf, coast_shp))
 
   if(nrow(overlap) > 0) {
     warning(
@@ -145,8 +142,6 @@ ss_check_station_in_ocean <- function(
 #' @param return_drift Logical argument indicating whether to return the drift
 #'   distance.
 #'
-#' @importFrom sf st_as_sf st_distance
-#'
 #' @return Logical value. Returns \code{TRUE} if the distance between deployment
 #'   and retrieval coordinates is less than \code{max_drift}. Returns
 #'   \code{FALSE} and a Warning if the distance is greater.
@@ -163,13 +158,13 @@ ss_check_station_drift <- function(
 
   depl <- log_coords %>%
     select(latitude, longitude) %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   retrieval <- log_coords %>%
     select(latitude = retrieval_latitude, longitude = retrieval_longitude) %>%
-    st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
-  drift_distance <- st_distance(depl, retrieval)
+  drift_distance <- sf::st_distance(depl, retrieval)
 
   drift_units = units(drift_distance)$numerator
   if(drift_units != "m") {
@@ -238,8 +233,8 @@ if(FALSE) {
 
   ns <- filter(PROV, PT == "NS")
   ns <- ns %>%
-    st_transform(crs = log_crs) %>%
-    st_crop(dummy_coords)
+    sf::st_transform(crs = log_crs) %>%
+    sf::st_crop(dummy_coords)
 
   ggplot() +
     geom_sf(data = ns) +
