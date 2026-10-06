@@ -21,9 +21,6 @@
 #' @param legend_position Position for the depth legend. Default is
 #'   \code{legend.position = "right"}.
 #'
-#' @param axis_label_newline Logical argument indicating whether to put units on
-#'   a new line.
-#'
 #' @param point_size Numeric value indicating size of points.
 #'
 #' @param convert_sn_to_factor Logical argument indicating whether to convert
@@ -55,7 +52,7 @@ ss_ggplot_variables <- function(
     date_breaks_major = NULL,
     date_breaks_minor = NULL,
     date_labels_format = "%Y-%m-%d",
-    axis_label_newline = FALSE,
+    yaxis_newline = FALSE,
     point_size = 0.25,
     convert_sn_to_factor = TRUE
     ) {
@@ -111,13 +108,15 @@ ss_ggplot_variables <- function(
       ss_pivot_longer()
   }
 
-  if(isTRUE(axis_label_newline)) {
-    dat <- dat %>%
-      ss_create_variable_labels()
-  } else {
-    dat <- dat %>%
-      ss_create_variable_labels_no_newline()
-  }
+  dat <- ss_create_variable_labels(dat, new_line = yaxis_newline)
+
+  # if(isTRUE(axis_label_newline)) {
+  #   dat <- dat %>%
+  #     ss_create_variable_labels()
+  # } else {
+  #   dat <- dat %>%
+  #     ss_create_variable_labels_no_newline()
+  # }
 
   if(!("sensor_type" %in% colnames(dat))) {
     dat <- mutate(dat, sensor_type = "")
@@ -185,15 +184,16 @@ ss_ggplot_variables <- function(
   # add superchill shading --------------------------------------------------
 
   if (isTRUE(superchill)) {
-    facet_panel <- data.frame(variable = "temperature_degree_c")
+    facet_panel <- data.frame(variable = "temperature_degree_c") |>
+      ss_create_variable_labels(new_line = yaxis_newline)
 
-    if(isTRUE(axis_label_newline)) {
-      facet_panel <- facet_panel %>%
-        ss_create_variable_labels()
-    } else {
-      facet_panel <- facet_panel %>%
-        ss_create_variable_labels_no_newline()
-    }
+    # if(isTRUE(axis_label_newline)) {
+    #   facet_panel <- facet_panel %>%
+    #     ss_create_variable_labels()
+    # } else {
+    #   facet_panel <- facet_panel %>%
+    #     ss_create_variable_labels_no_newline()
+    # }
 
     p <- p +
       geom_rect(

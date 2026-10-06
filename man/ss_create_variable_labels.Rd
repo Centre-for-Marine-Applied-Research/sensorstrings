@@ -4,15 +4,17 @@
 \alias{ss_create_variable_labels}
 \title{Create plot labels from variable names}
 \usage{
-ss_create_variable_labels(dat)
+ss_create_variable_labels(dat, new_line = FALSE)
 }
 \arguments{
-\item{dat}{Data frame of Water Quality data with variables in long
-format.}
+\item{dat}{Data frame of Water Quality data with variables in long format.}
+
+\item{new_line}{Logical argument indicating whether to place the units of the
+y-axis on a new line. If \code{FALSE}, the default, the variable name and
+units are on the same line.}
 }
 \value{
-Returns \code{dat_long} with an addition column
-  \code{variable_label}. \code{variable_label}
+Returns \code{dat} with an additional column \code{variable_label}.
 }
 \description{
 Create plot labels from variable names

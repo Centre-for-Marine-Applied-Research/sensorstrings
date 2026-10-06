@@ -73,6 +73,8 @@ utils::globalVariables(
 
     # ss_create_variable_labels
     "variable_label",
+    "label_new_line",
+    "label_no_new_line",
 
     # ss_generate_depl_filepath
     "depl_date",

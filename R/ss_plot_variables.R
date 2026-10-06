@@ -77,21 +77,23 @@ ss_plot_variables <- function(
     legend_position = "right"
 ){
 
-  dat <- dat %>% select(-contains("flag"))
+  dat <- dat %>%
+    select(-contains("flag"))
 
   if (!("variable" %in% colnames(dat))) {
-    vars_ss <- c(
-      "chlorophyll_blue_ug_per_l",
-      "chlorophyll_red_ug_per_l",
-      "dissolved_oxygen_percent_saturation",
-      "dissolved_oxygen_mg_per_l",
-      "dissolved_oxygen_uncorrected_mg_per_l",
-      "ph_ph",
-      "salinity_psu",
-      "sensor_depth_measured_m",
-      "temperature_degree_c",
-      "tilt_degree"
-    )
+    # vars_ss <- c(
+    #   "chlorophyll_blue_ug_per_l",
+    #   "chlorophyll_red_ug_per_l",
+    #   "dissolved_oxygen_percent_saturation",
+    #   "dissolved_oxygen_mg_per_l",
+    #   "dissolved_oxygen_uncorrected_mg_per_l",
+    #   "ph_ph",
+    #   "salinity_psu",
+    #   "sensor_depth_measured_m",
+    #   "temperature_degree_c",
+    #   "tilt_degree"
+    # )
+    vars_ss <- ss_vars$variable
 
     dat <- dat %>%
       select(
@@ -100,16 +102,9 @@ ss_plot_variables <- function(
       ss_pivot_longer()
   }
 
-  if(isTRUE(yaxis_newline)) {
-    dat <- dat %>%
-      ss_create_variable_labels()
-  } else {
-    dat <- dat %>%
-      ss_create_variable_labels_no_newline()
-  }
-
   dat <- dat %>%
     ss_convert_depth_to_ordered_factor() |>
+    ss_create_variable_labels(new_line = yaxis_newline) |>
     rename(timestamp_ = contains("timestamp"))
 
   # Common plot elements ----------------------------------------------------

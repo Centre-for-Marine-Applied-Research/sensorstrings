@@ -20,7 +20,6 @@
 #' @importFrom dplyr %>% contains select
 #'
 #' @export
-#'
 
 ss_get_colour_palette <- function(dat) {
   n_depth <- dat %>%
@@ -146,120 +145,42 @@ ss_xaxis_breaks <- function(dat){
     date_breaks_minor = date_breaks_minor,
     date_labels_format = date_labels_format
   )
-
 }
 
 #' Create plot labels from variable names
 #'
-#' @param dat Data frame of Water Quality data with variables in long
-#'   format.
+#' @param dat Data frame of Water Quality data with variables in long format.
 #'
-#' @return Returns \code{dat_long} with an addition column
-#'   \code{variable_label}. \code{variable_label}
+#' @param new_line Logical argument indicating whether to place the units of the
+#'   y-axis on a new line. If \code{FALSE}, the default, the variable name and
+#'   units are on the same line.
 #'
-#' @importFrom dplyr case_when mutate
+#' @return Returns \code{dat} with an additional column \code{variable_label}.
 #'
-#' @export
-
-ss_create_variable_labels <- function(dat) {
-  var_order <- c(
-    "Temperature \n(\u00B0C)",
-    "Dissolved Oxygen \n(% sat)",
-    "Uncorrected \nDissolved Oxygen \n(mg / L)",
-    "Dissolved Oxygen \n(mg / L)",
-    "pH",
-    "Salinity \n(PSU)",
-    "Chlorophyll Blue \n(\u03BCg/L)",
-    "Chlorophyll Red \n(\u03BCg/L)",
-    "Sensor Depth \n(m)",
-    "Tilt \n(\u00B0)"
-  )
-
-  dat %>%
-    mutate(
-      variable_label = case_when(
-        variable == "chlorophyll_blue_ug_per_l" ~
-          "Chlorophyll Blue \n(\u03BCg/L)",
-
-        variable == "chlorophyll_red_ug_per_l" ~
-          "Chlorophyll Red \n(\u03BCg/L)",
-
-        variable == "dissolved_oxygen_percent_saturation" ~
-          "Dissolved Oxygen \n(% sat)",
-        variable == "dissolved_oxygen_uncorrected_mg_per_l" ~
-          "Uncorrected \nDissolved Oxygen \n(mg / L)",
-        variable == "dissolved_oxygen_mg_per_l" ~
-          "Dissolved Oxygen \n(mg / L)",
-        variable == "ph_ph" ~ "pH",
-        variable == "salinity_psu" ~ "Salinity \n(PSU)",
-        variable == "sensor_depth_measured_m" ~ "Sensor Depth \n(m)",
-        variable == "temperature_degree_c" ~ "Temperature \n(\u00B0C)",
-        variable == "tilt_degree" ~ "Tilt \n(\u00B0)",
-        TRUE ~ variable
-      ),
-      variable_label = factor(
-        variable_label,
-        levels = var_order, ordered = TRUE
-      )
-    )
-}
-
-#' Create plot labels from variable names without new lines
-#'
-#' @param dat Data frame of Water Quality data with variables in long
-#'   format. Entries in \code{variable} column must be
-#'   \code{dissolved_oxygen_percent_saturation},
-#'   \code{dissolved_oxygen_uncorrected_mg_per_l}, \code{salinity_psu},
-#'   \code{sensor_depth_measured_m}, or \code{temperature_degree_c}.
-#'
-#' @return Returns \code{dat_long} with an addition column
-#'   \code{variable_label}. \code{variable_label}
-#'
-#' @importFrom dplyr case_when mutate
+#' @importFrom dplyr left_join mutate
 #'
 #' @export
 
-ss_create_variable_labels_no_newline <- function(dat) {
-  var_order <- c(
-    "Temperature (\u00B0C)",
-    "Dissolved Oxygen (% sat)",
-    "Uncorrected\nDissolved Oxygen (mg / L)",
-    "Dissolved Oxygen (mg / L)",
-    "pH",
-    "Salinity (PSU)",
-    "Chlorophyll Blue (\u03BCg / L)",
-    "Chlorophyll Red (\u03BCg / L)",
-    "Sensor Depth (m)",
-    "Tilt (\u00B0)"
-  )
+ss_create_variable_labels <- function(dat, new_line = FALSE) {
 
-  dat %>%
-    mutate(
-      variable_label = case_when(
-        variable == "chlorophyll_blue_ug_per_l" ~ "Chlorophyll Blue (\u03BCg / L)",
+ dat <- dat |>
+    left_join(ss_vars, by = "variable")
 
-        variable == "chlorophyll_red_ug_per_l" ~ "Chlorophyll Red (\u03BCg / L)",
+ if(isTRUE(new_line)) {
+   dat <- dat |>
+     mutate(
+       variable_label = ordered(label_new_line, levels = ss_vars$label_new_line)
+     )
+ } else{
+   dat <- dat |>
+     mutate(
+       variable_label = ordered(label_no_new_line, levels = ss_vars$label_no_new_line)
+     )
+ }
 
-        variable == "dissolved_oxygen_percent_saturation" ~
-          "Dissolved Oxygen (% sat)",
-        variable == "dissolved_oxygen_uncorrected_mg_per_l" ~
-          "Uncorrected\nDissolved Oxygen (mg / L)",
-        variable == "dissolved_oxygen_mg_per_l" ~
-          "Dissolved Oxygen (mg / L)",
-        variable == "ph_ph" ~ "pH",
-        variable == "salinity_psu" ~ "Salinity (PSU)",
-        variable == "sensor_depth_measured_m" ~ "Sensor Depth (m)",
-        variable == "temperature_degree_c" ~ "Temperature (\u00B0C)",
-        variable == "tilt_degree" ~ "Tilt (\u00B0)",
-        TRUE ~ variable
-      ),
-      variable_label = factor(
-        variable_label,
-        levels = var_order, ordered = TRUE
-      )
-    )
+ dat |>
+   select(-c(label_new_line, label_no_new_line))
 }
-
 
 #' Filter data before plotting to zoom in on interesting features
 #'

@@ -14,7 +14,7 @@ ss_ggplot_variables(
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
-  axis_label_newline = FALSE,
+  yaxis_newline = FALSE,
   point_size = 0.25,
   convert_sn_to_factor = TRUE
 )
@@ -47,8 +47,8 @@ observations.}
 
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
-\item{axis_label_newline}{Logical argument indicating whether to put units on
-a new line.}
+\item{yaxis_newline}{Logical argument indicating whether the units in the
+y-axis label should be on a new line. Default is \code{TRUE}.}
 
 \item{point_size}{Numeric value indicating size of points.}
 

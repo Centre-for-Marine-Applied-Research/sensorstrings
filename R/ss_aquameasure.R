@@ -94,7 +94,6 @@ ss_compile_aquameasure_data <- function(path,
 
   # loop over each aM file
   for (i in seq_along(dat_files)) {
-    #file_name <- dat_files[i]
 
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
@@ -159,8 +158,6 @@ ss_compile_aquameasure_data <- function(path,
     # variables to process
     vars <- extract_aquameasure_vars(colnames(am_i))
 
-   # browser()
-
     am_i <- am_i %>%
       select(
         timestamp_ = contains("stamp"),
@@ -223,15 +220,16 @@ ss_compile_aquameasure_data <- function(path,
 
 
     # convert ERR to -111 so that column can be saved as numeric --------------
-    vars_ss <- c(
-      "chlorophyll_blue_ug_per_l",
-      "chlorophyll_red_ug_per_l",
-      "dissolved_oxygen_percent_saturation",
-      "salinity_psu",
-      "sensor_depth_measured_m",
-      "temperature_degree_c",
-      "tilt_degree"
-    )
+    # vars_ss <- c(
+    #   "chlorophyll_blue_ug_per_l",
+    #   "chlorophyll_red_ug_per_l",
+    #   "dissolved_oxygen_percent_saturation",
+    #   "salinity_psu",
+    #   "sensor_depth_measured_m",
+    #   "temperature_degree_c",
+    #   "tilt_degree"
+    # )
+    vars_ss <- ss_vars$variable
 
     am_i <- am_i %>%
       mutate(
