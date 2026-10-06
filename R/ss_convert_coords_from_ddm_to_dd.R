@@ -11,7 +11,7 @@
 #' columns are not over-written:
 #'
 #' \code{dat <- dat_raw %>% mutate(across(any_of(coords_ddm),
-#' ~ss_coords_from_ddm_to_dd(.x), .names = "{str_remove(.col, '_w_ddm|_n_ddm')}"
+#' ~ss_convert_coords_from_ddm_to_dd(.x), .names = "{str_remove(.col, '_w_ddm|_n_ddm')}"
 #' ))}
 #'
 #' @param coords_ddm Vector of coordinate values in degree decimal minutes (xx
@@ -29,7 +29,7 @@
 #'
 #' @export
 
-ss_coords_from_ddm_to_dd <- function(coords_ddm, west = TRUE) {
+ss_convert_coords_from_ddm_to_dd <- function(coords_ddm, west = TRUE) {
 
   coords_out <- coords_ddm %>%
     data.frame(degree_decimal_minutes = .) %>%

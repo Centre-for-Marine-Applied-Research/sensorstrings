@@ -1,4 +1,4 @@
-#' Interactive map of station location
+#' Interactive map of station location(s)
 #'
 #' @param dat Data frame with columns \code{longitude}, \code{latitude},
 #'   \code{station}.
@@ -8,7 +8,7 @@
 #' @export
 #'
 
-ss_leaflet_station_map <- function(dat) {
+ss_map_stations <- function(dat) {
 
   leaflet::leaflet(dat) %>%
     leaflet::addProviderTiles("Esri.OceanBasemap") %>%

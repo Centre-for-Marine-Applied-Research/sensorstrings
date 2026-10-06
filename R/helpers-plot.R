@@ -55,7 +55,7 @@ ss_get_colour_palette <- function(dat) {
 #'   \code{date_labels_format}.
 #'
 
-ss_xaxis_breaks <- function(dat){
+ss_get_xaxis_breaks <- function(dat){
 
   # timespan of the data
   dat <- rename(dat, timestamp_ = contains("timestamp"))
@@ -194,7 +194,6 @@ ss_create_variable_labels <- function(dat, new_line = FALSE) {
 #' @importFrom dplyr %>% filter
 #' @importFrom rlang :=
 #'
-#' @export
 
 filter_dat_to_plot <- function(
     dat,
