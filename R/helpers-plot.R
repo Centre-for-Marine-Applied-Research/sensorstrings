@@ -272,6 +272,7 @@ ss_create_variable_labels_no_newline <- function(dat) {
 #' @importFrom lubridate period is.POSIXct  %m+% %m-%
 #' @importFrom plotly ggplotly
 #' @importFrom dplyr %>% filter
+#' @importFrom rlang :=
 #'
 #' @export
 
@@ -284,7 +285,7 @@ filter_dat_to_plot <- function(
 
   filter_to <- match.arg(filter_to)
 
-  ts_col <- colnames(dat_app)[grep("timestamp", colnames(dat_app))]
+  ts_col <- colnames(dat)[grep("timestamp", colnames(dat))]
   dat <- rename(dat, timestamp_ = contains("timestamp"))
 
   if (filter_to == "start") {
