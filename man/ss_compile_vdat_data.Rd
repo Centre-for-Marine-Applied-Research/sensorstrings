@@ -2,7 +2,7 @@
 % Please edit documentation in R/ss_vdat.R
 \name{ss_compile_vdat_data}
 \alias{ss_compile_vdat_data}
-\title{Format temperature data from VR2AR deployment}
+\title{Format temperature amd depth data from VR2AR (vdat) deployment}
 \usage{
 ss_compile_vdat_data(path, sn_table, deployment_dates, trim = TRUE)
 }

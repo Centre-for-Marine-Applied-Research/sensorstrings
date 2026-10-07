@@ -35,8 +35,8 @@ after 20:00 AST, which is 00:00 UTC the next day.) Default is \code{trim =
 TRUE}.}
 }
 \value{
-Returns a tibble with the data compiled from each of the hobo or
-  tidbit sensors.
+Returns a tibble with the data compiled from each of the hobo pH
+  sensors.
 }
 \description{
 Compile and format data from hobo pH sensors (MX2501)
@@ -46,7 +46,7 @@ Exported data must be saved in a folder named hobo_ph in csv format.
 
   All of the csv files in the hobo_ph folder will be compiled.
 
-  The timestamp column must be in the order "mdY HMS".
+  The timestamp column must be in the order "mdY HMS", “Ymd HMS”, or “Ymd”.
 
   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 }

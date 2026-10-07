@@ -38,7 +38,7 @@ ss_read_vdat_data <- function(path, file_name = NULL) {
 }
 
 
-#' Format temperature data from VR2AR deployment
+#' Format temperature amd depth data from VR2AR (vdat) deployment
 #'
 #' @description Compiles and formats temperature and depth data from VR2AR data
 #'   offloaded in the new .vdat format and exported with Fathom software.

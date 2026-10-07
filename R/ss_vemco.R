@@ -40,10 +40,10 @@ ss_read_vemco_data <- function(path, file_name = NULL) {
 }
 
 
-#' Format temperature data from Vemco deployment
+#' Format temperature, depth, and tilt data from Vemco deployment
 #'
-#' @description Compiles and formats temperature and seawater depth data from
-#'   VR2AR sensors.
+#' @description Compiles and formats temperature, seawater depth, and device
+#'   tilt data from VR2AR sensors processed with Vue software.
 #'
 #' @details The raw vemco data must be saved in a folder named vemco in csv
 #'   format. Folder name is not case-sensitive.
@@ -69,7 +69,8 @@ ss_read_vemco_data <- function(path, file_name = NULL) {
 #'   variable to compile. In some files (e.g., Borgles Island 2018-02-28), there
 #'   is only one "Seawater depth" observation, but a full deployment of "Average
 #'   seawater depth" observations. In this case, force the code to compile the
-#'   average seawater depth with \code{depth_override = Average seawater depth}.
+#'   average seawater depth with \code{depth_override = "Average seawater
+#'   depth"}.
 #'
 #' @return Returns a tibble with the data compiled from the file in path/vemco.
 #'

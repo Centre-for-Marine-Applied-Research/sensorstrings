@@ -25,12 +25,10 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
   if (extract_file_extension(path) != "csv")  {
     stop("file must have extension '.csv'.\nLooked in ", path)
   }
-  # remove this so can delete assertthat dependency
- # assert_that(has_extension(path, "csv"))
 
   data.table::fread(
     path,
-    header = TRUE, data.table = FALSE, na.strings = "", # might need to add ERR to na.strings
+    header = TRUE, data.table = FALSE, na.strings = "",
     fill = TRUE
   )
 }
@@ -39,7 +37,8 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' Compile data from aquameasure sensors
 #'
 #' @description Compile and format temperature, dissolved oxygen, salinity,
-#'   and/or device depth data from aquameasure sensors.
+#'   chlorophyll (blue and red), and/or device depth and til data from
+#'   aquameasure sensors.
 #'
 #' @details The raw aquameasure data must be saved in a folder named aquameasure
 #'   in csv format. Folder name is not case-sensitive.
@@ -220,15 +219,6 @@ ss_compile_aquameasure_data <- function(path,
 
 
     # convert ERR to -111 so that column can be saved as numeric --------------
-    # vars_ss <- c(
-    #   "chlorophyll_blue_ug_per_l",
-    #   "chlorophyll_red_ug_per_l",
-    #   "dissolved_oxygen_percent_saturation",
-    #   "salinity_psu",
-    #   "sensor_depth_measured_m",
-    #   "temperature_degree_c",
-    #   "tilt_degree"
-    # )
     vars_ss <- ss_vars$variable
 
     am_i <- am_i |>

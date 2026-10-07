@@ -12,8 +12,8 @@
 #'
 #' @inheritParams ss_compile_hobo_data
 #'
-#' @param path File path to the folder with the aquameasure, hobo, tidbit, or
-#'   vemco folder.
+#' @param path File path to the folder with the aquameasure, hobo, hobo_ph,
+#'   vdat, or vemco folder.
 #'
 #' @param sensor_make Make of the sensor to be compiled. Should match the name
 #'   of the folder with the raw data files. Most common entries will be

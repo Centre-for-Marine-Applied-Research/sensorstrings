@@ -1,19 +1,15 @@
-#' @title Compile aquameasure, hobo, tidbit, and vemco data from a single
-#'   deployment
+#' @title Compile Water Quality data from a sensor string deployment
 #'
-#' @details Reads the deployment log and then calls
-#'   \code{ss_compile_aquameasure_data()}, \code{ss_compile_hobo_data()}, and
-#'   \code{ss_compile_vemco_data()} and returns the results in a single data
-#'   frame.
+#' @details Reads the deployment log and then calls the
+#'   \code{ss_compile_*_data()}, functions and returns the results in a single
+#'   data frame.
 #'
-#'   aquameasure data must be in a folder named aquameasure, hobo data must be
-#'   in a folder named hobo, tidbit data must be in a folder named tidbit, and
-#'   vemco data must be in a folder name vemco (folder names are not case
-#'   sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in the
-#'   same folder.
+#'   Data files must be in a folder named after the sensor manufacturer and/or
+#'   model (e.g., aquameasure, hobo, hobo_ph, vemco, vdat). Folder names
+#'   are not case sensitive. These folders must be in the same folder.
 #'
 #'   VR2AR data processed with the Fathom software must be in a folder called
-#'   vr2ar.
+#'   vdat.
 #'
 #'   Columns with deployment details are added (e.g., county, waterbody,
 #'   latitude, longitude, station, lease, string_configuration).
@@ -22,13 +18,13 @@
 #' @inheritParams ss_compile_vemco_data
 #' @inheritParams ss_read_log
 #'
-#' @param path File path to the log, aquameasure, hobo, tidbit, and/or vemco
-#'   folders.
+#' @param path File path to the log, aquameasure, hobo, hobo_ph, vdat,
+#'   and/or vemco folders.
 #'
 #' @param ignore_sensors Vector of sensor serial numbers for sensors that are in
 #'   the deployment log, but should NOT be compiled (e.g., data file missing).
 #'
-#' @return Returns a data frame of data from a sensor string deployment.
+#' @return Returns a tibble of data from a sensor string deployment.
 #'
 #' @family compile
 #' @author Danielle Dempsey

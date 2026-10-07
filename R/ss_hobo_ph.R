@@ -4,7 +4,7 @@
 #'
 #'   All of the csv files in the hobo_ph folder will be compiled.
 #'
-#'   The timestamp column must be in the order "mdY HMS".
+#'   The timestamp column must be in the order "mdY HMS", “Ymd HMS”, or “Ymd”.
 #'
 #'   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 #'
@@ -29,8 +29,8 @@
 #'   after 20:00 AST, which is 00:00 UTC the next day.) Default is \code{trim =
 #'   TRUE}.
 #'
-#' @return Returns a tibble with the data compiled from each of the hobo or
-#'   tidbit sensors.
+#' @return Returns a tibble with the data compiled from each of the hobo pH
+#'   sensors.
 #'
 #' @family compile
 #'
