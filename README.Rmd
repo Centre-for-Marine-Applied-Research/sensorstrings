@@ -3,7 +3,6 @@ output: github_document
 editor_options: 
   chunk_output_type: console
 ---
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
@@ -84,9 +83,9 @@ tibble(
     "Temperature, Dissolved Oxygen, Depth", "Temperature, Salinity, Depth",
     "Temperature, Depth"
   )
-) %>%
-  mutate(Sensor = glue::glue("[{SENSORS}]({urls})")) %>%
-  select(Sensor, `Variable(s) Measured`) %>%
+) |>
+  mutate(Sensor = glue::glue("[{SENSORS}]({urls})")) |>
+  select(Sensor, `Variable(s) Measured`) |>
   kable(align = "ll", format = "pipe")
 ```
 
@@ -95,8 +94,7 @@ After retrieval, data from each sensor is exported to a separate csv file using 
 
 The `sensorstrings` package offers functions to compile, format, convert units, and visualize sensor string data.
 
-`sensorstrings` was developed specifically to streamline CMAR’s workflow, but is flexible enough that other users can apply it to process data from the accepted sensors (Table 1). 
-
+`sensorstrings` was developed specifically to streamline CMAR’s workflow, but is flexible enough that other users can apply it to process data from the accepted sensors (Table 1).
 
 For more information on _Water Quality_ data collection and processing, visit the [CMAR Water Quality Data Collection & Processing Reference Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_Workflow.pdf).
 
@@ -114,7 +112,7 @@ tibble(
   "Sensor" = c("HOBO Pro V2", "aquaMeasure DOT", "VR2AR"),
   "Serial Number" = c("10755220", "670364", "547109"),
   "Depth" = c("2", "5", "15")
-) %>%
+) |>
   kable(align = "lcc")
 ```
 
@@ -163,7 +161,7 @@ head(vemco_raw)
 ```
 
 
-Data from each sensor is exported in a slightly different layout, making it difficult to work with and analyze all of the data from a single deployment.
+Data from each sensor is exported in a slightly different layout, which makes it difficult to work with and analyze all of the data from a single deployment.
 
 ### Compile and format with `sensorstrings`
 

@@ -200,9 +200,9 @@ head(vemco_raw)
 #> 6    2019-05-30 18:25 VR2AR-547109     Tilt angle    84     °
 ```
 
-Data from each sensor is exported in a slightly different layout, making
-it difficult to work with and analyze all of the data from a single
-deployment.
+Data from each sensor is exported in a slightly different layout, which
+makes it difficult to work with and analyze all of the data from a
+single deployment.
 
 ### Compile and format with `sensorstrings`
 
