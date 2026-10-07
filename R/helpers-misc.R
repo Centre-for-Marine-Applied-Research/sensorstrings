@@ -7,6 +7,7 @@
 #'   one ".", which is used as the separator.
 #'
 #' @importFrom tools file_ext
+#' @noRd
 
 extract_file_extension <- function(file_input) {
 

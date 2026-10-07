@@ -53,9 +53,9 @@ ss_get_colour_palette <- function(dat) {
 #' @return Returns a dataframe with 1 observation of 3 variables
 #'   \code{date_breaks_major}, \code{date_breaks_minor},
 #'   \code{date_labels_format}.
-#'
+#' @noRd
 
-ss_get_xaxis_breaks <- function(dat){
+get_xaxis_breaks <- function(dat){
 
   # timespan of the data
   dat <- rename(dat, timestamp_ = contains("timestamp"))
@@ -193,7 +193,7 @@ ss_create_variable_labels <- function(dat, new_line = FALSE) {
 #' @importFrom lubridate period is.POSIXct  %m+% %m-%
 #' @importFrom dplyr %>% filter
 #' @importFrom rlang :=
-#'
+#' @noRd
 
 filter_dat_to_plot <- function(
     dat,

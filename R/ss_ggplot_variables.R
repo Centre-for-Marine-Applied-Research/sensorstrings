@@ -87,7 +87,7 @@ ss_ggplot_variables <- function(
   )
 
   #  x-axis
-  axis_breaks <- ss_get_xaxis_breaks(dat)
+  axis_breaks <- get_xaxis_breaks(dat)
 
   if(!is.null(date_breaks_major)) axis_breaks$date_breaks_major <- date_breaks_major
   if(!is.null(date_breaks_minor)) axis_breaks$date_breaks_minor <- date_breaks_minor

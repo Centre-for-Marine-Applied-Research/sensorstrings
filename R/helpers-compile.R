@@ -26,6 +26,7 @@
 #' @importFrom dplyr %>% mutate select
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect
+#' @noRd
 
 set_up_compile <- function(path,
                            sn_table,
@@ -133,6 +134,7 @@ set_up_compile <- function(path,
 #' @param end_date placeholder
 #'
 #' @return returns dat with additional columns
+#' @noRd
 
 add_deployment_columns <- function(
     dat,
@@ -179,6 +181,7 @@ add_deployment_columns <- function(
 #' @param trimmed Logical value indicating if \code{dat} has been trimmed.
 #'
 #' @return Returns an Error if there are no rows in \code{dat}.
+#' @noRd
 
 check_n_rows <- function(dat, file_name, trimmed = TRUE) {
   if (nrow(dat) == 0) {
@@ -208,6 +211,7 @@ check_n_rows <- function(dat, file_name, trimmed = TRUE) {
 #'   entry must be in the same order.
 #'
 #' @importFrom lubridate parse_date_time
+#' @noRd
 
 convert_timestamp_to_datetime <- function(dat, parse_orders = NULL) {
   date_format <- dat$timestamp_[1] # first datetime value; use to check the format
@@ -246,6 +250,7 @@ convert_timestamp_to_datetime <- function(dat, parse_orders = NULL) {
 #'
 #' @importFrom tidyr separate
 #' @importFrom lubridate as_datetime
+#' @noRd
 
 extract_deployment_dates <- function(deployment_dates) {
   # name deployment.dates
@@ -276,6 +281,7 @@ extract_deployment_dates <- function(deployment_dates) {
 #' @importFrom stringr str_detect
 #'
 #' @return Returns dat trimmed.
+#' @noRd
 
 trim_data <- function(dat, start_date, end_date) {
   if(!is.POSIXct(start_date)) {
@@ -307,6 +313,7 @@ trim_data <- function(dat, start_date, end_date) {
 #'   column.
 #'
 #' @importFrom stringr str_detect str_split
+#' @noRd
 
 extract_aquameasure_tz <- function(am_colnames) {
   tz_name <- am_colnames[which(str_detect(am_colnames, "stamp"))]
@@ -324,6 +331,7 @@ extract_aquameasure_tz <- function(am_colnames) {
 #' @param am_colnames Column names of aquameasure data file.
 #'
 #' @return Returns a vector of the variables included in the file.
+#' @noRd
 
 extract_aquameasure_vars <- function(am_colnames) {
 
@@ -352,6 +360,7 @@ extract_aquameasure_vars <- function(am_colnames) {
 #' @return Returns the hobo serial number.
 #'
 #' @importFrom stringr str_detect str_remove str_split
+#' @noRd
 
 extract_hobo_sn <- function(hobo_colnames) {
   SN <- hobo_colnames[str_detect(hobo_colnames, pattern = "Temp")]
@@ -385,6 +394,7 @@ extract_hobo_sn <- function(hobo_colnames) {
 #' @importFrom dplyr %>% contains mutate select
 #' @importFrom stringr str_replace str_remove
 #' @importFrom tidyr separate
+#' @noRd
 
 extract_hobo_units <- function(hobo_dat) {
   hobo_dat %>%
@@ -413,6 +423,7 @@ extract_hobo_units <- function(hobo_dat) {
 #' @importFrom dplyr %>% contains mutate select
 #' @importFrom stringr str_replace str_remove str_remove_all
 #' @importFrom tidyr separate
+#' @noRd
 
 extract_hobo_ph_units <- function(dat) {
   dat %>%
@@ -439,6 +450,7 @@ extract_hobo_ph_units <- function(dat) {
 #'
 #' @importFrom dplyr %>% arrange mutate
 #' @importFrom stringr str_detect str_replace
+#' @noRd
 
 make_column_names <- function(unit_table) {
   new_names <- unit_table %>%
@@ -480,6 +492,7 @@ make_column_names <- function(unit_table) {
 #'   column.
 #'
 #' @importFrom stringr str_detect str_split
+#' @noRd
 
 extract_vemco_tz <- function(dat_colnames) {
   tz_name <- dat_colnames[which(str_detect(dat_colnames, "Time"))]
