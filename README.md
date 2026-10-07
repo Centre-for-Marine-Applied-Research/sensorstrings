@@ -1,94 +1,114 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sensorstrings
-
-<img src="man/figures/2025_hex_sensorstrings.png" alt="" width="25%" style="display: block; margin: auto;" />
+# sensorstrings <img src="man/figures/2025_hex_sensorstrings.png" align="right" width="120" />
 
 <!-- badges: start -->
 
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![](https://img.shields.io/badge/devel%20version-1.5.5-blue.svg)](https://github.com/centre-for-marine-applied-research/sensorstrings)
-[![CodeFactor](https://www.codefactor.io/repository/github/centre-for-marine-applied-research/sensorstrings/badge)](https://www.codefactor.io/repository/github/centre-for-marine-applied-research/sensorstrings)
+[![](https://img.shields.io/badge/devel%20version-1.5.5-blue.svg)](https://github.com/Centre-for-Marine-Applied-Research/sensorstrings)
 [![R build
-status](https://github.com/centre-for-marine-applied-research/sensorstrings/workflows/R-CMD-check/badge.svg)](https://github.com/centre-for-marine-applied-research/sensorstrings/actions)
+status](https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/workflows/R-CMD-check/badge.svg)](https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/actions)
 <!-- badges: end -->
 
-Compile, format, and visualize Water Quality (temperature, dissolved
-oxygen, salinity, chlorophyll, and sensor depth and tilt) data measured
-by different sensors.
+`sensorstrings` compiles, formats and visualizes Water Quality data
+collected on “sensor strings” by the Centre for Marine Applied Research
+([CMAR](https://cmar.ca/)). It reads the raw csv files exported from
+each sensor, combines them with the deployment log, and returns one tidy
+data frame per deployment, ready for quality control with
+[`qaqcmar`](https://github.com/Centre-for-Marine-Applied-Research/qaqcmar).
+
+`sensorstrings` replaces the
+[`strings`](https://github.com/Centre-for-Marine-Applied-Research/strings)
+package.
 
 ## Installation
 
-You can install the development version of `sensorstrings` from
-[GitHub](https://github.com/) with:
+Install the development version from GitHub:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("centre-for-marine-applied-research/sensorstrings")
+# install.packages("remotes")
+remotes::install_github("Centre-for-Marine-Applied-Research/sensorstrings")
 ```
+
+A few functions need extra packages that are not installed
+automatically. Install them if you use those functions:
+
+| `sensorstrings` Function | Needs |
+|----|----|
+| `ss_map_stations()`, `ss_check_station_in_ocean()` | leaflet, sf |
+| `ss_open_trimdates_app()` | shiny, plotly |
+| `ss_model_mooring()` | mooring (`remotes::install_github("dankelley/mooring")`) |
 
 ## Background
 
-The Centre for Marine Applied Research ([CMAR](https://cmar.ca/))
-coordinates an extensive [Coastal Monitoring
-Program](https://cmar.ca/coastal-monitoring-program/) to measure
-[Essential Ocean
-Variables](https://www.goosocean.org/index.php?option=com_content&view=article&id=14&Itemid=114)
-from around the coast of Nova Scotia, Canada. There are three main
-branches of the program: *Water Quality*, *Currents*, and *Waves*.
-Processed data for each branch can be viewed and downloaded from several
-sources, as outlined in the [CMAR Data Access Reference
+CMAR’s [Coastal Monitoring
+Program](https://cmar.ca/coastal-monitoring-program/) measures
+[Essential Ocean Variables](https://www.goosocean.org/) around the coast
+of Nova Scotia, Canada. The program has three branches: *Water Quality*,
+*Currents* and *Waves*. `sensorstrings` is the backbone of the Water
+Quality data pipeline. Processed data can be viewed and downloaded as
+described in the [CMAR Data Access Reference
 Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf).
 
-The `sensorstrings` package is the backbone of the data pipeline for the
-*Water Quality* branch of the Coastal Monitoring Program. It is used to
-organize, compile, format, and visualize data *Water Quality* data.
-
-*Water Quality* data is collected using stationary moorings referred to
-as “sensor strings”. A typical sensor string configuration consists of a
-rope attached to the seafloor by an anchor and suspended by a
-sub-surface buoy, with sensors attached at various depths (Figure 1).
-Alternatively, sensors may be attached to surface buoys, equipment,
-floating docks, or fixed structures (Figure 1).
+Water Quality data are collected on vertical moorings called sensor
+strings. A typical string is a rope anchored to the seafloor and held up
+by a sub-surface buoy, with sensors attached at different depths.
+Sensors may also be attached to surface buoys, equipment, floating docks
+or fixed structures (Figure 1).
 
 <img src="man/figures/sensor_configurations.png" alt="" width="2304" style="display: block; margin: auto;" />
 Figure 1: Sensor string configurations (not to scale).
 
 <br> <br>
 
-All sensor strings have at least one sensor that measures temperature,
-and most strings also have one dissolved oxygen sensor. Some strings
-also have a salinity sensor, typically upon request from shellfish
-aquaculture operators (Table 1). Strings are deployed at a station for
-several months and data are typically measured every 10 minutes to 1
-hour, depending on the sensor.
+Every string has at least one temperature sensor, and most have a
+dissolved oxygen sensor. Sensors on a string may also measure salinity,
+pH, chlorophyll, and sensor depth and tilt. Strings are deployed at a
+location for several months and record every 10 minutes to 1 hour,
+depending on the sensor.
 
-| Sensor | Variable(s) Measured |
-|:---|:---|
-| [HOBO Pro V2](https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ) | Temperature |
-| [HOBO U26](https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x) | Temperature, Dissolved Oxygen |
-| [aquaMeasure DOT](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Dissolved Oxygen, Depth |
-| [aquaMeasure SAL](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Salinity, Depth |
-| [VR2AR](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf) | Temperature, Depth |
+### Supported Sensors
 
-After retrieval, data from each sensor is exported to a separate csv
-file using manufacturer-specific software. Each type of sensor generates
-a data file with unique columns and header fields, which poses a
-significant challenge for compiling all data from a deployment into a
-single format for analysis.
+| Sensor | Folder name | Variables |
+|:---|:---|:---|
+| HOBO Pro V2 | hobo | temperature |
+| HOBO U26 | hobo | temperature, dissolved oxygen |
+| HOBO pH | hobo_ph | temperature, pH |
+| TidbiT | tidbit | temperature |
+| aquaMeasure (DOT, SAL, CHL) | aquameasure | temperature, dissolved oxygen, salinity, chlorophyll, sensor depth, tilt (by model) |
+| VR2AR / VR2AR-X (csv from Vue) | vemco | temperature, sensor depth, tilt |
+| VR2AR-69 / VR2AR-X-69 (csv from Fathom) | vdat | temperature, sensor depth, tilt |
 
-The `sensorstrings` package offers functions to compile, format, convert
-units, and visualize sensor string data.
+Each sensor type exports its data with different columns and headers.
+`sensorstrings` provides functions to organize, compile, format, and
+visualize the data.
 
-`sensorstrings` was developed specifically to streamline CMAR’s
-workflow, but is flexible enough that other users can apply it to
-process data from the accepted sensors (Table 1).
+`sensorstrings` was built for CMAR’s workflow, but anyone with data from
+the sensors above can use it.
 
-For more information on *Water Quality* data collection and processing,
-visit the [CMAR Water Quality Data Collection & Processing Reference
+For more on how CMAR collects and processes Water Quality data, see the
+[CMAR Water Quality Data Collection & Processing Reference
 Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_Workflow.pdf).
+
+## Main functions
+
+| Step | Functions |
+|----|----|
+| Set up a deployment | `ss_set_up_folders()`, `ss_create_template()`, `ss_create_log_from_metadata()` |
+| Read the log | `ss_read_log()`, `ss_parse_log()` |
+| Read one raw file | `ss_read_aquameasure_data()`, `ss_read_hobo_data()`, `ss_read_vemco_data()`, `ss_read_vdat_data()` |
+| Compile a deployment | `ss_compile_deployment_data()` (calls the `ss_compile_*_data()` function for each sensor type) |
+| Check the station | `ss_check_station_radius()`, `ss_check_station_drift()`, `ss_check_station_in_ocean()`, `ss_map_stations()` |
+| Reshape | `ss_pivot_longer()`, `ss_pivot_wider()` |
+| Plot | `ss_ggplot_variables()`, `ss_plot_variables()`, `ss_open_trimdates_app()` |
+| Import, export and assemble | `ss_import_data()`, `ss_export_county_files()`, `ss_assemble_region_data()` |
+| Report | `ss_write_report_table()` |
+
+See the [reference
+pages](https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/reference/)
+for every function.
 
 ## Example
 
@@ -96,46 +116,35 @@ Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_W
 library(sensorstrings)
 ```
 
-Consider a string deployed from May 31, 2019 to October 19, 2019 with
-three sensors:
+This example uses a string deployed from May 31 to October 19, 2019 with
+three sensors. The data files ship with the package.
 
-| Sensor          | Serial Number | Depth |
-|:----------------|:-------------:|:-----:|
-| HOBO Pro V2     |   10755220    |   2   |
-| aquaMeasure DOT |    670364     |   5   |
-| VR2AR           |    547109     |  15   |
+| Sensor          | Serial number | Depth (m) |
+|:----------------|:-------------:|:---------:|
+| HOBO Pro V2     |   10755220    |     2     |
+| aquaMeasure DOT |    670364     |     5     |
+| VR2AR           |    547109     |    15     |
 
-### Raw data files
+### Raw data
 
-The data from each sensor is saved in separate csv file, each with
-manufacturer-specific columns.
-
-Import raw data files:
+Each sensor’s file has its own layout:
 
 ``` r
 path <- system.file("extdata", package = "sensorstrings")
 
 aquameasure_raw <- ss_read_aquameasure_data(
-  path = paste0(path, "/aquameasure"),
+  path = file.path(path, "aquameasure"),
   file_name = "aquameasure-670364.csv"
 )
-
 hobo_raw <- ss_read_hobo_data(
-  path = paste0(path, "/hobo"),
+  path = file.path(path, "hobo"),
   file_name = "10755220.csv"
 )
-
 vemco_raw <- ss_read_vemco_data(
-  path = paste0(path, "/vemco"),
+  path = file.path(path, "vemco"),
   file_name = "vemco-547109.csv"
 )
-```
 
-Examine the first rows of each raw data file:
-
-#### AquaMeasure data
-
-``` r
 head(aquameasure_raw)
 #>                       Timestamp(UTC) Time Corrected(seconds)             Sensor
 #> 1  209s after startup (time not set)                      NA aquaMeasure-670364
@@ -158,11 +167,6 @@ head(aquameasure_raw)
 #> 4      NA   NA   NA
 #> 5      NA   NA   NA
 #> 6      NA   NA   NA
-```
-
-#### Hobo data
-
-``` r
 head(hobo_raw)
 #>    # Date Time, GMT+00:00 Temp, °C (LGR S/N: 10755220, SEN S/N: 10755220) V4
 #> 1  4     2019-05-30 21:00                                           6.661 NA
@@ -185,11 +189,6 @@ head(hobo_raw)
 #> 4                                                            
 #> 5                                                            
 #> 6
-```
-
-#### Vemco data
-
-``` r
 head(vemco_raw)
 #>   Date and Time (UTC)     Receiver    Description  Data Units
 #> 1    2019-05-30 18:06 VR2AR-547109          Noise 207.6    mV
@@ -200,83 +199,73 @@ head(vemco_raw)
 #> 6    2019-05-30 18:25 VR2AR-547109     Tilt angle    84     °
 ```
 
-Data from each sensor is exported in a slightly different layout, which
-makes it difficult to work with and analyze all of the data from a
-single deployment.
+### Deployment log
 
-### Compile and format with `sensorstrings`
-
-The `ss_compile_deployment_data()` function makes it easy to compile
-these files into a single data frame, with additional information added
-from the deployment log.
-
-#### Deployment Log
-
-The deployment log includes the deployment and retrieval dates,
-information on where the string was deployed, and the depth of each
-sensor.
+The log holds the deployment and retrieval dates, where the string was
+deployed, and the depth of each sensor:
 
 ``` r
 log <- ss_read_log(path)
-#> Column county not found in log. county will be recorded as NA.
-#> Configuration will be converted from NA to << unknown >>
-```
 
-``` r
 log$deployment_dates
 #>   start_date   end_date
 #> 1 2019-05-30 2019-10-19
-```
-
-``` r
 log$area_info
-#>   region county waterbody latitude longitude        station lease
-#> 1     NA     NA Shoal Bay 44.77241 -62.72608 Borgles Island    NA
-```
-
-``` r
+#>   region  county waterbody latitude longitude        station lease
+#> 1     NA Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA
 log$sn_table
-#> # A tibble: 3 × 3
-#>   log_sensor      sensor_serial_number depth
-#>   <chr>                          <dbl> <dbl>
-#> 1 HOBO Pro V2                 10755220     2
+#>        log_sensor sensor_serial_number depth
+#> 1     HOBO Pro V2             10755220     2
 #> 2 aquaMeasure DOT               670364     5
-#> 3 VR2AR                         547109    15
+#> 3           VR2AR               547109    15
 ```
 
-#### Compile Data
+### Compile
 
-`ss_compile_deployment_data()` reads in the log and the data for each
-sensor and exports a single data frame.
+`ss_compile_deployment_data()` reads the log and every sensor file in
+the deployment folder, and returns one data frame:
 
 ``` r
 dat <- ss_compile_deployment_data(path)
-#> Column county not found in log. county will be recorded as NA.
-#> Configuration will be converted from NA to << unknown >>
 #> aquameasure data compiled
 #> hobo data compiled
 #> vemco data from sensor <<  547109  >> compiled: Temperature & Seawater depth
 
-kable(dat[1:10, ])
+kable(head(dat, 10))
 ```
 
 | region | county | waterbody | station | lease | latitude | longitude | deployment_range | string_configuration | sensor_type | sensor_serial_number | timestamp_utc | sensor_depth_at_low_tide_m | dissolved_oxygen_percent_saturation | sensor_depth_measured_m | temperature_degree_c | tilt_degree |
 |:---|:---|:---|:---|:---|---:|---:|:---|:---|:---|---:|:---|---:|---:|---:|---:|---:|
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-30 21:00:00 | 2 | NA | NA | 6.661 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 01:00:00 | 2 | NA | NA | 7.695 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 05:00:00 | 2 | NA | NA | 7.569 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 09:00:00 | 2 | NA | NA | 6.509 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 13:00:00 | 2 | NA | NA | 6.788 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 17:00:00 | 2 | NA | NA | 6.839 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 21:00:00 | 2 | NA | NA | 7.192 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 01:00:00 | 2 | NA | NA | 7.594 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 05:00:00 | 2 | NA | NA | 7.544 | NA |
-| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 09:00:00 | 2 | NA | NA | 6.661 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-30 21:00:00 | 2 | NA | NA | 6.661 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 01:00:00 | 2 | NA | NA | 7.695 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 05:00:00 | 2 | NA | NA | 7.569 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 09:00:00 | 2 | NA | NA | 6.509 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 13:00:00 | 2 | NA | NA | 6.788 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 17:00:00 | 2 | NA | NA | 6.839 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-05-31 21:00:00 | 2 | NA | NA | 7.192 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 01:00:00 | 2 | NA | NA | 7.594 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 05:00:00 | 2 | NA | NA | 7.544 | NA |
+| NA | Halifax | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | sub-surface buoy | hobo | 10755220 | 2019-06-01 09:00:00 | 2 | NA | NA | 6.661 | NA |
 
 ### Plot
 
 ``` r
-ss_ggplot_variables(dat)
+ss_ggplot_variables(dat, point_size = 1)
 ```
 
-<img src="man/figures/README-fig1-1.png" alt="" width="100%" />
+![](man/figures/README-fig1-1.png)<!-- -->
+
+## Getting help
+
+Please report bugs or suggest features on the [issues
+page](https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/issues).
+
+## AI Disclosure
+
+This README file was generated by Claude Opus 5.5. It was based on an
+earlier, human-written version of the README, and was reviewed and
+modified before publication.
+
+The original versions of `sensorstrings` were written without any AI.
+Since `sensorstrings v1.5.5`, Claude Opus 5.5 has been used to improve
+clarity and consistency between CMAR R packages.
