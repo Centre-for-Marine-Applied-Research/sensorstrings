@@ -11,7 +11,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-"
-  # out.width = "100%"
 )
 
 library(badger)
@@ -20,7 +19,7 @@ library(glue)
 library(kableExtra)
 library(usethis)
 
-repo <- "dempsey-cmar/sensorstrings"
+repo <- "centre-for-marine-applied-research/sensorstrings"
 ```
 
 # sensorstrings
@@ -36,21 +35,7 @@ knitr::include_graphics("man/figures/2025_hex_sensorstrings.png")
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) `r badge_devel(repo, "blue")` `r badge_codefactor(repo)` `r badge_github_actions(repo)`
 <!-- badges: end -->
 
-**This package replaces the [strings](https://github.com/Centre-for-Marine-Applied-Research/strings) package.** 
-
-New features:
-
-- Cleaner code 
-- More straightforward workflow 
-  - don't need to export intermediate "raw" and "trim" files
-  - few arguments to specify in templates
-- Additional functions (e.g., `ss_download_data()`)
-- Variable names consistent with [Climate Forecast](https://cfconventions.org/) conventions
-- Formal tests
-- More helpful `Error` and `Warning` messages
-
-
-Compile, format, and visualize Water Quality (temperature, dissolved oxygen, salinity) data measured by different sensors. 
+Compile, format, and visualize Water Quality (temperature, dissolved oxygen, salinity, chlorophyll, and sensor depth and tilt) data measured by different sensors. 
 
 ## Installation
 
@@ -58,25 +43,16 @@ You can install the development version of `sensorstrings` from [GitHub](https:/
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("dempsey-CMAR/sensorstrings")
+devtools::install_github("centre-for-marine-applied-research/sensorstrings")
 ```
-
-## Package Structure
-
-The function at the tip calls the function at the tail.
-
-```{r, echo=FALSE, out.height='120%', out.width='100%', fig.align='center', dpi=600}
-knitr::include_graphics("man/figures/2022-10-18_ss_structure.png")
-```
-
 
 ## Background
 
-The Centre for Marine Applied Research ([CMAR](https://cmar.ca/)) coordinates an extensive [Coastal Monitoring Program](https://cmar.ca/coastal-monitoring-program/) to measure [Essential Ocean Variables](https://www.goosocean.org/index.php?option=com_content&view=article&id=14&Itemid=114) from around the coast of Nova Scotia, Canada. There are three main branches of the program: _Water Quality_, _Currents_, and _Waves_. Processed data for each branch can be viewed and downloaded from several sources, as outlined in the [CMAR Report & Data Access Reference Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf).
+The Centre for Marine Applied Research ([CMAR](https://cmar.ca/)) coordinates an extensive [Coastal Monitoring Program](https://cmar.ca/coastal-monitoring-program/) to measure [Essential Ocean Variables](https://www.goosocean.org/index.php?option=com_content&view=article&id=14&Itemid=114) from around the coast of Nova Scotia, Canada. There are three main branches of the program: _Water Quality_, _Currents_, and _Waves_. Processed data for each branch can be viewed and downloaded from several sources, as outlined in the [CMAR Data Access Reference Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf).
 
 The `sensorstrings` package is the backbone of the data pipeline for the _Water Quality_ branch of the Coastal Monitoring Program. It is used to organize, compile, format, and visualize data _Water Quality_ data. 
 
-_Water Quality_ data (temperature, dissolved oxygen, and salinity) is collected using stationary moorings referred to as “sensor strings”. A typical sensor string configuration consists of a rope attached to the seafloor by an anchor and suspended by a sub-surface buoy, with sensors attached at various depths (Figure 1). Alternatively, sensors may be attached to surface buoys, equipment, floating docks, or fixed structures (Figure 1). 
+_Water Quality_ data is collected using stationary moorings referred to as “sensor strings”. A typical sensor string configuration consists of a rope attached to the seafloor by an anchor and suspended by a sub-surface buoy, with sensors attached at various depths (Figure 1). Alternatively, sensors may be attached to surface buoys, equipment, floating docks, or fixed structures (Figure 1). 
 
 
 ```{r, echo=FALSE, fig.align="center"}
@@ -92,7 +68,7 @@ All sensor strings have at least one sensor that measures temperature, and most 
 ```{r, echo=FALSE,caption= "Sensor Models included"}
 tibble(
   SENSORS = c(
-    "HOBO Pro V2", "HOBO DO",
+    "HOBO Pro V2", "HOBO U26",
     "aquaMeasure DOT", "aquaMeasure SAL",
     "VR2AR"
   ),
@@ -105,8 +81,8 @@ tibble(
   ),
   `Variable(s) Measured` = c(
     "Temperature", "Temperature, Dissolved Oxygen",
-    "Temperature, Dissolved Oxygen", "Temperature, Salinity",
-    "Temperature"
+    "Temperature, Dissolved Oxygen, Depth", "Temperature, Salinity, Depth",
+    "Temperature, Depth"
   )
 ) %>%
   mutate(Sensor = glue::glue("[{SENSORS}]({urls})")) %>%

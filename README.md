@@ -3,36 +3,21 @@
 
 # sensorstrings
 
-<img src="man/figures/2025_hex_sensorstrings.png" width="25%" style="display: block; margin: auto;" />
+<img src="man/figures/2025_hex_sensorstrings.png" alt="" width="25%" style="display: block; margin: auto;" />
 
 <!-- badges: start -->
 
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![](https://img.shields.io/badge/devel%20version-1.0.3-blue.svg)](https://github.com/dempsey-cmar/sensorstrings)
-[![CodeFactor](https://www.codefactor.io/repository/github/dempsey-cmar/sensorstrings/badge)](https://www.codefactor.io/repository/github/dempsey-cmar/sensorstrings)
+[![](https://img.shields.io/badge/devel%20version-1.5.5-blue.svg)](https://github.com/centre-for-marine-applied-research/sensorstrings)
+[![CodeFactor](https://www.codefactor.io/repository/github/centre-for-marine-applied-research/sensorstrings/badge)](https://www.codefactor.io/repository/github/centre-for-marine-applied-research/sensorstrings)
 [![R build
-status](https://github.com/dempsey-cmar/sensorstrings/workflows/R-CMD-check/badge.svg)](https://github.com/dempsey-cmar/sensorstrings/actions)
+status](https://github.com/centre-for-marine-applied-research/sensorstrings/workflows/R-CMD-check/badge.svg)](https://github.com/centre-for-marine-applied-research/sensorstrings/actions)
 <!-- badges: end -->
 
-**This package replaces the
-[strings](https://github.com/Centre-for-Marine-Applied-Research/strings)
-package.**
-
-New features:
-
-- Cleaner code
-- More straightforward workflow
-  - don’t need to export intermediate “raw” and “trim” files
-  - few arguments to specify in templates
-- Additional functions (e.g., `ss_download_data()`)
-- Variable names consistent with [Climate
-  Forecast](https://cfconventions.org/) conventions
-- Formal tests
-- More helpful `Error` and `Warning` messages
-
 Compile, format, and visualize Water Quality (temperature, dissolved
-oxygen, salinity) data measured by different sensors.
+oxygen, salinity, chlorophyll, and sensor depth and tilt) data measured
+by different sensors.
 
 ## Installation
 
@@ -41,14 +26,8 @@ You can install the development version of `sensorstrings` from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("dempsey-CMAR/sensorstrings")
+devtools::install_github("centre-for-marine-applied-research/sensorstrings")
 ```
-
-## Package Structure
-
-The function at the tip calls the function at the tail.
-
-<img src="man/figures/2022-10-18_ss_structure.png" width="100%" height="120%" style="display: block; margin: auto;" />
 
 ## Background
 
@@ -60,22 +39,21 @@ Variables](https://www.goosocean.org/index.php?option=com_content&view=article&i
 from around the coast of Nova Scotia, Canada. There are three main
 branches of the program: *Water Quality*, *Currents*, and *Waves*.
 Processed data for each branch can be viewed and downloaded from several
-sources, as outlined in the [CMAR Report & Data Access Reference
+sources, as outlined in the [CMAR Data Access Reference
 Sheet](https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf).
 
 The `sensorstrings` package is the backbone of the data pipeline for the
 *Water Quality* branch of the Coastal Monitoring Program. It is used to
 organize, compile, format, and visualize data *Water Quality* data.
 
-*Water Quality* data (temperature, dissolved oxygen, and salinity) is
-collected using stationary moorings referred to as “sensor strings”. A
-typical sensor string configuration consists of a rope attached to the
-seafloor by an anchor and suspended by a sub-surface buoy, with sensors
-attached at various depths (Figure 1). Alternatively, sensors may be
-attached to surface buoys, equipment, floating docks, or fixed
-structures (Figure 1).
+*Water Quality* data is collected using stationary moorings referred to
+as “sensor strings”. A typical sensor string configuration consists of a
+rope attached to the seafloor by an anchor and suspended by a
+sub-surface buoy, with sensors attached at various depths (Figure 1).
+Alternatively, sensors may be attached to surface buoys, equipment,
+floating docks, or fixed structures (Figure 1).
 
-<img src="man/figures/sensor_configurations.png" width="2304" style="display: block; margin: auto;" />
+<img src="man/figures/sensor_configurations.png" alt="" width="2304" style="display: block; margin: auto;" />
 Figure 1: Sensor string configurations (not to scale).
 
 <br> <br>
@@ -87,13 +65,13 @@ aquaculture operators (Table 1). Strings are deployed at a station for
 several months and data are typically measured every 10 minutes to 1
 hour, depending on the sensor.
 
-| Sensor                                                                                                                                  | Variable(s) Measured          |
-|:----------------------------------------------------------------------------------------------------------------------------------------|:------------------------------|
-| [HOBO Pro V2](https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ) | Temperature                   |
-| [HOBO DO](https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x)     | Temperature, Dissolved Oxygen |
-| [aquaMeasure DOT](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf)        | Temperature, Dissolved Oxygen |
-| [aquaMeasure SAL](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf)        | Temperature, Salinity         |
-| [VR2AR](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf)                         | Temperature                   |
+| Sensor | Variable(s) Measured |
+|:---|:---|
+| [HOBO Pro V2](https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ) | Temperature |
+| [HOBO U26](https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x) | Temperature, Dissolved Oxygen |
+| [aquaMeasure DOT](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Dissolved Oxygen, Depth |
+| [aquaMeasure SAL](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf) | Temperature, Salinity, Depth |
+| [VR2AR](https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf) | Temperature, Depth |
 
 After retrieval, data from each sensor is exported to a separate csv
 file using manufacturer-specific software. Each type of sensor generates
@@ -121,56 +99,11 @@ library(sensorstrings)
 Consider a string deployed from May 31, 2019 to October 19, 2019 with
 three sensors:
 
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-Sensor
-</th>
-<th style="text-align:center;">
-Serial Number
-</th>
-<th style="text-align:center;">
-Depth
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-HOBO Pro V2
-</td>
-<td style="text-align:center;">
-10755220
-</td>
-<td style="text-align:center;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-aquaMeasure DOT
-</td>
-<td style="text-align:center;">
-670364
-</td>
-<td style="text-align:center;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-VR2AR
-</td>
-<td style="text-align:center;">
-547109
-</td>
-<td style="text-align:center;">
-15
-</td>
-</tr>
-</tbody>
-</table>
+| Sensor          | Serial Number | Depth |
+|:----------------|:-------------:|:-----:|
+| HOBO Pro V2     |   10755220    |   2   |
+| aquaMeasure DOT |    670364     |   5   |
+| VR2AR           |    547109     |  15   |
 
 ### Raw data files
 
@@ -285,8 +218,8 @@ sensor.
 
 ``` r
 log <- ss_read_log(path)
-#> ✔ Reading from "STRING TRACKING".
-#> ✔ Range ''Area Info''.
+#> Column county not found in log. county will be recorded as NA.
+#> Configuration will be converted from NA to << unknown >>
 ```
 
 ``` r
@@ -297,8 +230,8 @@ log$deployment_dates
 
 ``` r
 log$area_info
-#>    county waterbody latitude longitude        station lease
-#> 1 Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA
+#>   region county waterbody latitude longitude        station lease
+#> 1     NA     NA Shoal Bay 44.77241 -62.72608 Borgles Island    NA
 ```
 
 ``` r
@@ -318,8 +251,8 @@ sensor and exports a single data frame.
 
 ``` r
 dat <- ss_compile_deployment_data(path)
-#> ✔ Reading from "STRING TRACKING".
-#> ✔ Range ''Area Info''.
+#> Column county not found in log. county will be recorded as NA.
+#> Configuration will be converted from NA to << unknown >>
 #> aquameasure data compiled
 #> hobo data compiled
 #> vemco data from sensor <<  547109  >> compiled: Temperature & Seawater depth
@@ -327,529 +260,18 @@ dat <- ss_compile_deployment_data(path)
 kable(dat[1:10, ])
 ```
 
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-county
-</th>
-<th style="text-align:left;">
-waterbody
-</th>
-<th style="text-align:left;">
-station
-</th>
-<th style="text-align:left;">
-lease
-</th>
-<th style="text-align:right;">
-latitude
-</th>
-<th style="text-align:right;">
-longitude
-</th>
-<th style="text-align:left;">
-deployment_range
-</th>
-<th style="text-align:left;">
-string_configuration
-</th>
-<th style="text-align:left;">
-sensor_type
-</th>
-<th style="text-align:right;">
-sensor_serial_number
-</th>
-<th style="text-align:left;">
-timestamp_utc
-</th>
-<th style="text-align:right;">
-sensor_depth_at_low_tide_m
-</th>
-<th style="text-align:right;">
-dissolved_oxygen_percent_saturation
-</th>
-<th style="text-align:right;">
-sensor_depth_measured_m
-</th>
-<th style="text-align:right;">
-temperature_degree_c
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-30 21:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.661
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 01:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.695
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 05:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.569
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 09:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.509
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 13:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.788
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 17:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.839
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 21:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.192
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 01:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.594
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 05:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.544
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 09:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.661
-</td>
-</tr>
-</tbody>
-</table>
+| region | county | waterbody | station | lease | latitude | longitude | deployment_range | string_configuration | sensor_type | sensor_serial_number | timestamp_utc | sensor_depth_at_low_tide_m | dissolved_oxygen_percent_saturation | sensor_depth_measured_m | temperature_degree_c | tilt_degree |
+|:---|:---|:---|:---|:---|---:|---:|:---|:---|:---|---:|:---|---:|---:|---:|---:|---:|
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-30 21:00:00 | 2 | NA | NA | 6.661 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 01:00:00 | 2 | NA | NA | 7.695 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 05:00:00 | 2 | NA | NA | 7.569 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 09:00:00 | 2 | NA | NA | 6.509 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 13:00:00 | 2 | NA | NA | 6.788 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 17:00:00 | 2 | NA | NA | 6.839 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-05-31 21:00:00 | 2 | NA | NA | 7.192 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 01:00:00 | 2 | NA | NA | 7.594 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 05:00:00 | 2 | NA | NA | 7.544 | NA |
+| NA | NA | Shoal Bay | Borgles Island | NA | 44.77241 | -62.72608 | 2019-May-30 to 2019-Oct-19 | unknown | hobo | 10755220 | 2019-06-01 09:00:00 | 2 | NA | NA | 6.661 | NA |
 
 ### Plot
 
@@ -857,4 +279,4 @@ NA
 ss_ggplot_variables(dat)
 ```
 
-<img src="man/figures/README-fig1-1.png" width="100%" />
+<img src="man/figures/README-fig1-1.png" alt="" width="100%" />
