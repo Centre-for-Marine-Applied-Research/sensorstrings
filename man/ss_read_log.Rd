@@ -39,14 +39,11 @@ serial numbers and sensor depth.}
 string configuration.}
 }
 \value{
-Returns a a data frame of the deployment metadata. Option to parse
-  the information into a list using \code{ss_parse_log()}.
+If \code{parse = TRUE} (the default), returns a list of deployment
+  metadata from \code{ss_parse_log()}. Otherwise returns a data frame of the
+  metadata.
 }
 \description{
 The log must be saved in .csv, .xlsx or .xls format. Value checks are applied
 in \code{ss_parse_log()}.
-}
-\details{
-"Old" log column names will be converted to the new standard (.e.,g
-"Location_Description" will be replaced with "station").
 }

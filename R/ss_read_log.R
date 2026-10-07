@@ -1,43 +1,7 @@
-#' Convert column names from old log into the new format
-#'
-#' @param log Log file as read in from \code{ss_read_log()}.
-#'
-#' @returns Returns log with columns names matching those as if it head been
-#'   read in from
-#'
-#' @importFrom dplyr contains rename
-#'
-#' @export
-
-ss_convert_old_log <- function(log) {
-
-  log <- log |>
-    rename(
-      waterbody = contains("Deployment_Waterbody"),
-      station = contains("Location_Description"),
-      lease = contains("Lease#"),
-      deployment_date = Deployment,
-      retrieval_date = Retrieval,
-      deployment_latitude = contains("Logger_Latitude"),
-      deployment_longitude = contains("Logger_Longitude"),
-      sensor_type = contains("Logger_Model"),
-      sensor_serial_number = contains("Serial#"),
-      sensor_depth_m = contains("Sensor_Depth")
-    )
-
-  colnames(log) <- tolower(colnames(log))
-
-  log
-}
-
-
 #' Read in deployment log
 #'
 #' The log must be saved in .csv, .xlsx or .xls format. Value checks are applied
 #' in \code{ss_parse_log()}.
-#'
-#' "Old" log column names will be converted to the new standard (.e.,g
-#' "Location_Description" will be replaced with "station").
 #'
 #' @inheritParams ss_parse_log
 #'
@@ -49,8 +13,9 @@ ss_convert_old_log <- function(log) {
 #' @param parse Logical argument indicating whether to parse log into a list
 #'   used by \code{ss_compile_*} functions.
 #'
-#' @return Returns a a data frame of the deployment metadata. Option to parse
-#'   the information into a list using \code{ss_parse_log()}.
+#' @return If \code{parse = TRUE} (the default), returns a list of deployment
+#'   metadata from \code{ss_parse_log()}. Otherwise returns a data frame of the
+#'   metadata.
 #'
 #' @importFrom data.table fread
 #' @importFrom readxl read_excel
@@ -110,10 +75,10 @@ ss_read_log <- function(
     )
   }
 
-  old_col_names <- c("Location_Description", "Logger_Model", "Serial#")
-  if(any(old_col_names %in% colnames(log))) {
-    log <- ss_convert_old_log(log)
-  }
+  # old_col_names <- c("Location_Description", "Logger_Model", "Serial#")
+  # if(any(old_col_names %in% colnames(log))) {
+  #   log <- ss_convert_old_log(log)
+  # }
 
   if(isTRUE(parse)) {
     log <- ss_parse_log(
@@ -137,7 +102,6 @@ ss_read_log <- function(
 #' \code{deployment_longitude}, \code{sensor_type}, \code{sensor_serial_number},
 #' \code{sensor_depth_m}. Missing information will be filled in with \code{NA}.
 #'
-#' Old log column names will also be accepted.
 #'
 #' If \code{verbose = TRUE}, a message will be printed if there is more than one
 #' unique entry in \code{waterbody}, \code{station}, \code{deployment_date},
@@ -173,10 +137,10 @@ ss_read_log <- function(
 #'
 #' @return Returns a list with up to 4 elements. \code{deployment_dates} is a
 #'   data frame with two columns: \code{start_date} and \code{end_date}.
-#'   \code{area_info} is a data frame with five columns: \code{county},
-#'   \code{waterbody}, \code{latitude}, \code{longitude}, \code{station}, and
-#'   \code{lease}. \code{sn_table} is a data frame with three columns:
-#'   \code{log_sensor} (sensor name as recorded in the log),
+#'   \code{area_info} is a data frame with six columns: \code{region} or
+#'   \code{county}, \code{waterbody}, \code{latitude}, \code{longitude},
+#'   \code{station}, and \code{lease}. \code{sn_table} is a data frame with
+#'   three columns: \code{log_sensor} (sensor name as recorded in the log),
 #'   \code{sensor_serial_number}, and \code{depth}. \code{string_configuration}
 #'   is a character string indicating how the sensor string was moored.
 #'
@@ -304,7 +268,7 @@ ss_parse_log <- function(
       long <- unique(log$deployment_longitude)
       if (any(long > 0)) stop("Longitude must be a negative value")
       if (length(long) > 1) warning("Multiple longitudes recorded in log")
-      if (!is.numeric(long)) warning("Latitude is not numeric")
+      if (!is.numeric(long)) warning("Longitude is not numeric")
     } else {
       if(isTRUE(verbose)) {
         message("Column deployment_longitude not found in log. longitude will be recorded as NA.")

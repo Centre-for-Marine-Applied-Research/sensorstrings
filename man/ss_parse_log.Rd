@@ -34,10 +34,10 @@ values are missing. Warnings will still be printed.}
 \value{
 Returns a list with up to 4 elements. \code{deployment_dates} is a
   data frame with two columns: \code{start_date} and \code{end_date}.
-  \code{area_info} is a data frame with five columns: \code{county},
-  \code{waterbody}, \code{latitude}, \code{longitude}, \code{station}, and
-  \code{lease}. \code{sn_table} is a data frame with three columns:
-  \code{log_sensor} (sensor name as recorded in the log),
+  \code{area_info} is a data frame with six columns: \code{region} or
+  \code{county}, \code{waterbody}, \code{latitude}, \code{longitude},
+  \code{station}, and \code{lease}. \code{sn_table} is a data frame with
+  three columns: \code{log_sensor} (sensor name as recorded in the log),
   \code{sensor_serial_number}, and \code{depth}. \code{string_configuration}
   is a character string indicating how the sensor string was moored.
 }
@@ -49,8 +49,6 @@ The function will attempt to parse the following columns: \code{county},
 \code{sensor_depth_m}. Missing information will be filled in with \code{NA}.
 }
 \details{
-Old log column names will also be accepted.
-
 If \code{verbose = TRUE}, a message will be printed if there is more than one
 unique entry in \code{waterbody}, \code{station}, \code{deployment_date},
 \code{retrieval_date}, \code{deployment_latitude}, or

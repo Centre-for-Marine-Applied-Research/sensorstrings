@@ -1,0 +1,4 @@
+county,waterbody,station,lease,deployment_date,retrieval_date,deployment_latitude,deployment_longitude,retrieval_latitude,retrieval_longitude,sensor_type,sensor_serial_number,sensor_depth_m,string_configuration
+Lunenburg,St. Margarets Bay,Birchy Head,NA,2025-05-02,2025-12-06,44.57016667,-64.03473333,44.57016667,-64.03473333,HOBO Pro V2,22224438,2,sub-surface buoy
+Lunenburg,St. Margarets Bay,Birchy Head,NA,2025-05-02,2025-12-06,44.57016667,-64.03473333,44.57016667,-64.03473333,HOBO DO,21429533,5,sub-surface buoy
+Lunenburg,St. Margarets Bay,Birchy Head,NA,2025-05-02,2026-10-07,44.57016667,-64.03473333,44.57016667,-64.03473333,HOBO Pro V2,22200676,10,sub-surface buoy

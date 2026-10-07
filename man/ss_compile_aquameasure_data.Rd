@@ -30,7 +30,8 @@ Returns a tibble with the compiled data from each of the aquameasure
 }
 \description{
 Compile and format temperature, dissolved oxygen, salinity,
-  and/or device depth data from aquameasure sensors.
+  chlorophyll (blue and red), and/or device depth and til data from
+  aquameasure sensors.
 }
 \details{
 The raw aquameasure data must be saved in a folder named aquameasure

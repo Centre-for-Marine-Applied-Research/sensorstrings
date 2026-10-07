@@ -66,9 +66,6 @@ utils::globalVariables(
     # ss_pivot
     "value",
 
-    # ss_download_data
-    #"name",
-
     # ss_plot_variables
     "Date",
 
@@ -157,10 +154,10 @@ utils::globalVariables(
     "retrieval_longitude_w_ddm",
 
     # ss_convert_old_log
-    "Deployment_Waterbody",
-    "Lease#",
-    "Logger_Latitude",
-    "Logger_Longitude",
+    # "Deployment_Waterbody",
+    # "Lease#",
+    # "Logger_Latitude",
+    # "Logger_Longitude",
 
     ## ss_hobo_ph
     "ph_ph",
