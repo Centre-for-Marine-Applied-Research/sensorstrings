@@ -6,9 +6,8 @@
 #' @param dat Water Quality data in long or wide format.
 #'
 #' @param colour_palette  Colour palette of hex colours onto which
-#'   \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
-#'   more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
-#'   \code{pal = rev(viridis(6, option = "D"))}.
+#'   \code{sensor_depth_at_low_tide_m} will be mapped. Default is
+#'   \code{rev(viridis(6, option = "D"))}.
 #'
 #' @param date_breaks_major Intervals for major breaks. Default is selected by
 #'   \code{get_xaxis_breaks()}.
@@ -29,24 +28,24 @@
 #'   the pH panel.
 #'
 #' @param standard_sal_ylims If \code{TRUE}, the y-limits for salinity are set
-#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
-#'   default. Alternatively, a vector giving custom y-limits for the salinity
-#'   panel.
+#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the
+#'   \code{ggplot} default. Alternatively, a vector giving custom y-limits for
+#'   the salinity panel.
 #'
 #' @param yaxis_newline Logical argument indicating whether the units in the
-#'   y-axis label should be on a new line. Default is \code{TRUE}.
+#'   y-axis label should be on a new line. Default is \code{FALSE}.
 #'
 #' @param alpha Value indicating the transparency of the points. 0 is most
 #'   transparent; 1 is opaque.
 #'
 #' @param legend_name Name for the legend. Must be a character string. Default
-#'   is \code{legend.name = "Depth (m)"}.
+#'   is \code{legend_name = "Depth (m)"}.
 #'
-#' @param legend_position Position for the legend. Passed to \code{ggpubr}.
-#'   Default is \code{legend.position = "right"}.
+#' @param legend_position Position for the legend. Passed to \code{patchwork}.
+#'   Default is \code{legend_position = "right"}.
 #'
-#' @return Returns * object, a single figure with the plots for each variable in
-#'   \code{tidy.data} stacked in a column is returned.
+#' @return Returns a patchwork object, a single figure with the plots for each
+#'   variable in \code{dat} stacked in a column.
 #'
 #' @family plot
 #' @author Danielle Dempsey

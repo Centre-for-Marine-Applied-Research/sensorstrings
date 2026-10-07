@@ -10,7 +10,7 @@ ss_import_path(station, depl_date, prov = "ns", path = NULL)
 \item{station}{Character string of the station name. Will be converted to
 lower case, and all spaces will be replaced with an underscore.}
 
-\item{depl_date}{Character string of the deployment data in the order
+\item{depl_date}{Character string of the deployment date in the order
 yyyy-mm-dd.}
 
 \item{prov}{Character string indicating which province the deployment is

@@ -37,7 +37,7 @@ observations.}
 "Depth (m)"}.}
 
 \item{legend_position}{Position for the depth legend. Default is
-\code{legend.position = "right"}.}
+\code{legend_position = "right"}.}
 
 \item{date_breaks_major}{Intervals for major breaks. Default is selected by
 \code{get_xaxis_breaks()}.}
@@ -48,7 +48,7 @@ observations.}
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
 \item{yaxis_newline}{Logical argument indicating whether the units in the
-y-axis label should be on a new line. Default is \code{TRUE}.}
+y-axis label should be on a new line. Default is \code{FALSE}.}
 
 \item{point_size}{Numeric value indicating size of points.}
 

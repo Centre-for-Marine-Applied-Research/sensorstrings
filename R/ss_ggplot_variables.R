@@ -19,7 +19,7 @@
 #'   "Depth (m)"}.
 #'
 #' @param legend_position Position for the depth legend. Default is
-#'   \code{legend.position = "right"}.
+#'   \code{legend_position = "right"}.
 #'
 #' @param point_size Numeric value indicating size of points.
 #'

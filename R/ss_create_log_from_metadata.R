@@ -77,7 +77,7 @@ ss_create_log_from_metadata <- function(
   } else station_title <- station
 
   if(!(station_title %in% dat_raw$station)) {
-    stop(paste0(station_title, " not found in metatdata tracking sheet"))
+    stop(paste0(station_title, " not found in metadata tracking sheet"))
   }
 
   # remove _dd from NB metadata sheet
@@ -91,7 +91,7 @@ ss_create_log_from_metadata <- function(
 
   if (nrow(dat) == 0) {
     warning(
-      paste("No rows found in metatdata for << ", station, deployment_date, " >>")
+      paste("No rows found in metadata for << ", station, deployment_date, " >>")
     )
   }
 

@@ -153,12 +153,6 @@ utils::globalVariables(
     "retrieval_latitude_n_ddm",
     "retrieval_longitude_w_ddm",
 
-    # ss_convert_old_log
-    # "Deployment_Waterbody",
-    # "Lease#",
-    # "Logger_Latitude",
-    # "Logger_Longitude",
-
     ## ss_hobo_ph
     "ph_ph",
     "timestamp_ast/adt",

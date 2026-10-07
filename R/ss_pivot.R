@@ -1,11 +1,11 @@
-#' Pivot sensor string data from long to wide format
+#' Pivot sensor string data from wide to long format
 #'
 #' @param dat_wide Data frame of sensor string data in a wide format, as
-#'   returned by \code{ss_compile_**()} functions.
+#'   returned by \code{ss_compile_*()} functions.
 #'
-#' @return Returns \code{dat} in long format. Variables (e.g., temperature,
-#'   dissolved, salinity, and depth measured by sensor) are in a column named
-#'   \code{variable} and the associated measurement in a column named
+#' @return Returns \code{dat_wide} in long format. Variables (e.g., temperature,
+#'   dissolved oxygen, salinity, and depth measured by sensor) are in a column
+#'   named \code{variable} and the associated measurement in a column named
 #'   \code{value}.
 #'
 #' @importFrom dplyr arrange contains
@@ -34,7 +34,7 @@ ss_pivot_longer <- function(dat_wide) {
 }
 
 
-#' Pivot sensor string data from wide to long format
+#' Pivot sensor string data from long to wide format
 #'
 #' @param dat_long Data frame of sensor string data in long format, as returned
 #'   by \code{ss_pivot_longer()}.

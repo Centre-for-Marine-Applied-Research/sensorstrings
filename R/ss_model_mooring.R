@@ -77,10 +77,10 @@ ss_model_mooring <- function(
         instrument = case_when(
           sensor_type == "HOBO Pro V2" ~ "Hobo Temp U22",
           sensor_type == "HOBO DO" ~ "Hobo DO U26",
-          str_detect(sensor_type, "VR2AR") ~ "VR2AR reciever",
+          str_detect(sensor_type, "VR2AR") ~ "VR2AR receiver",
           TRUE ~ sensor_type
         ),
-        # might make more sense to do this after unique() so only making the conversiom
+        # might make more sense to do this after unique() so only making the conversion
         # once
         primary_buoy_type = gsub("\"", "in", primary_buoy_type),
         float_type = case_when(

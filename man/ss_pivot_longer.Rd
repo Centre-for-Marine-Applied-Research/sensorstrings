@@ -2,20 +2,20 @@
 % Please edit documentation in R/ss_pivot.R
 \name{ss_pivot_longer}
 \alias{ss_pivot_longer}
-\title{Pivot sensor string data from long to wide format}
+\title{Pivot sensor string data from wide to long format}
 \usage{
 ss_pivot_longer(dat_wide)
 }
 \arguments{
 \item{dat_wide}{Data frame of sensor string data in a wide format, as
-returned by \code{ss_compile_**()} functions.}
+returned by \code{ss_compile_*()} functions.}
 }
 \value{
-Returns \code{dat} in long format. Variables (e.g., temperature,
-  dissolved, salinity, and depth measured by sensor) are in a column named
-  \code{variable} and the associated measurement in a column named
+Returns \code{dat_wide} in long format. Variables (e.g., temperature,
+  dissolved oxygen, salinity, and depth measured by sensor) are in a column
+  named \code{variable} and the associated measurement in a column named
   \code{value}.
 }
 \description{
-Pivot sensor string data from long to wide format
+Pivot sensor string data from wide to long format
 }

@@ -12,7 +12,7 @@ ss_convert_depth_to_ordered_factor(dat)
 }
 \value{
 Returns \code{dat}, with the \code{sensor_depth_at_low_tide_m} column
-  converted to an ordered factor. The shallowest depth with have a factor
+  converted to an ordered factor. The shallowest depth will have a factor
   value of 1; the deepest depth will have the largest factor value.
 }
 \description{

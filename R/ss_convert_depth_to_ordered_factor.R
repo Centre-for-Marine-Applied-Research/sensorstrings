@@ -9,7 +9,7 @@
 #'   \code{sensor_depth_at_low_tide_m}.
 #'
 #' @return Returns \code{dat}, with the \code{sensor_depth_at_low_tide_m} column
-#'   converted to an ordered factor. The shallowest depth with have a factor
+#'   converted to an ordered factor. The shallowest depth will have a factor
 #'   value of 1; the deepest depth will have the largest factor value.
 #'
 #' @family format

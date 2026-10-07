@@ -1,6 +1,6 @@
 # all compile foos --------------------------------------------------------
 
-#' Set up parameters, Errors, and Warnings for the \code{compile_**} functions
+#' Set up parameters, Errors, and Warnings for the \code{compile_*_data()} functions
 #'
 #' @details A column named \code{sensor_type} is added to \code{sn_table}, with
 #'   values of \code{sensor_make}. The \code{sensor_type} column is added to the
@@ -205,7 +205,7 @@ check_n_rows <- function(dat, file_name, trimmed = TRUE) {
 #'   (the default), a vector of several year-month-day hour-minute-second and
 #'   day-month-year hour-minute-second orders are provided. The order must be
 #'   explicitly specified if the month is provided first. Passed to
-#'   \code{lubridate::paste_date_time()}.
+#'   \code{lubridate::parse_date_time()}.
 #'
 #' @details Converts the timestamp_ column to a POSIXct object. Every datetime
 #'   entry must be in the same order.
@@ -418,7 +418,7 @@ extract_hobo_units <- function(hobo_dat) {
 
 #' Extract units from column names of hobo pH data
 #'
-#' @param dat Data as read in by \code{ss_read_hobo_ph_data()}.
+#' @param dat Data as read in by \code{ss_read_hobo_data()}.
 #'
 #' @return Returns a tibble of \code{variable} and \code{units} found in
 #'   \code{dat}. Units are ph for pH and degree_c for

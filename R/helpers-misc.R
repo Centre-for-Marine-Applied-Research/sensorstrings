@@ -26,12 +26,12 @@ extract_file_extension <- function(file_input) {
 #'   from. Options are "ns" (the default) and "nb". This dictates the file path
 #'   for where the data will be exported on the CMAR R drive.
 #'
-#' @param path File path where \code{sub-folder} is created. If \code{NULL}
+#' @param path File path where \code{sub_folder} is created. If \code{NULL}
 #'   (the default), this is a folder on the CMAR shared drive, dictated by
 #'   the value of \code{prov}.
 #'
-#' @param sub_folder Character string of the sub-folder name (inside county
-#'   folder) where \code{dat} should be exported. Default is \code{sub-folder =
+#' @param sub_folder Character string of the sub_folder name (inside county
+#'   folder) where \code{dat} should be exported. Default is \code{sub_folder =
 #'   "new"}.
 #'
 #' @param ext File extension. Default is \code{ext = "rds"}.
@@ -95,7 +95,7 @@ ss_export_path <- function(
 #' @param station Character string of the station name. Will be converted to
 #'   lower case, and all spaces will be replaced with an underscore.
 #'
-#' @param depl_date Character string of the deployment data in the order
+#' @param depl_date Character string of the deployment date in the order
 #'   yyyy-mm-dd.
 #'
 #' @param path Partial path to where data is imported from. The final path

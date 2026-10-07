@@ -4,8 +4,6 @@
 #'   corrects known errors (e.g., standardizes station and waterbody spellings,
 #'   fixes deployment dates, etc.).
 #'
-#'   **Might want to add 2021-08-27 1042 deployment
-#'
 #' @param path Path to the NSDFA tracking sheet (include file name and
 #'   extension).
 #'

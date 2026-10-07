@@ -14,12 +14,12 @@ include columns \code{county}, \code{station}, and \code{deployment_range}.}
 from. Options are "ns" (the default) and "nb". This dictates the file path
 for where the data will be exported on the CMAR R drive.}
 
-\item{path}{File path where \code{sub-folder} is created. If \code{NULL}
+\item{path}{File path where \code{sub_folder} is created. If \code{NULL}
 (the default), this is a folder on the CMAR shared drive, dictated by
 the value of \code{prov}.}
 
-\item{sub_folder}{Character string of the sub-folder name (inside county
-folder) where \code{dat} should be exported. Default is \code{sub-folder =
+\item{sub_folder}{Character string of the sub_folder name (inside county
+folder) where \code{dat} should be exported. Default is \code{sub_folder =
 "new"}.}
 
 \item{ext}{File extension. Default is \code{ext = "rds"}.}
