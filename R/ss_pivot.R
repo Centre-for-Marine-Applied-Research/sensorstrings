@@ -28,7 +28,7 @@ ss_pivot_longer <- function(dat_wide) {
       ),
       names_to = "variable",
       values_to = "value",
-      names_prefix = "value_",
+     # names_prefix = "value_",
       values_drop_na = TRUE
     )
 }
@@ -42,13 +42,12 @@ ss_pivot_longer <- function(dat_wide) {
 #' @return Returns \code{dat_long} in wide format, with a separate column for
 #'   each \code{variable}.
 #'
-#' @importFrom dplyr %>% contains relocate
 #' @importFrom tidyr pivot_wider
 #'
 #' @export
 
 ss_pivot_wider <- function(dat_long) {
-  dat_long %>%
+  dat_long |>
     pivot_wider(
       names_from = variable, values_from = value, names_sort = TRUE
     )
