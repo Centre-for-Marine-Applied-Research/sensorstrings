@@ -17,7 +17,7 @@
 #'
 #' @export
 
-ss_read_vdat_data <- function(path, file_name) {
+ss_read_vdat_data <- function(path, file_name = NULL) {
 
   # finish path if needed
   if (isFALSE(utils::file_test("-f", path))) {

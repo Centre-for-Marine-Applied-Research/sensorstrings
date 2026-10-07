@@ -4,7 +4,7 @@
 \alias{ss_read_vemco_data}
 \title{Import data from vemco csv files}
 \usage{
-ss_read_vemco_data(path, file_name)
+ss_read_vemco_data(path, file_name = NULL)
 }
 \arguments{
 \item{path}{File path to the vemco folder, or full path to the data

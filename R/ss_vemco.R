@@ -17,7 +17,7 @@
 #' @export
 
 
-ss_read_vemco_data <- function(path, file_name) {
+ss_read_vemco_data <- function(path, file_name = NULL) {
 
   # finish path if needed
   if (isFALSE(utils::file_test("-f", path))) {
