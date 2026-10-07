@@ -81,7 +81,7 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
 #'
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
+#' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate hours
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit
@@ -116,12 +116,10 @@ ss_compile_hobo_data <- function(path,
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
-
-    # if(!is.null(file_name)) file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    hobo_i <- ss_read_hobo_data(file_i) %>%
+    hobo_i <- ss_read_hobo_data(file_i) |>
       # to avoid deprecation Warning from GitHub Actions check
       filter(if_all(everything(), ~ !grepl("Logged", .)))
 
@@ -147,9 +145,9 @@ ss_compile_hobo_data <- function(path,
     }
 
     # Select and add columns of interest ----------------------------------------------
-    hobo_i <- hobo_i %>%
-      select(contains("Date Time"), contains("DO conc"), contains("Temp")) %>%
-      rename(timestamp_ = 1) %>%
+    hobo_i <- hobo_i |>
+      select(contains("Date Time"), contains("DO conc"), contains("Temp")) |>
+      rename(timestamp_ = 1) |>
       convert_timestamp_to_datetime()
 
     colnames(hobo_i) <- new_col_names$col_name
@@ -159,7 +157,7 @@ ss_compile_hobo_data <- function(path,
     # use serial number to identify the variable and depth (from sn_table)
     sensor_info_i <- dplyr::filter(sn_table, sensor_serial_number == sn_i)
 
-    hobo_i <- hobo_i %>%
+    hobo_i <- hobo_i |>
       add_deployment_columns(start_date, end_date, sn_table = sensor_info_i)
 
     check_n_rows(hobo_i, file_name = file_name, trimmed = FALSE)
@@ -173,7 +171,7 @@ ss_compile_hobo_data <- function(path,
     hobo_dat[[i]] <- hobo_i
   } # end loop over files
 
-  hobo_out <- hobo_dat %>%
+  hobo_out <- hobo_dat |>
     map_df(rbind)
 
   # Return compiled data ----------------------------------------------------

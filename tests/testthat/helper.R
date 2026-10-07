@@ -7,18 +7,10 @@ deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
 
 # log ---------------------------------------------------------------------
 
-# # old log
-# log_old <- ss_read_log(path, parse = FALSE)
-# log_old2 <- ss_read_log(
-#   paste0(path, "/Log/Borgles_Island_2019-05-30_Log.xls" ), parse = FALSE
-# )
-
-#log_old_parse <- log_old %>% ss_parse_log()
-
 # new log
 log_new <- ss_read_log(path, parse = FALSE)
 
-log_new_parse <- log_new %>% ss_parse_log(verbose = FALSE)
+log_new_parse <- log_new |> ss_parse_log(verbose = FALSE)
 
 
 # aquameasure -------------------------------------------------------------
@@ -70,15 +62,15 @@ am_trim <- ss_compile_aquameasure_data(
 
 path_hobo <- system.file("testdata/Hobo", package = "sensorstrings")
 
-hobo1 <- ss_read_hobo_data(path_hobo, "10755220.csv") %>%
+hobo1 <- ss_read_hobo_data(path_hobo, "10755220.csv") |>
   # the degree symbol was causing a problem
   dplyr::rename(temperature = 2)
 
-hobo2 <- ss_read_hobo_data(path_hobo, "hobo_20827226.csv") %>%
+hobo2 <- ss_read_hobo_data(path_hobo, "hobo_20827226.csv") |>
   # the degree symbol was causing a problem
   dplyr::rename(temperature = 4)
 
-hobo3 <- ss_read_hobo_data(paste0(path_hobo, "/hobo_20827226.csv")) %>%
+hobo3 <- ss_read_hobo_data(paste0(path_hobo, "/hobo_20827226.csv")) |>
   dplyr::rename(temperature = 4)
 
 # ss_compile_hobo_data ----------------------------------------------------
@@ -115,14 +107,14 @@ hobo_trim <- ss_compile_hobo_data(
 
 path_hobo_ph <- system.file("testdata", package = "sensorstrings")
 
-hobo_ph1 <- ss_read_hobo_data(path_hobo_ph, "hobo_ph/22058687.csv") %>%
+hobo_ph1 <- ss_read_hobo_data(path_hobo_ph, "hobo_ph/22058687.csv") |>
   # the degree symbol was causing a problem
   dplyr::rename(temperature = 3)
 
-hobo_ph_ast <- hobo_ph1 %>%
-  filter(if_all(everything(), ~ !grepl("Logged", .))) %>%
-  select(timestamp_ = `Date-Time (AST/ADT)`) %>%
-  sensorstrings:::convert_timestamp_to_datetime(parse_orders = "mdY HMS") %>%
+hobo_ph_ast <- hobo_ph1 |>
+  filter(if_all(everything(), ~ !grepl("Logged", .))) |>
+  select(timestamp_ = `Date-Time (AST/ADT)`) |>
+  sensorstrings:::convert_timestamp_to_datetime(parse_orders = "mdY HMS") |>
   mutate(
     timestamp_at = force_tz(timestamp_, tzone = "America/Halifax"),
     is_dst = dst(timestamp_at)
@@ -151,8 +143,8 @@ hobo_ph_trim <- ss_compile_hobo_ph_data(
   trim = TRUE
 )
 
-ts_check <- cbind(hobo_ph_all$timestamp_utc, hobo_ph_ast) %>%
-  rename(timestamp_utc = 1) %>%
+ts_check <- cbind(hobo_ph_all$timestamp_utc, hobo_ph_ast) |>
+  rename(timestamp_utc = 1) |>
   mutate(
     ts_check = force_tz(timestamp_at, tzone = "UTC"),
     ts_check = if_else(
@@ -278,7 +270,7 @@ ts <- data.frame(
     "16-03-2022 3:11 AM",
     "16/04/2022 3:11:12 AM"
   )
-) %>%
+) |>
   convert_timestamp_to_datetime()
 
 ts_error <- data.frame(timestamp_ = "08-22-2019 12:55")
@@ -302,13 +294,13 @@ hobo_colnames_error <- c(
 hobo_units <- ss_read_hobo_data(
   path = system.file("testdata/Hobo", package = "sensorstrings"),
   file_name = "hobo_20827226.csv"
-) %>%
+) |>
   extract_hobo_units()
 
 hobo_ph_units <- ss_read_hobo_data(
   path = system.file("testdata/hobo_ph", package = "sensorstrings"),
   file_name = "22058687.csv"
-) %>%
+) |>
   extract_hobo_ph_units()
 
 # make_column_names -------------------------------------------------------

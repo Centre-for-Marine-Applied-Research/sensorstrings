@@ -8,14 +8,14 @@
 #'   \code{variable} and the associated measurement in a column named
 #'   \code{value}.
 #'
-#' @importFrom dplyr %>% arrange contains
+#' @importFrom dplyr arrange contains
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_remove
 #'
 #' @export
 
 ss_pivot_longer <- function(dat_wide) {
-  dat_wide %>%
+  dat_wide |>
     pivot_longer(
       cols = c(
         contains("chlorophyll"),

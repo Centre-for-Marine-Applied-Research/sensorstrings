@@ -61,7 +61,7 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
+#' @importFrom dplyr across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect str_remove str_replace
 #' @importFrom tidyr separate pivot_wider
@@ -98,7 +98,7 @@ ss_compile_aquameasure_data <- function(path,
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    am_i <- ss_read_aquameasure_data(file_i) %>%
+    am_i <- ss_read_aquameasure_data(file_i) |>
       filter(!str_detect(`Record Type`, "aquaMeasure-"))
 
     # remove "Water" from colnames of files downloaded from new app
@@ -110,8 +110,8 @@ ss_compile_aquameasure_data <- function(path,
     # sn and timezone checks --------------------------------------------------
 
     # serial number
-    sn_i <- am_i %>%
-      distinct(Sensor) %>%
+    sn_i <- am_i |>
+      distinct(Sensor) |>
       separate(Sensor, into = c("sensor", "serial number"), sep = "-")
     sn_i <- sn_i$`serial number`
 
@@ -147,7 +147,7 @@ ss_compile_aquameasure_data <- function(path,
 
     # Re-name the "Temp(Water)" column to "Temperature"
     if (!("Temperature" %in% am_colnames) & "Temp(Water)" %in% am_colnames) {
-      am_i <- am_i %>% rename(Temperature = `Temp(Water)`)
+      am_i <- am_i |> rename(Temperature = `Temp(Water)`)
     }
 
     # re-format and add other columns of interest --------------------------------------------------------
@@ -158,20 +158,20 @@ ss_compile_aquameasure_data <- function(path,
     # variables to process
     vars <- extract_aquameasure_vars(colnames(am_i))
 
-    am_i <- am_i %>%
+    am_i <- am_i |>
       select(
         timestamp_ = contains("stamp"),
         `Record Type`,
         all_of(vars)
-      ) %>%
+      ) |>
       # remove "Water" from colnames of files downloaded from new app
-      mutate(`Record Type` = str_remove(`Record Type`, "Water ")) %>%
+      mutate(`Record Type` = str_remove(`Record Type`, "Water ")) |>
       filter(
         !str_detect(timestamp_, "after"),
         !str_detect(timestamp_, "undefined"),
         `Record Type` %in% vars
-      ) %>%
-      convert_timestamp_to_datetime() %>%
+      ) |>
+      convert_timestamp_to_datetime() |>
       # remove "Water" from colnames of files downloaded from new app
       mutate(`Record Type` = str_remove(`Record Type`, "Water "))
 
@@ -184,9 +184,9 @@ ss_compile_aquameasure_data <- function(path,
     check_n_rows(am_i, file_name = file_name, trimmed = trim)
 
     # find if any duplicate timestamps
-    bad_ts <- am_i %>%
-      group_by(timestamp_) %>%
-      summarise(n = n()) %>%
+    bad_ts <- am_i |>
+      group_by(timestamp_) |>
+      summarise(n = n()) |>
       filter(n > length(vars))
 
     if (nrow(bad_ts) > 0) {
@@ -198,12 +198,12 @@ ss_compile_aquameasure_data <- function(path,
     }
 
     # remove duplicate timestamps and pivot wider
-    am_i <- am_i %>%
-      filter(!(timestamp_ %in% bad_ts$timestamp_)) %>%
+    am_i <- am_i |>
+      filter(!(timestamp_ %in% bad_ts$timestamp_)) |>
       tidyr::pivot_wider(
         id_cols = "timestamp_",
         names_from = "Record Type", values_from = dplyr::all_of(vars)
-      ) %>%
+      ) |>
       select(
         timestamp_,
         do_percent_saturation = contains("Dissolved Oxygen_Dissolved Oxygen"),
@@ -213,7 +213,7 @@ ss_compile_aquameasure_data <- function(path,
         chlorophyll_blue_ug_per_l = contains("Chlorophyll Blue_Chlorophyll Blue"),
         chlorophyll_red_ug_per_l = contains("Chlorophyll Red_Chlorophyll Red"),
         tilt_degree = contains("Device Tilt_device Tilt")
-      ) %>%
+      ) |>
       add_deployment_columns(start_date, end_date, sensor_info_i)
 
     colnames(am_i)[which(str_detect(colnames(am_i), "timestamp"))] <- paste0("timestamp_", date_tz)
@@ -231,7 +231,7 @@ ss_compile_aquameasure_data <- function(path,
     # )
     vars_ss <- ss_vars$variable
 
-    am_i <- am_i %>%
+    am_i <- am_i |>
       mutate(
         across(.cols = any_of(vars_ss),
                .fns = ~str_replace_all(.x, pattern = "ERR", replacement = "-111")),
@@ -242,7 +242,7 @@ ss_compile_aquameasure_data <- function(path,
     am_dat[[i]] <- am_i
   } # end loop over files
 
-  am_out <- am_dat %>%
+  am_out <- am_dat |>
     map_df(bind_rows)
 
   message("aquameasure data compiled")

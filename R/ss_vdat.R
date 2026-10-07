@@ -60,7 +60,7 @@ ss_read_vdat_data <- function(path, file_name = NULL) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% case_when filter group_by mutate select summarise tibble
+#' @importFrom dplyr case_when filter group_by mutate select summarise tibble
 #' @importFrom lubridate as_datetime
 #' @importFrom purrr list_rbind
 #'
@@ -102,13 +102,13 @@ ss_compile_vdat_data <- function(
     colnames(dat_i) <- dat_i[2, ]
     dat_i <- dat_i[!is.na(colnames(dat_i))]
 
-    dat_i <- dat_i %>%
+    dat_i <- dat_i |>
       dplyr::filter(
         `RECORD TYPE` %in% c("DEPTH_DESC", "DEPTH", "TEMP_DESC", "TEMP")
       )
 
-    depth_units_i <-  dat_i %>%
-      dplyr::filter(`RECORD TYPE` == "DEPTH_DESC") %>%
+    depth_units_i <-  dat_i |>
+      dplyr::filter(`RECORD TYPE` == "DEPTH_DESC") |>
       dplyr::pull(FIELD.6)
 
     # depth and temperature units
@@ -116,8 +116,8 @@ ss_compile_vdat_data <- function(
       stop(paste0("Sensor ", file_name, " has depth units of << ", depth_units_i, " >>"))
     }
 
-    temp_units_i <-  dat_i %>%
-      dplyr::filter(`RECORD TYPE` == "TEMP_DESC") %>%
+    temp_units_i <-  dat_i |>
+      dplyr::filter(`RECORD TYPE` == "TEMP_DESC") |>
       dplyr::pull(FIELD.6)
 
     if (!(temp_units_i %in% "Ambient (deg C)")) {
@@ -131,16 +131,16 @@ ss_compile_vdat_data <- function(
     colnames(dat_i) <- dat_i[1, ]
     dat_i <- dat_i[!is.na(colnames(dat_i))]
 
-    dat_i <- dat_i %>%
-      slice(-c(1:2)) %>%
+    dat_i <- dat_i |>
+      slice(-c(1:2)) |>
       select(
         timestamp_ = `Device Time (UTC)`,
         sensor_type = Model,
         sensor_serial_number = `Serial Number`,
         variable = DEPTH_DESC,
         value = `Depth (m)`
-      ) %>%
-      convert_timestamp_to_datetime() %>%
+      ) |>
+      convert_timestamp_to_datetime() |>
       mutate(
         timestamp_utc = timestamp_,
         sensor_serial_number = as.numeric(sensor_serial_number),
@@ -150,7 +150,7 @@ ss_compile_vdat_data <- function(
           variable == "TEMP" ~ "temperature_degree_c",
           TRUE ~ NA
         )
-      ) %>%
+      ) |>
       select(-timestamp_)
 
     # serial number from data file
@@ -174,9 +174,9 @@ ss_compile_vdat_data <- function(
     check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
 
     # find any duplicate timestamps
-    bad_ts <- dat_i %>%
-      group_by(timestamp_utc) %>%
-      summarise(n = n()) %>%
+    bad_ts <- dat_i |>
+      group_by(timestamp_utc) |>
+      summarise(n = n()) |>
       filter(n > 2)
 
     if (nrow(bad_ts) > 0) {
@@ -188,9 +188,9 @@ ss_compile_vdat_data <- function(
     }
 
     # remove duplicate timestamps and pivot wider
-    dat_i <- dat_i %>%
-      filter(!(timestamp_utc %in% bad_ts$timestamp_utc)) %>%
-      pivot_wider(values_from = value, names_from = variable) %>%
+    dat_i <- dat_i |>
+      filter(!(timestamp_utc %in% bad_ts$timestamp_utc)) |>
+      pivot_wider(values_from = value, names_from = variable) |>
       add_deployment_columns(start_date, end_date,  sensor_info_i)
 
     vem_dat[[i]] <- dat_i
@@ -198,7 +198,7 @@ ss_compile_vdat_data <- function(
     message(paste("vemco data from sensor << ", sn_i, " >> compiled"))
   }
 
-  vem_out <- vem_dat %>%
+  vem_out <- vem_dat |>
     list_rbind()
 
   tibble(vem_out)

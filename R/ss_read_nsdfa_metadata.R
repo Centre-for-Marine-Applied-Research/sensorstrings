@@ -36,11 +36,11 @@ ss_read_nsdfa_metadata <- function(path) {
     )
   )
 
-  nsdfa_raw %>%
+  nsdfa_raw |>
     # fix deployment/recovery dates (remove time if entered)
     # the separate function will result in a Warning if there is no time entered in any row
-    separate(Depl_Date, into = c("Depl_Date", NA), " ") %>%
-    separate(Recv_Date, into = c("Recv_Date", NA), " ") %>%
+    separate(Depl_Date, into = c("Depl_Date", NA), " ") |>
+    separate(Recv_Date, into = c("Recv_Date", NA), " ") |>
     mutate(
       Depl_Date = as_date(Depl_Date),
       Recv_Date = as_date(Recv_Date),
@@ -150,7 +150,7 @@ ss_read_nsdfa_metadata <- function(path) {
           Station_Name == "Sandy Cove" ~ "Sandy Cove Chedabucto",
         TRUE ~ Station_Name
       )
-    ) %>%
+    ) |>
     mutate(
       Depl_Date = case_when(
         # strings that we actually deployed on 2015-09-08

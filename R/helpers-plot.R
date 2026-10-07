@@ -17,20 +17,20 @@
 #' @author Danielle Dempsey
 #'
 #' @importFrom viridis viridis
-#' @importFrom dplyr %>% contains select
+#' @importFrom dplyr contains select
 #'
 #' @export
 
 ss_get_colour_palette <- function(dat) {
-  n_depth <- dat %>%
+  n_depth <- dat |>
     select(contains("low_tide"))
 
   if(ncol(n_depth) > 1) {
     stop("More than one column named with the string low_tide detected in dat.")
   }
 
-  n_depth <- n_depth %>%
-    distinct() %>%
+  n_depth <- n_depth |>
+    distinct() |>
     nrow()
 
   if (n_depth > 6) {
@@ -191,7 +191,7 @@ ss_create_variable_labels <- function(dat, new_line = FALSE) {
 #' @return Returns \code{dat} filtered to the specified dates.
 #'
 #' @importFrom lubridate period is.POSIXct  %m+% %m-%
-#' @importFrom dplyr %>% filter
+#' @importFrom dplyr filter
 #' @importFrom rlang :=
 #' @noRd
 
@@ -208,7 +208,7 @@ filter_dat_to_plot <- function(
   dat <- rename(dat, timestamp_ = contains("timestamp"))
 
   if (filter_to == "start") {
-    dat <- dat %>%
+    dat <- dat |>
       filter(
         timestamp_ <=
           (na.omit(min(dat$timestamp_)) %m+% lubridate::period(period))
@@ -216,7 +216,7 @@ filter_dat_to_plot <- function(
   }
 
   if (filter_to == "end") {
-    dat <- dat %>%
+    dat <- dat |>
       filter(
         timestamp_ >=
           (na.omit(max(dat$timestamp_)) %m-% lubridate::period(period))
@@ -231,7 +231,7 @@ filter_dat_to_plot <- function(
       stop("'custom_end' must be of type 'POSIXct', not ", class(custom_end))
     }
 
-    dat <- dat %>%
+    dat <- dat |>
       filter(timestamp_ >= custom_start & timestamp_ <= custom_end)
   }
 

@@ -36,7 +36,7 @@
 #'
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
+#' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate dst force_tz with_tz
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit
@@ -75,7 +75,7 @@ ss_compile_hobo_ph_data <- function(path,
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    hobo_i <- ss_read_hobo_data(file_i) %>%
+    hobo_i <- ss_read_hobo_data(file_i) |>
       # to avoid deprecation Warning from GitHub Actions check
       filter(if_all(everything(), ~ !grepl("Logged", .)))
 
@@ -102,29 +102,29 @@ ss_compile_hobo_ph_data <- function(path,
     }
 
     # Select and add columns of interest ----------------------------------------------
-    hobo_i <- hobo_i %>%
-      select(contains("Date"), contains("pH"), contains("Temp")) %>%
-      rename(timestamp_ = 1) %>%
+    hobo_i <- hobo_i |>
+      select(contains("Date"), contains("pH"), contains("Temp")) |>
+      rename(timestamp_ = 1) |>
       convert_timestamp_to_datetime(parse_orders = c("mdY HMS", "Ymd HMS", "Ymd"))
 
     colnames(hobo_i) <- new_col_names$col_name
 
     # could combine these if statements
     if(tz_i$units == "ast/adt") {
-      hobo_i <- hobo_i %>%
+      hobo_i <- hobo_i |>
         mutate(
           timestamp_at = force_tz(`timestamp_ast/adt`, tzone = "America/Halifax"),
           timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
-        ) %>%
+        ) |>
         select(timestamp_utc, ph_ph, temperature_degree_c)
     }
 
     if(tz_i$units == "adt") {
-      hobo_i <- hobo_i %>%
+      hobo_i <- hobo_i |>
         mutate(
           timestamp_at = force_tz(timestamp_adt, tzone = "America/Halifax"),
           timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
-        ) %>%
+        ) |>
         select(timestamp_utc, ph_ph, temperature_degree_c)
     }
 
@@ -134,7 +134,7 @@ ss_compile_hobo_ph_data <- function(path,
     # use serial number to identify the variable and depth (from sn_table)
     sensor_info_i <- dplyr::filter(sn_table, sensor_serial_number == sn_i)
 
-    hobo_i <- hobo_i %>%
+    hobo_i <- hobo_i |>
       add_deployment_columns(start_date, end_date, sn_table = sensor_info_i)
 
     check_n_rows(hobo_i, file_name = file_name, trimmed = FALSE)
@@ -148,7 +148,7 @@ ss_compile_hobo_ph_data <- function(path,
     hobo_dat[[i]] <- hobo_i
   } # end loop over files
 
-  hobo_out <- hobo_dat %>%
+  hobo_out <- hobo_dat |>
     map_df(rbind)
 
   # Return compiled data ----------------------------------------------------

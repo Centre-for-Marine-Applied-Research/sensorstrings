@@ -55,9 +55,9 @@ ss_export_path <- function(
 
   if (is.null(sub_folder)) sub_folder <- "new"
 
-  info <- dat %>%
-    distinct(region, county, station, deployment_range) %>%
-    separate("deployment_range", into = c("depl_date", NA, NA), sep = " ") %>%
+  info <- dat |>
+    distinct(region, county, station, deployment_range) |>
+    separate("deployment_range", into = c("depl_date", NA, NA), sep = " ") |>
     mutate(
       region = tolower(region),
       county = tolower(county),

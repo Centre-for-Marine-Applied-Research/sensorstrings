@@ -11,7 +11,6 @@
 #'
 #' @importFrom purrr map_dfr
 #' @importFrom stringr str_subset
-#' @importFrom dplyr %>%
 #' @export
 
 ss_import_data <- function(path = NULL, county = "all") {
@@ -34,10 +33,10 @@ ss_import_data <- function(path = NULL, county = "all") {
 
   # filter for specified county(ies)
   # format county argument as a regular expression for use in str_subset
-  if(!("all" %in% county)) dat <- dat %>% str_subset(paste(county, collapse = "|"))
+  if(!("all" %in% county)) dat <- dat |> str_subset(paste(county, collapse = "|"))
 
   # read and bind the rds files
-  dat %>%
+  dat |>
     purrr::map_dfr(readRDS)
 
 }

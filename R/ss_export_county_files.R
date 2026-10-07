@@ -31,7 +31,7 @@
 #' @author Danielle Dempsey
 #'
 #' @importFrom data.table fwrite
-#' @importFrom dplyr %>%  mutate
+#' @importFrom dplyr mutate
 #' @export
 
 ss_export_county_files <- function(
@@ -66,9 +66,9 @@ ss_export_county_files <- function(
     }
 
 
-    dat %>%
+    dat |>
       # remove the UTC formatting for Open Data Portal
-      mutate(timestamp_utc = format(timestamp_utc)) %>%
+      mutate(timestamp_utc = format(timestamp_utc)) |>
       data.table::fwrite(file = output_csv, na = "", showProgress = TRUE)
   }
 

@@ -76,7 +76,7 @@ ss_read_vemco_data <- function(path, file_name = NULL) {
 #' @family compile
 #' @author Danielle Dempsey
 #'
-#' @importFrom dplyr %>% case_when contains filter group_by mutate select summarise tibble
+#' @importFrom dplyr case_when contains filter group_by mutate select summarise tibble
 #' @importFrom purrr list_rbind
 #'
 #' @export
@@ -174,14 +174,14 @@ ss_compile_vemco_data <- function(path,
     vars <- na.omit(c(depth_var, temperature_var, tilt_var))
 
     # extract sensor depth
-    dat_i <- dat_i %>%
+    dat_i <- dat_i |>
       select(
         timestamp_ = contains("Time"),
         Description,
         Data,
         Units
-      ) %>%
-      filter(Description %in% vars) %>%
+      ) |>
+      filter(Description %in% vars) |>
       mutate(
         Description = dplyr::case_when(
           Description == "Average seawater depth" ~ "sensor_depth_measured",
@@ -198,7 +198,7 @@ ss_compile_vemco_data <- function(path,
         ),
         Description = paste(Description, Units, sep = "_"),
         Data = as.numeric(Data)
-      ) %>%
+      ) |>
       convert_timestamp_to_datetime()
 
     # check there are more than 0 rows in dat
@@ -210,9 +210,9 @@ ss_compile_vemco_data <- function(path,
     check_n_rows(dat_i, file_name = file_i, trimmed = trim)
 
     # find any duplicate timestamps
-    bad_ts <- dat_i %>%
-      group_by(timestamp_) %>%
-      summarise(n = n()) %>%
+    bad_ts <- dat_i |>
+      group_by(timestamp_) |>
+      summarise(n = n()) |>
       filter(n > length(vars))
 
     if (nrow(bad_ts) > 0) {
@@ -224,12 +224,12 @@ ss_compile_vemco_data <- function(path,
     }
 
     # remove duplicate timestamps and pivot wider
-    dat_i <- dat_i %>%
-      filter(!(timestamp_ %in% bad_ts$timestamp_)) %>%
+    dat_i <- dat_i |>
+      filter(!(timestamp_ %in% bad_ts$timestamp_)) |>
       tidyr::pivot_wider(
         id_cols = "timestamp_",
         names_from = "Description", values_from = Data
-      ) %>%
+      ) |>
       add_deployment_columns(start_date, end_date,  sensor_info_i)
 
     colnames(dat_i)[which(str_detect(colnames(dat_i), "timestamp"))] <- paste0("timestamp_", date_tz)
@@ -240,7 +240,7 @@ ss_compile_vemco_data <- function(path,
                   temperature_var, "&", depth_var))
   }
 
-  vem_out <- vem_dat %>%
+  vem_out <- vem_dat |>
     list_rbind()
 
   tibble(vem_out)

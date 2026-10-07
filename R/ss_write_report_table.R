@@ -10,7 +10,7 @@
 #'
 #' @importFrom tidyr separate unite
 #' @importFrom lubridate as_date
-#' @importFrom dplyr %>% all_of any_of arrange case_when distinct mutate relocate select
+#' @importFrom dplyr all_of any_of arrange case_when distinct mutate relocate select
 #' @export
 
 ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
@@ -24,7 +24,7 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
     "temperature_degree_c"
   )
 
-  vars <- data.frame(vars = all_vars[all_vars %in% colnames(dat)]) %>%
+  vars <- data.frame(vars = all_vars[all_vars %in% colnames(dat)]) |>
     mutate(
       vars = case_when(
         vars == "sensor_depth_measured_m" ~ "depth",
@@ -39,7 +39,7 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
     )
   vars <- vars$vars
 
-  table_out <- dat %>%
+  table_out <- dat |>
     select(
       Waterbody = waterbody,
       Station = station,
@@ -48,14 +48,14 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
       Longitude = longitude,
       any_of(all_vars),
       Configuration = string_configuration
-    ) %>%
-    ss_pivot_longer() %>%
-    select(-value) %>%
-    distinct() %>%
+    ) |>
+    ss_pivot_longer() |>
+    select(-value) |>
+    distinct() |>
     separate(
       col = deployment_range,
       into = c("Deployment Date", "Retrieval Date"), sep = " to "
-    ) %>%
+    ) |>
     mutate(
       variable = case_when(
         variable == "dissolved_oxygen_percent_saturation" ~
@@ -71,20 +71,20 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
       `Retrieval Date` = format(as_date(`Retrieval Date`), "%Y-%m-%d"),
       Latitude = round(Latitude, digits = 4),
       Longitude = round(Longitude, digits = 4)
-    ) %>%
+    ) |>
     pivot_wider(
       values_from = "variable", names_from = "variable",
-      names_sort = TRUE) %>%
+      names_sort = TRUE) |>
     unite("Variables Measured", any_of(vars), sep = var_sep, na.rm = TRUE)
 
 
 
   if(isTRUE(keep_waterbody)) {
-    table_out <- table_out %>%
+    table_out <- table_out |>
       arrange(Waterbody, Station, `Deployment Date`)
   } else {
-    table_out <- table_out %>%
-      arrange(Station, `Deployment Date`) %>%
+    table_out <- table_out |>
+      arrange(Station, `Deployment Date`) |>
       select(-Waterbody)
   }
 

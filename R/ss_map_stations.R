@@ -10,13 +10,13 @@
 
 ss_map_stations <- function(dat) {
 
-  leaflet::leaflet(dat) %>%
-    leaflet::addProviderTiles("Esri.OceanBasemap") %>%
+  leaflet::leaflet(dat) |>
+    leaflet::addProviderTiles("Esri.OceanBasemap") |>
     leaflet::addCircleMarkers(
       data = dat,
       lng = ~longitude, lat = ~latitude, label = ~station,
       weight = 1, fillOpacity = 0.75, radius = 5
-    ) %>%
+    ) |>
     leaflet::addScaleBar(
       position = "bottomleft",
       options = leaflet::scaleBarOptions(imperial = FALSE)

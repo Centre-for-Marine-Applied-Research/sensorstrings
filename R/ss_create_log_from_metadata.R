@@ -28,7 +28,7 @@
 #'
 #' @return Returns deployment log in .csv format.
 #'
-#' @importFrom dplyr %>% if_else filter mutate transmute
+#' @importFrom dplyr if_else filter mutate transmute
 #' @importFrom lubridate as_date
 #' @importFrom googlesheets4 read_sheet gs4_deauth
 #' @importFrom readxl read_excel
@@ -83,7 +83,7 @@ ss_create_log_from_metadata <- function(
   # remove _dd from NB metadata sheet
   colnames(dat_raw) <- gsub("tude_dd", "tude", colnames(dat_raw))
 
-  dat <- dat_raw %>%
+  dat <- dat_raw |>
     filter(
       station == !!station_title,
       deployment_date == !!as_date(deployment_date)
@@ -95,7 +95,7 @@ ss_create_log_from_metadata <- function(
     )
   }
 
-  dat <- dat %>%
+  dat <- dat |>
     mutate(
       deployment_latitude = if_else(
         is.na(deployment_latitude),
@@ -120,7 +120,7 @@ ss_create_log_from_metadata <- function(
     )
 
   # make log
-  log <- dat %>%
+  log <- dat |>
     select(
       any_of(c("county", "region")),
       waterbody, station, lease,
@@ -131,7 +131,7 @@ ss_create_log_from_metadata <- function(
       retrieval_latitude, retrieval_longitude,
       sensor_type, sensor_serial_number, sensor_depth_m,
       string_configuration
-    ) %>%
+    ) |>
     dplyr::mutate(
       #Location_Description = str_to_title(Location_Description),
       sensor_serial_number = as.numeric(sensor_serial_number),

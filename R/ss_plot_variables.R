@@ -77,20 +77,20 @@ ss_plot_variables <- function(
     legend_position = "right"
 ){
 
-  dat <- dat %>%
+  dat <- dat |>
     select(-contains("flag"))
 
   if (!("variable" %in% colnames(dat))) {
     vars_ss <- ss_vars$variable
 
-    dat <- dat %>%
+    dat <- dat |>
       select(
         contains("timestamp_"), sensor_depth_at_low_tide_m, any_of(vars_ss)
-      ) %>%
+      ) |>
       ss_pivot_longer()
   }
 
-  dat <- dat %>%
+  dat <- dat |>
     ss_convert_depth_to_ordered_factor() |>
     ss_create_variable_labels(new_line = yaxis_newline) |>
     rename(timestamp_ = contains("timestamp"))
@@ -136,9 +136,9 @@ ss_plot_variables <- function(
   figs <- list(NULL)              # empty list for storing the figures
 
   # arrange variable to plot in consistent order
-  vars_to_plot <- dat %>%
-    select(variable) %>%
-    distinct() %>%
+  vars_to_plot <- dat |>
+    select(variable) |>
+    distinct() |>
     mutate(variable = ordered(
       variable,
       levels = c(
@@ -153,7 +153,7 @@ ss_plot_variables <- function(
         "sensor_depth_measured_m",
         "tilt_degree"
         ))
-    ) %>%
+    ) |>
     arrange(variable)
   vars_to_plot <- vars_to_plot$variable
 

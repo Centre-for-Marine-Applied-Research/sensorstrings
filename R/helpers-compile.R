@@ -23,7 +23,7 @@
 #'   final path to the folder of interest, deployment dates, vector of files in
 #'   the folder, and \code{sn_table}.
 #'
-#' @importFrom dplyr %>% mutate select
+#' @importFrom dplyr mutate select
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect
 #' @noRd
@@ -39,11 +39,11 @@ set_up_compile <- function(path,
   # log_sensor is the Logger_Model from the deployment log
   names(sn_table) <- c("log_sensor", "sensor_serial_number", "depth")
 
-  sn_table <- sn_table %>%
+  sn_table <- sn_table |>
     filter(
       str_detect(log_sensor, regex(paste0(sensor_make, collapse = "|"),
                                    ignore_case = TRUE))
-    ) %>%
+    ) |>
     # this standardizes the sensor_type column, e.g., replaces "HOBO PRO V2"
     # with "hobo"
     mutate(
@@ -71,10 +71,10 @@ set_up_compile <- function(path,
     excel_files <- dat_files[grep("xlsx|xls", dat_files)]
   } else{
     sensor_make <- str_replace(sensor_make, " ", "_")
-    folder <- list.files(path) %>%
+    folder <- list.files(path) |>
       str_extract(
         regex(paste0("^", sensor_make, "$"), ignore_case = TRUE)
-      ) %>%
+      ) |>
       na.omit()
 
     if (length(folder) == 0) {
@@ -142,7 +142,7 @@ add_deployment_columns <- function(
     end_date,
     sn_table) {
 
-  dat %>%
+  dat |>
     mutate(
       deployment_range = paste(
         format(start_date, "%Y-%b-%d"), "to", format(end_date, "%Y-%b-%d")
@@ -150,7 +150,7 @@ add_deployment_columns <- function(
       sensor_type = sn_table$sensor_type,
       sensor_serial_number = as.numeric(sn_table$sensor_serial_number),
       sensor_depth_at_low_tide_m = sn_table$depth
-    ) %>%
+    ) |>
     select(
       deployment_range,
       contains("timestamp"),
@@ -230,7 +230,7 @@ convert_timestamp_to_datetime <- function(dat, parse_orders = NULL) {
   )
 
   if (!is.na(check_date)) {
-    dat <- dat %>%
+    dat <- dat |>
       mutate(
         timestamp_ = lubridate::parse_date_time(timestamp_, orders = parse_orders)
       )
@@ -295,7 +295,7 @@ trim_data <- function(dat, start_date, end_date) {
 
   ind <- colnames(dat)[which(str_detect(colnames(dat), "timestamp"))]
 
-  dat %>%
+  dat |>
     filter(
       .data[[ind[[1]]]] >= start_date,
       .data[[ind[[1]]]] <= (end_date + hours(4))
@@ -391,20 +391,23 @@ extract_hobo_sn <- function(hobo_colnames) {
 #' @return Returns a tibble of \code{variable} and \code{units} found in
 #'   \code{hobo_dat}. Units are mg_per_l for dissolved oxygen and degree_c for
 #'   temperature.
-#' @importFrom dplyr %>% contains mutate select
+#' @importFrom dplyr contains mutate select
 #' @importFrom stringr str_replace str_remove
 #' @importFrom tidyr separate
 #' @noRd
 
 extract_hobo_units <- function(hobo_dat) {
-  hobo_dat %>%
+
+  hobo_dat |>
     select(
-      contains("Date"), contains("Temp"), contains("DO", ignore.case = FALSE)
-    ) %>%
-    colnames() %>%
-    data.frame() %>%
-    separate(col = ".", into = c("variable", "units"), sep = ", ", extra = "drop") %>%
-    separate(col = "units", into = c("units", NA), sep = " \\(", fill = "right") %>%
+      contains("Date"),
+      contains("Temp"), contains("DO", ignore.case = FALSE)
+    ) |>
+    colnames() |>
+    data.frame() |>
+    rename("col1" = 1) |>
+    separate(col = "col1", into = c("variable", "units"), sep = ", ", extra = "drop") |>
+    separate(col = "units", into = c("units", NA), sep = " \\(", fill = "right") |>
     mutate(
       units = str_replace(units, pattern = "GMT", replacement = "utc"),
       units = str_remove(units, pattern = "\\+00:00"),
@@ -420,17 +423,18 @@ extract_hobo_units <- function(hobo_dat) {
 #' @return Returns a tibble of \code{variable} and \code{units} found in
 #'   \code{dat}. Units are ph for pH and degree_c for
 #'   temperature.
-#' @importFrom dplyr %>% contains mutate select
+#' @importFrom dplyr contains mutate select
 #' @importFrom stringr str_replace str_remove str_remove_all
 #' @importFrom tidyr separate
 #' @noRd
 
 extract_hobo_ph_units <- function(dat) {
-  dat %>%
-    select(contains("Date"), contains("Temp"), contains("pH")) %>%
-    colnames() %>%
-    data.frame() %>%
-    separate(col = ".", into = c("variable", "units"), " \\(|, ") %>%
+  dat |>
+    select(contains("Date"), contains("Temp"), contains("pH")) |>
+    colnames() |>
+    data.frame() |>
+    rename("col1" = 1) |>
+    separate(col = "col1", into = c("variable", "units"), " \\(|, ") |>
     mutate(
       variable = str_remove_all(variable, " "),
       units = str_remove(units, "\\)"),
@@ -448,12 +452,12 @@ extract_hobo_ph_units <- function(dat) {
 #'
 #' @return Data frame with column names in the form \code{variable_units}.
 #'
-#' @importFrom dplyr %>% arrange mutate
+#' @importFrom dplyr arrange mutate
 #' @importFrom stringr str_detect str_replace
 #' @noRd
 
 make_column_names <- function(unit_table) {
-  new_names <- unit_table %>%
+  new_names <- unit_table |>
     mutate(
       variable_label = case_when(
        variable == "Date Time" | variable == "Date-Time" ~ "timestamp_",
@@ -475,9 +479,9 @@ make_column_names <- function(unit_table) {
     new_names[str_detect(new_names$col_name, "temperature"), ]$col_name
   )
 
-  new_names %>%
-    mutate(col_name = ordered(col_name, levels = f_levels)) %>%
-    arrange(col_name) %>%
+  new_names |>
+    mutate(col_name = ordered(col_name, levels = f_levels)) |>
+    arrange(col_name) |>
     mutate(col_name = as.character(col_name))
 }
 

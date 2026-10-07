@@ -11,7 +11,7 @@
 
 ss_convert_old_log <- function(log) {
 
-  log <- log %>%
+  log <- log |>
     rename(
       waterbody = contains("Deployment_Waterbody"),
       station = contains("Location_Description"),
@@ -53,7 +53,6 @@ ss_convert_old_log <- function(log) {
 #'   the information into a list using \code{ss_parse_log()}.
 #'
 #' @importFrom data.table fread
-#' @importFrom dplyr %>%
 #' @importFrom readxl read_excel
 #' @importFrom stringr str_extract
 #' @importFrom utils file_test
@@ -78,8 +77,8 @@ ss_read_log <- function(
   # if path goes to the deployment folder, finish with log folder + file name + extension
   if (isFALSE(utils::file_test("-f", path))) {
 
-    folder <- list.files(path) %>%
-      str_extract(regex("log", ignore_case = TRUE)) %>%
+    folder <- list.files(path) |>
+      str_extract(regex("log", ignore_case = TRUE)) |>
       na.omit()
 
     path <- paste0(path, "/", folder)
@@ -181,7 +180,7 @@ ss_read_log <- function(
 #'   \code{sensor_serial_number}, and \code{depth}. \code{string_configuration}
 #'   is a character string indicating how the sensor string was moored.
 #'
-#' @importFrom dplyr %>% contains filter mutate select
+#' @importFrom dplyr contains filter mutate select
 #' @importFrom lubridate is.Date ymd
 #' @importFrom stringr str_replace str_detect
 #' @importFrom tidyr separate
@@ -352,14 +351,14 @@ ss_parse_log <- function(
     if(!("sensor_depth_m" %in% cols)) {
       log <- mutate(log, sensor_depth_m = NA_real_)
     }
-    depth <- log %>%
-      select(sensor_type, sensor_serial_number, sensor_depth_m) %>%
+    depth <- log |>
+      select(sensor_type, sensor_serial_number, sensor_depth_m) |>
       mutate(numeric_depth = suppressWarnings(as.numeric(sensor_depth_m)))
 
     if (any(is.na((depth$numeric_depth)))) {
-      depth_char <- depth %>%
-        filter(is.na(numeric_depth)) %>%
-        select(-numeric_depth) %>%
+      depth_char <- depth |>
+        filter(is.na(numeric_depth)) |>
+        select(-numeric_depth) |>
         mutate(
           depth_print = paste(
             sensor_type, sensor_serial_number, sensor_depth_m)
@@ -371,14 +370,14 @@ ss_parse_log <- function(
     }
 
     # serial number table -----------------------------------------------------
-    sn_table <- log %>%
+    sn_table <- log |>
       select(
         log_sensor = sensor_type,
         sensor_serial_number,
         depth = sensor_depth_m
       )
 
-    sensors <- sn_table %>%
+    sensors <- sn_table |>
       mutate(
         log_sensor = str_replace(log_sensor, "_", " "),
         log_sensor = tolower(log_sensor),
@@ -389,8 +388,8 @@ ss_parse_log <- function(
       )
 
     # warning if there are any sensors in the log that are NOT recognized by package
-    n_sensors <- sensors %>%
-      select(contains("detect")) %>%
+    n_sensors <- sensors |>
+      select(contains("detect")) |>
       apply(1, sum)
 
     if (any(n_sensors == 0)) {

@@ -44,7 +44,7 @@ ss_open_trimdates_app <- function(
 
   server <- function(input, output) {
     output$vars_plot <- plotly::renderPlotly({
-      dat <- dat %>%
+      dat <- dat |>
         filter_dat_to_plot(
           filter_to = filter_to,
           period = period,

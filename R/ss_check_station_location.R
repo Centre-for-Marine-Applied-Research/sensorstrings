@@ -18,7 +18,7 @@
 #'   the buffer radius. Returns \code{FALSE} and a Warning if the coordinates
 #'   are outside the buffer.
 #'
-#' @importFrom dplyr %>% contains filter mutate select
+#' @importFrom dplyr contains filter mutate select
 #' @importFrom googlesheets4 gs4_deauth read_sheet
 #'
 #' @export
@@ -41,8 +41,8 @@ ss_check_station_radius <- function(
     link <- "http://docs.google.com/spreadsheets/d/1a3QvJsvwr4dd64g3jxgewRtfutIpsKjT2yrMEAoxA3I/edit#gid=828367890"
 
     # read in the "Area Info" tab of the STRING TRACKING sheet
-    station_coords <- googlesheets4::read_sheet(link, sheet = "Area Info") %>%
-      filter(station == station_name) %>%
+    station_coords <- googlesheets4::read_sheet(link, sheet = "Area Info") |>
+      filter(station == station_name) |>
       select(station, latitude, longitude)
   }
 
@@ -54,12 +54,12 @@ ss_check_station_radius <- function(
     stop("Must provide coordinates for station << ", station_name, " >>")
   }
 
-  station_coords_sf <- station_coords %>%
+  station_coords_sf <- station_coords |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   station_buffer <- sf::st_buffer(station_coords_sf, dist = station_radius)
 
-  log_coords_sf <- log_coords %>%
+  log_coords_sf <- log_coords |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   #check_location <- st_within(log_coords_sf, station_buffer)
@@ -103,14 +103,14 @@ ss_check_station_in_ocean <- function(
   station_name <- log_coords$station
 
   if(is.null(coast_shp)) {
-    coast_shp <- sf::read_sf("R:/data_branches/ns_coast/ns_coast.shp") %>%
+    coast_shp <- sf::read_sf("R:/data_branches/ns_coast/ns_coast.shp") |>
       na.omit()
   }
 
-  coast_shp <- coast_shp %>%
+  coast_shp <- coast_shp |>
     sf::st_transform(crs = log_crs)
 
-  log_coords_sf <- log_coords %>%
+  log_coords_sf <- log_coords |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   overlap <- suppressWarnings(sf::st_intersection(log_coords_sf, coast_shp))
@@ -156,12 +156,12 @@ ss_check_station_drift <- function(
 
   station_name <- log_coords$station
 
-  depl <- log_coords %>%
-    select(latitude, longitude) %>%
+  depl <- log_coords |>
+    select(latitude, longitude) |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
-  retrieval <- log_coords %>%
-    select(latitude = retrieval_latitude, longitude = retrieval_longitude) %>%
+  retrieval <- log_coords |>
+    select(latitude = retrieval_latitude, longitude = retrieval_longitude) |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = log_crs)
 
   drift_distance <- sf::st_distance(depl, retrieval)

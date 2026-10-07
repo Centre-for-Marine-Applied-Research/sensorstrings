@@ -33,7 +33,7 @@
 #' @return Returns a ggplot object of ocean variables plotted over time and
 #'   coloured by sensor depth.
 #'
-#' @importFrom dplyr %>% contains select mutate
+#' @importFrom dplyr contains select mutate
 #' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom grDevices colorRampPalette
 #' @importFrom lubridate as_datetime
@@ -57,13 +57,13 @@ ss_ggplot_variables <- function(
     convert_sn_to_factor = TRUE
     ) {
 
-  dat <- dat %>%
+  dat <- dat |>
     rename(timestamp_ = contains("timestamp"))
 
   if (colour_col == "sensor_serial_number") {
 
     if(isTRUE(convert_sn_to_factor)){
-      dat <- dat %>%
+      dat <- dat |>
         mutate(sensor_serial_number = factor(sensor_serial_number))
     }
 
@@ -104,7 +104,7 @@ ss_ggplot_variables <- function(
 #  format data -------------------------------------------------------------
 
   if (!("variable" %in% colnames(dat))) {
-    dat <- dat %>%
+    dat <- dat |>
       ss_pivot_longer()
   }
 
@@ -119,7 +119,7 @@ ss_ggplot_variables <- function(
   if(!("sensor_depth_at_low_tide_m" %in% colnames(dat))) {
     dat <- mutate(dat, sensor_depth_at_low_tide_m = "")
   } else {
-    dat <- dat %>%
+    dat <- dat |>
       ss_convert_depth_to_ordered_factor()
   }
 
@@ -127,8 +127,8 @@ ss_ggplot_variables <- function(
 
   # superchill
   if (is.null(superchill) && "temperature_degree_c" %in% unique(dat$variable)) {
-    min_temp <- (dat %>%
-                   filter(variable == "temperature_degree_c") %>%
+    min_temp <- (dat |>
+                   filter(variable == "temperature_degree_c") |>
                    summarise(min_temp = min(value)))$min_temp
 
     if (min_temp <= -0.7) {

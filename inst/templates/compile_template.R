@@ -90,7 +90,7 @@ depl_end <- as_datetime('2025-04-23 17:43:06')
 
 # SECTION 5: Trim Data --------------------------------------------------------------
 
-dat <- dat_raw %>%
+dat <- dat_raw |>
   filter(timestamp_utc >= depl_start, timestamp_utc <= depl_end)
 
 # review and adjust if necessary

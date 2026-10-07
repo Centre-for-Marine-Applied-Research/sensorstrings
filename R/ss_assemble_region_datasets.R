@@ -12,7 +12,7 @@
 #'
 #' @return Returns a data.frame with data from all deployments in folder.
 #'
-#' @importFrom dplyr %>% arrange distinct mutate n row_number select
+#' @importFrom dplyr arrange distinct mutate n row_number select
 #' @importFrom purrr list_rbind map
 #'
 #' @export
@@ -66,14 +66,14 @@ ss_assemble_region_data <- function(prov = "ns", path = NULL, folder) {
   )
 
   # read in data, bind together
-  dat <- depls %>%
-    map(readRDS) %>%
+  dat <- depls |>
+    map(readRDS) |>
     list_rbind()
 
   # if any needed columns are NOT in dat, add them as na
-  dat %>%
-    bind_rows(df) %>%
-    filter(row_number() != n()) %>% # last row will be all NA, so need to remove it
+  dat |>
+    bind_rows(df) |>
+    filter(row_number() != n()) |> # last row will be all NA, so need to remove it
     select(all_of(all_cols))  # fix the column order
 
 }

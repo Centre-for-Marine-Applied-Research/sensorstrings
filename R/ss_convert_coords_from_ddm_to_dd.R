@@ -10,7 +10,7 @@
 #' 2. Use the .names argument to specify new column names so that the original
 #' columns are not over-written:
 #'
-#' \code{dat <- dat_raw %>% mutate(across(any_of(coords_ddm),
+#' \code{dat <- dat_raw |> mutate(across(any_of(coords_ddm),
 #' ~ss_convert_coords_from_ddm_to_dd(.x), .names = "{str_remove(.col, '_w_ddm|_n_ddm')}"
 #' ))}
 #'
@@ -24,19 +24,20 @@
 #'
 #' @return Returns a vector of coordinates in decimal-degree format.
 #'
-#' @importFrom dplyr across mutate select
+#' @importFrom dplyr across mutate rename select
 #' @importFrom tidyr separate
 #'
 #' @export
 
 ss_convert_coords_from_ddm_to_dd <- function(coords_ddm, west = TRUE) {
 
-  coords_out <- coords_ddm %>%
-    data.frame(degree_decimal_minutes = .) %>%
+  coords_out <- coords_ddm |>
+    data.frame() |>
+    rename(degree_decimal_minutes = 1) |>
     separate(
       degree_decimal_minutes,
       into = c("coord_deg", "coord_dm"), sep = " ", remove = FALSE
-    ) %>%
+    ) |>
     mutate(
       across(contains("coord_"), ~ as.numeric(.x)),
       decimal_degree = coord_deg + coord_dm / 60
