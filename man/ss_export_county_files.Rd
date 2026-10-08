@@ -14,19 +14,19 @@ ss_export_county_files(
 }
 \arguments{
 \item{dat}{Dataframe to be exported, e.g., output from
-\code{export_county_data()}.}
+\code{qc_assemble_county_data()}.}
 
 \item{county}{County name. Will be appended with today's date as the name of
 the output file.}
 
-\item{output_path}{Path to where there assembled file(s) will be exported.
+\item{output_path}{Path to where the assembled file(s) will be exported.
 The default will export the csv file to the open_data folder and the rds
 file to the processed_data/assembled_data folder (both on the R drive). For
 custom \code{output_path} entries, the csv and rds files will be exported
 to the same folder.}
 
 \item{export_csv}{Logical argument indicating whether the data should be
-  exported as a csv file. File name will be county_todays-date.csv. Default
+  exported as a csv file. File name will be todays-date_county.csv. Default
   is \code{TRUE}.
 
   Note: \code{timestamp_utc} is converted to a character before exporting to
@@ -37,7 +37,7 @@ to the same folder.}
 
 \item{export_rds}{Logical argument indicating whether the assembled data
 should be exported as a *.rds file. File name will be
-county_todays-date.rds. Default is \code{TRUE}.}
+todays-date_county.rds. Default is \code{TRUE}.}
 }
 \value{
 Exports \code{dat} as a csv and/or rds file.
