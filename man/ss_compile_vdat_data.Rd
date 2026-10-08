@@ -2,7 +2,7 @@
 % Please edit documentation in R/ss_vdat.R
 \name{ss_compile_vdat_data}
 \alias{ss_compile_vdat_data}
-\title{Format temperature amd depth data from VR2AR (vdat) deployment}
+\title{Format temperature, depth, and tilt data from VR2AR (vdat) deployment}
 \usage{
 ss_compile_vdat_data(path, sn_table, deployment_dates, trim = TRUE)
 }
@@ -30,8 +30,9 @@ TRUE}.}
 Returns a tibble with the data compiled from the file in path/vdat.
 }
 \description{
-Compiles and formats temperature and depth data from VR2AR data
-  offloaded in the new .vdat format and exported with Fathom software.
+Compiles and formats temperature, depth, and tilt data from
+  VR2AR data offloaded in the new .vdat format and exported with Fathom
+  software.
 }
 \details{
 The raw VR2AR data must be saved in a folder named vdat in csv

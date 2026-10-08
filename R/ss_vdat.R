@@ -38,10 +38,11 @@ ss_read_vdat_data <- function(path, file_name = NULL) {
 }
 
 
-#' Format temperature amd depth data from VR2AR (vdat) deployment
+#' Format temperature, depth, and tilt data from VR2AR (vdat) deployment
 #'
-#' @description Compiles and formats temperature and depth data from VR2AR data
-#'   offloaded in the new .vdat format and exported with Fathom software.
+#' @description Compiles and formats temperature, depth, and tilt data from
+#'   VR2AR data offloaded in the new .vdat format and exported with Fathom
+#'   software.
 #'
 #' @details The raw VR2AR data must be saved in a folder named vdat in csv
 #'   format. Folder name is not case-sensitive.
@@ -104,7 +105,7 @@ ss_compile_vdat_data <- function(
 
     dat_i <- dat_i |>
       dplyr::filter(
-        `RECORD TYPE` %in% c("DEPTH_DESC", "DEPTH", "TEMP_DESC", "TEMP")
+        `RECORD TYPE` %in% c("DEPTH_DESC", "DEPTH", "TEMP_DESC", "TEMP", "ATTITUDE")
       )
 
     depth_units_i <-  dat_i |>
@@ -123,7 +124,6 @@ ss_compile_vdat_data <- function(
     if (!(temp_units_i %in% "Ambient (deg C)")) {
       stop(paste0("Sensor ", file_name, " has temperature units of << ", temp_units_i, " >>"))
     }
-
 
     # format data -------------------------------------------------------------
 
@@ -148,6 +148,7 @@ ss_compile_vdat_data <- function(
         variable = case_when(
           variable == "DEPTH" ~ "sensor_depth_measured_m",
           variable == "TEMP" ~ "temperature_degree_c",
+          variable == "ATTITUDE" ~ "tilt_degree",
           TRUE ~ NA
         )
       ) |>
@@ -173,6 +174,11 @@ ss_compile_vdat_data <- function(
 
     check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
 
+    # pivot wider
+    dat_i <- dat_i |>
+      pivot_wider(values_from = value, names_from = variable) |>
+      add_deployment_columns(start_date, end_date, sensor_info_i)
+
     # find any duplicate timestamps
     bad_ts <- dat_i |>
       group_by(timestamp_utc) |>
@@ -187,15 +193,12 @@ ss_compile_vdat_data <- function(
       )
     }
 
-    # remove duplicate timestamps and pivot wider
     dat_i <- dat_i |>
-      filter(!(timestamp_utc %in% bad_ts$timestamp_utc)) |>
-      pivot_wider(values_from = value, names_from = variable) |>
-      add_deployment_columns(start_date, end_date,  sensor_info_i)
+      filter(!(timestamp_utc %in% bad_ts))
 
     vem_dat[[i]] <- dat_i
 
-    message(paste("vemco data from sensor << ", sn_i, " >> compiled"))
+    message(paste("vdat data from sensor << ", sn_i, " >> compiled"))
   }
 
   vem_out <- vem_dat |>
