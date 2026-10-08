@@ -17,3 +17,11 @@ Returns \code{dat_long} in wide format, with a separate column for
 \description{
 Pivot sensor string data from long to wide format
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+dat_long <- ss_pivot_longer(dat)
+
+dat_wide <- ss_pivot_wider(dat_long)
+head(dat_wide)
+}

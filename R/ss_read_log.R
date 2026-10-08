@@ -23,6 +23,22 @@
 #' @importFrom utils file_test
 #'
 #' @export
+#' @examples
+#' # path to the deployment folder (which holds the Log folder)
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' # parsed into the list used by the ss_compile_*() functions
+#' log <- ss_read_log(path)
+#' log$sn_table
+#'
+#' # the log as a data frame
+#' ss_read_log(path, parse = FALSE)
+#'
+#' # or the full path to the log file
+#' ss_read_log(
+#'   file.path(path, "Log", "borgles_island_2019-05-30_log.csv"),
+#'   parse = FALSE
+#' )
 
 ss_read_log <- function(
     path,
@@ -74,11 +90,6 @@ ss_read_log <- function(
       na.strings = c("", "n/a", "N/A", "NA")
     )
   }
-
-  # old_col_names <- c("Location_Description", "Logger_Model", "Serial#")
-  # if(any(old_col_names %in% colnames(log))) {
-  #   log <- ss_convert_old_log(log)
-  # }
 
   if(isTRUE(parse)) {
     log <- ss_parse_log(
@@ -150,6 +161,20 @@ ss_read_log <- function(
 #' @importFrom tidyr separate
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' log_raw <- ss_read_log(path, parse = FALSE)
+#'
+#' log <- ss_parse_log(log_raw)
+#'
+#' log$deployment_dates
+#' log$area_info
+#' log$sn_table
+#' log$string_configuration
+#'
+#' # only return the serial number table
+#' ss_parse_log(log_raw, deployment_dates = FALSE, area_info = FALSE, config = FALSE)
 
 ss_parse_log <- function(
     log,

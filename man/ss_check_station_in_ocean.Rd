@@ -26,3 +26,24 @@ Logical value. Returns \code{TRUE} if the log coordinates are in the
 \description{
 Check station location is in the ocean (not on land)
 }
+\examples{
+if (requireNamespace("sf", quietly = TRUE)) {
+ # The default (coast_shp = NULL) reads a coastline shapefile from the CMAR
+ # R drive. Here, a small square of "land" stands in for the coastline.
+ land <- sf::st_sf(
+ geometry = sf::st_sfc(
+ sf::st_polygon(list(rbind(
+   c(-64.05, 44.54), c(-64.00, 44.54), c(-64.00, 44.555),
+   c(-64.05, 44.555), c(-64.05, 44.54)
+   ))), crs = 4617))
+
+   # in the water: TRUE
+   print(ss_check_station_in_ocean(
+   log_coords = data.frame(station = "Birchy Head", latitude = 44.57,
+   longitude = -64.03), coast_shp = land ))
+
+   # on land: FALSE with a warning
+   print(ss_check_station_in_ocean(
+   log_coords = data.frame(station = "Birchy Head", latitude = 44.55,
+   longitude = -64.03), coast_shp = land)) }
+}

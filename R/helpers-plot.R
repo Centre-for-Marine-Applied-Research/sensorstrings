@@ -20,6 +20,13 @@
 #' @importFrom dplyr contains select
 #'
 #' @export
+#'
+#' @examples
+#' # 3 depths: a 6-colour palette
+#' ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = c(2, 5, 15)))
+#'
+#' # 8 depths: one colour per depth
+#' ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = 1:8))
 
 ss_get_colour_palette <- function(dat) {
   n_depth <- dat |>
@@ -158,10 +165,8 @@ get_xaxis_breaks <- function(dat){
 #' @return Returns \code{dat} with an additional column \code{variable_label}.
 #'
 #' @importFrom dplyr left_join mutate
-#'
-#' @export
 
-ss_create_variable_labels <- function(dat, new_line = FALSE) {
+create_variable_labels <- function(dat, new_line = FALSE) {
 
  dat <- dat |>
     left_join(ss_vars, by = "variable")

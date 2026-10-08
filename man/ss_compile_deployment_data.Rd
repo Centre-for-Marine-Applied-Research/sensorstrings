@@ -52,11 +52,22 @@ Reads the deployment log and then calls the
   Columns with deployment details are added (e.g., county, waterbody,
   latitude, longitude, station, lease, string_configuration).
 }
+\examples{
+#path to the log, aquameasure, hobo, and vemco folders
+path <- system.file("extdata", package = "sensorstrings")
+
+dat <- ss_compile_deployment_data(path)
+head(dat)
+
+# leave the data untrimmed, and skip one of the sensors in the log
+dat_untrimmed <- ss_compile_deployment_data(
+  path, trim = FALSE, ignore_sensors = 547109
+)
+unique(dat_untrimmed$sensor_type)
+}
 \seealso{
 Other compile:
 \code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
 \code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
 \code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }

@@ -53,15 +53,21 @@ This code does not correct dissolved oxygen data for salinity.
   The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p", "Ymd
   HM", "Ymd HMS", "dmY HM", or "dmY HMS".
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
+\examples{
+path <- system.file("extdata", package = "sensorstrings")
+
+sn_table <- data.frame(
+  sensor_type = "hobo",
+  sensor_serial_number = 10755220,
+  depth = 2
+)
+
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+hobo <- ss_compile_hobo_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+head(hobo)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}

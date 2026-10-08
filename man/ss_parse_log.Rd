@@ -63,3 +63,18 @@ the log.
 Code will stop with an error if \code{deployment_longitude} is a positive
 value.
 }
+\examples{
+path <- system.file("extdata", package = "sensorstrings")
+
+log_raw <- ss_read_log(path, parse = FALSE)
+
+log <- ss_parse_log(log_raw)
+
+log$deployment_dates
+log$area_info
+log$sn_table
+log$string_configuration
+
+# only return the serial number table
+ss_parse_log(log_raw, deployment_dates = FALSE, area_info = FALSE, config = FALSE)
+}

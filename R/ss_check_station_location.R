@@ -22,6 +22,33 @@
 #' @importFrom googlesheets4 gs4_deauth read_sheet
 #'
 #' @export
+#'
+#' @examples
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#' # The default (station_coords = NULL) looks up the official coordinates in
+#' # the STRING TRACKING Google Sheet. Supply them directly to work offline.
+#'
+#' official <- data.frame(latitude = 44.56975, longitude = -64.03448)
+#'
+#' # within 500 m: TRUE
+#' print(ss_check_station_radius(
+#' log_coords = data.frame(station = "Birchy Head", latitude = 44.5700, longitude = -64.0344),
+#' station_coords = official
+#' ))
+#'
+#' # about 50 km away: FALSE with a warning
+#' print(ss_check_station_radius(
+#' log_coords = data.frame(station = "Birchy Head", latitude = 45, longitude = -64.03),
+#' station_coords = official
+#' ))
+#'
+#' # a tighter radius (about 30 m away): FALSE with a warning
+#' print(ss_check_station_radius(
+#' log_coords = data.frame(station = "Birchy Head", latitude = 44.5700, longitude = -64.0344),
+#' station_coords = official,
+#' station_radius = 10
+#' ))
+#' }
 
 ss_check_station_radius <- function(
     log_coords,
@@ -93,6 +120,28 @@ ss_check_station_radius <- function(
 #'   land.
 #'
 #' @export
+#'
+#' @examples
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'  # The default (coast_shp = NULL) reads a coastline shapefile from the CMAR
+#'  # R drive. Here, a small square of "land" stands in for the coastline.
+#'  land <- sf::st_sf(
+#'  geometry = sf::st_sfc(
+#'  sf::st_polygon(list(rbind(
+#'    c(-64.05, 44.54), c(-64.00, 44.54), c(-64.00, 44.555),
+#'    c(-64.05, 44.555), c(-64.05, 44.54)
+#'    ))), crs = 4617))
+#'
+#'    # in the water: TRUE
+#'    print(ss_check_station_in_ocean(
+#'    log_coords = data.frame(station = "Birchy Head", latitude = 44.57,
+#'    longitude = -64.03), coast_shp = land ))
+#'
+#'    # on land: FALSE with a warning
+#'    print(ss_check_station_in_ocean(
+#'    log_coords = data.frame(station = "Birchy Head", latitude = 44.55,
+#'    longitude = -64.03), coast_shp = land)) }
+
 
 ss_check_station_in_ocean <- function(
     log_coords,
@@ -146,6 +195,24 @@ ss_check_station_in_ocean <- function(
 #'   and retrieval coordinates is less than \code{max_drift}. Returns
 #'   \code{FALSE} and a Warning if the distance is greater.
 #' @export
+#'
+#' @examples
+#' if (requireNamespace("sf", quietly = TRUE)) {
+#'  # deployment and retrieval coordinates are the same
+#'  log_coords <- data.frame(
+#'  station = "Birchy Head",
+#'  latitude = 44.56, longitude = -64.03,
+#'  retrieval_latitude = 44.56, retrieval_longitude = -64.03
+#'  )
+#'  print(ss_check_station_drift(log_coords))
+#'  # retrieval coordinates about 5.5 km east: returns FALSE with a warning
+#'  log_coords$retrieval_longitude <- -63.96
+#'  print(ss_check_station_drift(log_coords))
+#'
+#'  # return the drift distance (m) instead of TRUE/FALSE
+#'  print(ss_check_station_drift(log_coords, return_drift = TRUE))
+#'  }
+#'
 
 ss_check_station_drift <- function(
     log_coords,

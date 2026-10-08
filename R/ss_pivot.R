@@ -13,6 +13,13 @@
 #' @importFrom stringr str_remove
 #'
 #' @export
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' dat_long <- ss_pivot_longer(dat)
+#'
+#' head(dat_long)
+#' unique(dat_long$variable)
 
 ss_pivot_longer <- function(dat_wide) {
   dat_wide |>
@@ -45,6 +52,13 @@ ss_pivot_longer <- function(dat_wide) {
 #' @importFrom tidyr pivot_wider
 #'
 #' @export
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' dat_long <- ss_pivot_longer(dat)
+#'
+#' dat_wide <- ss_pivot_wider(dat_long)
+#' head(dat_wide)
 
 ss_pivot_wider <- function(dat_long) {
   dat_long |>

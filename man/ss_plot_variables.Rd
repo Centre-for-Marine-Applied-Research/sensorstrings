@@ -69,6 +69,19 @@ Returns a patchwork object, a single figure with the plots for each
 Output is not compatible with ggplot2 functions or ggplotly(). Use
 \code{ss_ggplot_variables()} to work with those functions.
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+ss_plot_variables(dat)
+
+# the legend on the bottom, units on a second line, and custom DO limits
+ss_plot_variables(
+  dat,
+  legend_position = "bottom",
+  yaxis_newline = TRUE,
+  standard_do_ylims = c(70, 150)
+)
+}
 \seealso{
 Other plot:
 \code{\link[=ss_get_colour_palette]{ss_get_colour_palette()}}

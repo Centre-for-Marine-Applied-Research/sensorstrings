@@ -66,3 +66,23 @@ Returns a ggplot object of ocean variables plotted over time and
 \description{
 Plot variables at depth
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+ss_ggplot_variables(dat)
+
+# colour by sensor serial number, with larger points and the legend on the
+# bottom
+
+ss_ggplot_variables(
+  dat,
+  colour_col = "sensor_serial_number",
+  legend_name = "Serial number",
+  legend_position = "bottom",
+  point_size = 1
+)
+
+# a ggplot object, so it can be changed with ggplot2 functions
+p <- ss_ggplot_variables(dat, date_breaks_major = "1 month")
+p + ggplot2::ggtitle("Borgles Island")
+}

@@ -34,3 +34,30 @@ Logical value. Returns \code{TRUE} if the log coordinates are within
 \description{
 Check station location is within buffer of official coordinates
 }
+\examples{
+if (requireNamespace("sf", quietly = TRUE)) {
+# The default (station_coords = NULL) looks up the official coordinates in
+# the STRING TRACKING Google Sheet. Supply them directly to work offline.
+
+official <- data.frame(latitude = 44.56975, longitude = -64.03448)
+
+# within 500 m: TRUE
+print(ss_check_station_radius(
+log_coords = data.frame(station = "Birchy Head", latitude = 44.5700, longitude = -64.0344),
+station_coords = official
+))
+
+# about 50 km away: FALSE with a warning
+print(ss_check_station_radius(
+log_coords = data.frame(station = "Birchy Head", latitude = 45, longitude = -64.03),
+station_coords = official
+))
+
+# a tighter radius (about 30 m away): FALSE with a warning
+print(ss_check_station_radius(
+log_coords = data.frame(station = "Birchy Head", latitude = 44.5700, longitude = -64.0344),
+station_coords = official,
+station_radius = 10
+))
+}
+}

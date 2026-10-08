@@ -61,12 +61,28 @@ The raw vemco data must be saved in a folder named vemco in csv
   compiled. Otherwise, the function will stop with an error message.  (See
   argument \code{depth_override} for exception.)
 }
+\examples{
+path <- system.file("extdata", package = "sensorstrings")
+
+sn_table <- data.frame(
+  sensor_type = "VR2AR",
+  sensor_serial_number = 547109,
+  depth = 15
+)
+
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+vemco <- ss_compile_vemco_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+head(vemco)
+}
 \seealso{
 Other compile:
 \code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
 \code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
 \code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}}
 }
 \author{

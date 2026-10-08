@@ -21,6 +21,17 @@ This function simplifies converting the
   or \code{character} to an ordered factor, which is preferred for using the
   function \code{ss_ggplot_variables()}.
 }
+\examples{
+dat <- data.frame(
+  sensor_depth_at_low_tide_m = c(10, 2, 5, 2),
+  temperature_degree_c = c(8, 15, 12, 14)
+)
+
+dat_ordered <- ss_convert_depth_to_ordered_factor(dat)
+
+dat_ordered
+levels(dat_ordered$sensor_depth_at_low_tide_m)
+}
 \author{
 Danielle Dempsey
 }

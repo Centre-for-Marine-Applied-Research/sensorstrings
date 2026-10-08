@@ -23,6 +23,13 @@ Import data from aquameasure csv files
 \details{
 The aquameasure data must be saved in csv format.
 }
-\author{
-Danielle Dempsey
+\examples{
+path <- system.file("extdata", "aquameasure", package = "sensorstrings")
+
+# folder and file name
+dat <- ss_read_aquameasure_data(path, "aquameasure-670364.csv")
+head(dat)
+
+# or the full path to the file
+dat <- ss_read_aquameasure_data(file.path(path, "aquameasure-670364.csv"))
 }

@@ -23,6 +23,13 @@ Import data from vemco csv files
 \details{
 The Vemco data must be saved in csv format.
 }
-\author{
-Danielle Dempsey
+\examples{
+path <- system.file("extdata", "vemco", package = "sensorstrings")
+
+# folder and file name
+vemco_raw <- ss_read_vemco_data(path, "vemco-547109.csv")
+head(vemco_raw)
+
+# or the full path to the file
+vemco_raw <- ss_read_vemco_data(file.path(path, "vemco-547109.csv"))
 }

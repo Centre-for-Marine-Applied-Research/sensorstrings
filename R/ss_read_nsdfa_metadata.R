@@ -15,8 +15,17 @@
 #' @importFrom janitor convert_to_date
 #'
 #' @export
+#' @examples
+#' # A small synthetic version of the NSDFA tracking sheet (TempMetaData tab).
+#' # The function fixes misspelled stations and waterbodies, removes times from
+#' # the dates, and makes positive longitudes negative. tidyr gives an
+#' # "Expected 2 pieces" warning for dates that have no time; this is expected.
+#'
+#' nsdfa <- ss_read_nsdfa_metadata(
+#' system.file("extdata/nsdfa_tracking_example.xlsx",  package = "sensorstrings"))
+#'
+#' nsdfa[, c("County", "Waterbody", "Station_Name", "Depl_Date", "Recv_Date", "Depl_Lon")]
 
-# add station 1042
 ss_read_nsdfa_metadata <- function(path) {
   # read in NSDFA Tracking Sheet
   nsdfa_raw <- read_excel(

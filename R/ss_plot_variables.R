@@ -54,7 +54,20 @@
 #' @importFrom patchwork wrap_plots
 #' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom viridis viridis
+#'
 #' @export
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' ss_plot_variables(dat)
+#'
+#' # the legend on the bottom, units on a second line, and custom DO limits
+#' ss_plot_variables(
+#'   dat,
+#'   legend_position = "bottom",
+#'   yaxis_newline = TRUE,
+#'   standard_do_ylims = c(70, 150)
+#' )
 
 ss_plot_variables <- function(
     dat,
@@ -91,7 +104,7 @@ ss_plot_variables <- function(
 
   dat <- dat |>
     ss_convert_depth_to_ordered_factor() |>
-    ss_create_variable_labels(new_line = yaxis_newline) |>
+    create_variable_labels(new_line = yaxis_newline) |>
     rename(timestamp_ = contains("timestamp"))
 
   # Common plot elements ----------------------------------------------------

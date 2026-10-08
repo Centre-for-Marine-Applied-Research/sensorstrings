@@ -32,10 +32,6 @@
 #' @return Returns a tibble with the data compiled from each of the hobo pH
 #'   sensors.
 #'
-#' @family compile
-#'
-#' @author Danielle Dempsey
-#'
 #' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate dst force_tz with_tz
 #' @importFrom purrr map_df
@@ -43,6 +39,25 @@
 #' @importFrom stringr regex str_extract str_remove
 #'
 #' @export
+#'
+#' @examples
+#' # path holds a folder called hobo_ph
+#' path <- system.file("testdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "hobo ph",
+#'   sensor_serial_number = 22058687,
+#'   depth = 1
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2025-03-08", END = "2025-03-09")
+#'
+#' hobo_ph <- ss_compile_hobo_ph_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(hobo_ph)
 
 ss_compile_hobo_ph_data <- function(path,
                                  sn_table,

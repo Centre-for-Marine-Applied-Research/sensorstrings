@@ -10,11 +10,18 @@
 #' @return Returns a data frame of vemco data, with the same columns as in the
 #'   original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "vemco", package = "sensorstrings")
+#'
+#' # folder and file name
+#' vemco_raw <- ss_read_vemco_data(path, "vemco-547109.csv")
+#' head(vemco_raw)
+#'
+#' # or the full path to the file
+#' vemco_raw <- ss_read_vemco_data(file.path(path, "vemco-547109.csv"))
 
 
 ss_read_vemco_data <- function(path, file_name = NULL) {
@@ -81,6 +88,24 @@ ss_read_vemco_data <- function(path, file_name = NULL) {
 #' @importFrom purrr list_rbind
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "VR2AR",
+#'   sensor_serial_number = 547109,
+#'   depth = 15
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' vemco <- ss_compile_vemco_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(vemco)
 
 ss_compile_vemco_data <- function(path,
                                   sn_table,

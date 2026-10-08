@@ -10,10 +10,19 @@
 #' @return Returns a data frame of aquameasure data, with the same columns as in
 #'   the original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
+#'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "aquameasure", package = "sensorstrings")
+#'
+#' # folder and file name
+#' dat <- ss_read_aquameasure_data(path, "aquameasure-670364.csv")
+#' head(dat)
+#'
+#' # or the full path to the file
+#' dat <- ss_read_aquameasure_data(file.path(path, "aquameasure-670364.csv"))
+
 
 ss_read_aquameasure_data <- function(path, file_name = NULL) {
 
@@ -66,6 +75,25 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @importFrom tidyr separate pivot_wider
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "aquameasure",
+#'   sensor_serial_number = 670364,
+#'   depth = 5
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' am <- ss_compile_aquameasure_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(am)
+
 
 ss_compile_aquameasure_data <- function(path,
                                         sn_table,

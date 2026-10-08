@@ -49,3 +49,33 @@ Imports the water quality metadata tracking sheet, filters for the
   station and date of interest, re-formats into the deployment log format,
   and exports to the Log folder.
 }
+\examples{
+# The default (path = NULL) reads the metadata tracking sheet from the CMAR R
+# drive. Here, path points to a small example sheet with the same "tracker"
+# tab, and the log is written to a deployment folder in tempdir().
+output_path <- file.path(tempdir(), "borgles_island_2019-05-30")
+dir.create(output_path, showWarnings = FALSE)
+
+ss_create_log_from_metadata(
+  output_path = output_path,
+  station = "borgles_island",
+  deployment_date = "2019-05-30",
+  path = system.file("extdata/metadata_tracking_example.xlsx", package = "sensorstrings")
+)
+
+# the new log can be read with ss_read_log()
+ss_read_log(output_path, parse = FALSE)
+
+unlink(output_path, recursive = TRUE)
+
+if (FALSE) {
+  # google_sheet = TRUE reads the New Brunswick metadata Google Sheet (or the
+  # sheet at google_sheet_link). Needs an internet connection, so not run.
+  ss_create_log_from_metadata(
+    output_path = tempdir(),
+    station = "station name",
+    deployment_date = "2024-05-01",
+    google_sheet = TRUE
+  )
+}
+}

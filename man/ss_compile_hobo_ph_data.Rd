@@ -50,15 +50,22 @@ Exported data must be saved in a folder named hobo_ph in csv format.
 
   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
+\examples{
+# path holds a folder called hobo_ph
+path <- system.file("testdata", package = "sensorstrings")
+
+sn_table <- data.frame(
+  sensor_type = "hobo ph",
+  sensor_serial_number = 22058687,
+  depth = 1
+)
+
+deployment_dates <- data.frame(START = "2025-03-08", END = "2025-03-09")
+
+hobo_ph <- ss_compile_hobo_ph_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+head(hobo_ph)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}

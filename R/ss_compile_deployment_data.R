@@ -33,7 +33,19 @@
 #' @importFrom dplyr arrange bind_rows contains select tibble
 #'
 #' @export
-
+#'
+#' @examples
+#' #path to the log, aquameasure, hobo, and vemco folders
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' dat <- ss_compile_deployment_data(path)
+#' head(dat)
+#'
+#' # leave the data untrimmed, and skip one of the sensors in the log
+#' dat_untrimmed <- ss_compile_deployment_data(
+#'   path, trim = FALSE, ignore_sensors = 547109
+#' )
+#' unique(dat_untrimmed$sensor_type)
 
 ss_compile_deployment_data <- function(
     path,

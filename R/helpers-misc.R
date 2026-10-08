@@ -107,6 +107,18 @@ ss_export_path <- function(
 #' @importFrom stringr str_replace_all
 #'
 #' @export
+#'
+#' @examples
+#' # The default (path = NULL) points to the station_folders folder on the CMAR R
+#' # drive. Here, path is a folder in tempdir() set up with ss_set_up_folders().
+#' path <- file.path(tempdir(), "station_folders")
+#' dir.create(path, showWarnings = FALSE)
+#'
+#' ss_set_up_folders(station = "Borgles Island", depl_date = "2019-05-30", path_output = path)
+#'
+#' ss_import_path("Borgles Island", "2019-05-30", path = path)
+#'
+#' unlink(path, recursive = TRUE)
 
 ss_import_path <- function(station, depl_date, prov = "ns", path = NULL) {
 

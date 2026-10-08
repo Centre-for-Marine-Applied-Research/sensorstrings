@@ -24,6 +24,13 @@ Import data from VR2AR csv files exported from Fathom
 For VR2AR data offloaded in the new .vdat format and exported with
   Fathom software. The data must be saved in csv format.
 }
-\author{
-Danielle Dempsey
+\examples{
+path <- system.file("testdata", "vdat", package = "sensorstrings")
+
+# folder and file name
+vdat_raw <- ss_read_vdat_data(path, "VR2AR-69_555438.csv")
+head(vdat_raw)
+
+# or the full path to the file
+vdat_raw <- ss_read_vdat_data(file.path(path, "VR2AR-69_555438.csv"))
 }

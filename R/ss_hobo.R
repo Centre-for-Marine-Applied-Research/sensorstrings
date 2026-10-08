@@ -11,11 +11,18 @@
 #' @return Returns a data frame of hobo or tidbit data, with the same columns as
 #'   in the original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "hobo", package = "sensorstrings")
+#'
+#' # folder and file name
+#' dat <- ss_read_hobo_data(path, "10755220.csv")
+#' head(dat)
+#'
+#' # or the full path to the file
+#' dat <- ss_read_hobo_data(file.path(path, "10755220.csv"))
 
 ss_read_hobo_data <- function(path, file_name = NULL) {
 
@@ -77,10 +84,6 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
 #' @return Returns a tibble with the data compiled from each of the hobo or
 #'   tidbit sensors.
 #'
-#' @family compile
-#'
-#' @author Danielle Dempsey
-#'
 #' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate hours
 #' @importFrom purrr map_df
@@ -88,6 +91,24 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
 #' @importFrom stringr regex str_extract str_remove
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "hobo",
+#'   sensor_serial_number = 10755220,
+#'   depth = 2
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' hobo <- ss_compile_hobo_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(hobo)
 
 ss_compile_hobo_data <- function(path,
                                  sn_table,

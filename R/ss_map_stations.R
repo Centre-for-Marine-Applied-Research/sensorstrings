@@ -7,6 +7,18 @@
 #'
 #' @export
 #'
+#' @examples
+#' if (requireNamespace("leaflet", quietly = TRUE)) {
+#'   stations <- data.frame(
+#'     station = c("Borgles Island", "Birchy Head"),
+#'     latitude = c(44.77241, 44.5701),
+#'     longitude = c(-62.72608, -64.034383)
+#'   )
+#'
+#'   # the map tiles load when the map is viewed (needs internet)
+#'   ss_map_stations(stations)
+#' }
+
 
 ss_map_stations <- function(dat) {
 

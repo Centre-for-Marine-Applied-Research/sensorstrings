@@ -17,6 +17,18 @@
 #' @importFrom dplyr mutate arrange
 #'
 #' @export
+#'
+#' @examples
+#' dat <- data.frame(
+#'   sensor_depth_at_low_tide_m = c(10, 2, 5, 2),
+#'   temperature_degree_c = c(8, 15, 12, 14)
+#' )
+#'
+#' dat_ordered <- ss_convert_depth_to_ordered_factor(dat)
+#'
+#' dat_ordered
+#' levels(dat_ordered$sensor_depth_at_low_tide_m)
+
 
 ss_convert_depth_to_ordered_factor <- function(dat) {
   dat |>

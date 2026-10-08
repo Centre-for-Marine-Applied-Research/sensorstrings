@@ -19,3 +19,11 @@ Returns \code{dat_wide} in long format. Variables (e.g., temperature,
 \description{
 Pivot sensor string data from wide to long format
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+dat_long <- ss_pivot_longer(dat)
+
+head(dat_long)
+unique(dat_long$variable)
+}

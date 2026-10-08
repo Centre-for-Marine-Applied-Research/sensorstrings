@@ -11,7 +11,15 @@
 #' @importFrom tidyr separate unite
 #' @importFrom lubridate as_date
 #' @importFrom dplyr all_of any_of arrange case_when distinct mutate relocate select
+#'
 #' @export
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' ss_write_report_table(dat)
+#'
+#' # keep the waterbody column, and separate variables with a comma
+#' ss_write_report_table(dat, keep_waterbody = TRUE, var_sep = ", ")
 
 ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
 

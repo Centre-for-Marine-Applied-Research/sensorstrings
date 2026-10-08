@@ -19,6 +19,25 @@
 #' @importFrom utils packageVersion
 #'
 #' @export
+#'
+#' @examples
+#' # The default (path = NULL) writes to the station folder on the CMAR R drive.
+#' # Here the template is written to tempdir().
+#' template <- ss_create_template(
+#'   station = "Borgles Island",
+#'   depl_date = "2019-05-30",
+#'   initials = "DD",
+#'   path = tempdir()
+#' )
+#'
+#' head(readLines(template), 20)
+#
+# # a second call leaves the existing file alone and gives a warning
+# ss_create_template(
+#   station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
+# )
+#
+# unlink(template)
 
 ss_create_template <- function(
     station = NULL, depl_date = NULL, initials = "", path = NULL

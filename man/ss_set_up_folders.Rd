@@ -28,3 +28,20 @@ Creates the folder structure for storing raw sensor string data from
 \description{
 Create folders for the raw sensor string data from a given deployment
 }
+\examples{
+path <- file.path(tempdir(), "station_folders")
+dir.create(path, showWarnings = FALSE)
+
+# station folder + deployment folder
+ss_set_up_folders(station = "Borgles Island", depl_date = "2019-05-30", path_output = path)
+
+# also add the log, aquameasure, hobo, and vemco folders
+ss_set_up_folders(
+  station = "Borgles Island", depl_date = "2020-06-15",
+  path_output = path, sensor_folders = TRUE
+)
+
+list.dirs(path, full.names = FALSE)
+
+unlink(path, recursive = TRUE)
+}

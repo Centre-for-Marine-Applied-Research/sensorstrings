@@ -25,6 +25,28 @@
 #' @importFrom lubridate as_datetime
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("shiny", quietly = TRUE) &&
+#'     requireNamespace("plotly", quietly = TRUE)) {
+#'   dat <- ss_compile_deployment_data(
+#'     system.file("extdata", package = "sensorstrings"), trim = FALSE
+#'   )
+#'
+#'   # the app object is created here, and opens when printed or run
+#'   app <- ss_open_trimdates_app(dat, filter_to = "end", period = "1 day")
+#'
+#'   # the app is interactive, so only open it in an interactive session
+#'   if (interactive()) shiny::runApp(app)
+#'
+#'   # zoom in on a custom time window
+#'   app2 <- ss_open_trimdates_app(
+#'     dat,
+#'     filter_to = "custom",
+#'     custom_start = as.POSIXct("2019-05-30 12:00", tz = "UTC"),
+#'     custom_end = as.POSIXct("2019-06-01 00:00", tz = "UTC")
+#'   )
+#'   if (interactive()) shiny::runApp(app2)
+#' }
 
 
 ss_open_trimdates_app <- function(

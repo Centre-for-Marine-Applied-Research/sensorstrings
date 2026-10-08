@@ -32,3 +32,15 @@ Invisibly returns the path to the template file. Creates the file if
 \description{
 Create file to compile and trim sensor string data
 }
+\examples{
+# The default (path = NULL) writes to the station folder on the CMAR R drive.
+# Here the template is written to tempdir().
+template <- ss_create_template(
+  station = "Borgles Island",
+  depl_date = "2019-05-30",
+  initials = "DD",
+  path = tempdir()
+)
+
+head(readLines(template), 20)
+}
