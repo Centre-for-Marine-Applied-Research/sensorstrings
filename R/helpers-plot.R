@@ -198,9 +198,11 @@ create_variable_labels <- function(dat, new_line = FALSE) {
 #' @importFrom lubridate period is.POSIXct  %m+% %m-%
 #' @importFrom dplyr filter
 #' @importFrom rlang :=
-#' @noRd
+#'
+#' @export
 
-filter_dat_to_plot <- function(
+
+ss_filter_dat_to_plot <- function(
     dat,
     filter_to = c("start", "end", "custom"),
     period = "2 days",
