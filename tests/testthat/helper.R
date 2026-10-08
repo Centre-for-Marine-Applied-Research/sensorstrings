@@ -105,7 +105,7 @@ hobo_trim <- ss_compile_hobo_data(
 
 # Hobo pH -----------------------------------------------------------------
 
-path_hobo_ph <- system.file("testdata", package = "sensorstrings")
+ path_hobo_ph <- system.file("testdata", package = "sensorstrings")
 
 hobo_ph1 <- ss_read_hobo_data(path_hobo_ph, "hobo_ph/22058687.csv") |>
   # the degree symbol was causing a problem
@@ -301,7 +301,7 @@ hobo_ph_units <- ss_read_hobo_data(
   path = system.file("testdata/hobo_ph", package = "sensorstrings"),
   file_name = "22058687.csv"
 ) |>
-  extract_hobo_ph_units()
+  extract_hobo_units()
 
 # make_column_names -------------------------------------------------------
 

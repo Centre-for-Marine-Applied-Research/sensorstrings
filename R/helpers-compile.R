@@ -386,64 +386,39 @@ extract_hobo_sn <- function(hobo_colnames) {
 
 #' Extract units from column names of hobo data
 #'
-#' @param hobo_dat Data as read in by \code{ss_read_hobo_data()}.
-#'
-#' @return Returns a tibble of \code{variable} and \code{units} found in
-#'   \code{hobo_dat}. Units are mg_per_l for dissolved oxygen and degree_c for
-#'   temperature.
-#' @importFrom dplyr contains mutate select
-#' @importFrom stringr str_replace str_remove
-#' @importFrom tidyr separate
-#' @noRd
-
-extract_hobo_units <- function(hobo_dat) {
-
-  hobo_dat |>
-    select(
-      contains("Date"),
-      contains("Temp"), contains("DO", ignore.case = FALSE)
-    ) |>
-    colnames() |>
-    data.frame() |>
-    rename("col1" = 1) |>
-    separate(col = "col1", into = c("variable", "units"), sep = ", ", extra = "drop") |>
-    separate(col = "units", into = c("units", NA), sep = " \\(", fill = "right") |>
-    mutate(
-      units = str_replace(units, pattern = "GMT", replacement = "utc"),
-      units = str_remove(units, pattern = "\\+00:00"),
-      units = str_replace(units, pattern = "mg/L", replacement = "mg_per_l"),
-      units = str_replace(units, pattern = "\u00B0C", replacement = "degree_c")
-    )
-}
-
-#' Extract units from column names of hobo pH data
-#'
 #' @param dat Data as read in by \code{ss_read_hobo_data()}.
 #'
 #' @return Returns a tibble of \code{variable} and \code{units} found in
-#'   \code{dat}. Units are ph for pH and degree_c for
-#'   temperature.
+#'   \code{dat}. Units are mg_per_l for dissolved oxygen, degree_c for
+#'   temperature, and ph for pH.
 #' @importFrom dplyr contains mutate select
 #' @importFrom stringr str_replace str_remove str_remove_all
 #' @importFrom tidyr separate
 #' @noRd
 
-extract_hobo_ph_units <- function(dat) {
+extract_hobo_units <- function(dat) {
   dat |>
-    select(contains("Date"), contains("Temp"), contains("pH")) |>
+    select(
+      contains("Date"),
+      contains("Temp"), contains("DO", ignore.case = FALSE), contains("pH")
+    ) |>
     colnames() |>
     data.frame() |>
     rename("col1" = 1) |>
-    separate(col = "col1", into = c("variable", "units"), " \\(|, ") |>
+    separate(col = "col1", into = c("variable", "units"), sep = ", |\\(|, ", extra = "drop") |>
+    separate(col = "units", into = c("units", NA), sep = " \\(", fill = "right") |>
     mutate(
       variable = str_remove_all(variable, " "),
+      units = str_remove_all(units, " "),
       units = str_remove(units, "\\)"),
-      units = str_replace(units, pattern = "pH", replacement = "ph"),
+      units = str_replace(units, pattern = "GMT", replacement = "utc"),
+      units = str_remove(units, pattern = "\\+00:00"),
+      units = str_replace(units, pattern = "mg/L", replacement = "mg_per_l"),
       units = str_replace(units, pattern = "\u00B0C", replacement = "degree_c"),
+      units = str_replace(units, pattern = "pH", replacement = "ph"),
       units = tolower(units)
     )
 }
-
 
 #' Paste variable name and units to create column names
 #'
@@ -457,11 +432,12 @@ extract_hobo_ph_units <- function(dat) {
 #' @noRd
 
 make_column_names <- function(unit_table) {
+
   new_names <- unit_table |>
     mutate(
       variable_label = case_when(
-       variable == "Date Time" | variable == "Date-Time" ~ "timestamp_",
-       variable == "DO conc" ~ "dissolved_oxygen_uncorrected_",
+       variable %in% c("Date Time", "Date-Time", "DateTime") ~ "timestamp_",
+       variable %in% c("DO conc", "DOconc") ~ "dissolved_oxygen_uncorrected_",
        variable == "Temp" | variable == "Temperature" ~ "temperature_",
         variable == "pH" ~ "ph_",
         TRUE ~ NA

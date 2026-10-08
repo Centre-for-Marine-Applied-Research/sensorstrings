@@ -70,8 +70,6 @@ ss_compile_hobo_ph_data <- function(path,
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
-
-    # if(!is.null(file_name)) file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
@@ -80,7 +78,7 @@ ss_compile_hobo_ph_data <- function(path,
       filter(if_all(everything(), ~ !grepl("Logged", .)))
 
     # extract units and make column names
-    hobo_units <- extract_hobo_ph_units(hobo_i)
+    hobo_units <- extract_hobo_units(hobo_i)
     new_col_names <- make_column_names(hobo_units)
 
     # sn and timezone checks --------------------------------------------------
