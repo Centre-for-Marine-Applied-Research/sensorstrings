@@ -11,15 +11,30 @@ test_that("extract_file_extension() identifies correct extension", {
     extract_file_extension(c("a.csv", "b.XLSX", "noext")), c("csv", "xlsx", ""))
 })
 
-# # ss_coords_from_ddm_to_dd()
-# test_that("ss_convert_coords_from_ddm_to_dd() returns correct coordinates", {
-#   expect_equal(
-#     round(ss_convert_coords_from_ddm_to_dd(coords_ddm), digits = 5),
-#     c(45.36085, -61.40678, 44.43730, -64.25063)
-#   )
-#
-#   expect_equal(
-#     round(ss_convert_coords_from_ddm_to_dd(coords_ddm, west = FALSE), digits = 5),
-#     c(45.36085, 61.40678, 44.43730, 64.25063)
-#   )
-# })
+# written with Claude Opus 5.5
+test_that("ss_export_path() builds the county/sub_folder path and file name", {
+  out <- new_tmp_dir()
+  on.exit(unlink(out, recursive = TRUE))
+
+  dir.create(file.path(out, "halifax", "new"), recursive = TRUE)
+  expect_equal(
+    ss_export_path(dat_extdata, path = out),
+    file.path(out, "halifax", "new", "borgles_island_2019-05-30.rds")
+  )
+
+  expect_error(ss_export_path(dat_extdata, path = out, sub_folder = "old"), "does not exist")
+})
+
+test_that("ss_import_path() builds the station/station_date path", {
+  out <- new_tmp_dir()
+  on.exit(unlink(out, recursive = TRUE))
+
+  dir.create(file.path(out, "borgles_island", "borgles_island_2019-05-30"), recursive = TRUE)
+  expect_equal(
+    ss_import_path("Borgles Island", "2019-05-30", path = out),
+    file.path(out, "borgles_island", "borgles_island_2019-05-30")
+  )
+
+  expect_error(ss_import_path("Borgles Island", "2020-01-01", path = out), "does not exist")
+})
+

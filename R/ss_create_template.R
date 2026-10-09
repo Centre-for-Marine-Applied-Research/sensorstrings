@@ -48,7 +48,8 @@ ss_create_template <- function(
   }
 
   # check date in correct format
-  if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
+  if(!grepl("^\\d{4}-\\d{2}-\\d{2}$", depl_date)) {
+    # if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
     stop("'depl_date' in incorrect format. Must be yyyy-mm-dd.")
   }
 
