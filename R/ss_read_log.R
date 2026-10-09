@@ -406,7 +406,15 @@ ss_parse_log <- function(
     } else config <- NA
 
     if (length(config) > 1) {
-      warning("More than one configuration type entered in the Log.")
+      config <- config[!is.na(config)] # remove NAs from config
+    }
+
+    if (length(config) > 1) { # if length is still > 1, pick the first
+      warning(
+        "More than one configuration type entered in the Log. ",
+        paste(config, collapse = ", "), " >>. Using << ", config[1], " >>."
+      )
+      config <- config[1]
     }
 
     if (!(config %in% config_options)) {

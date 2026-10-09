@@ -32,4 +32,11 @@ test_that("ss_parse_log() returns Errors and Warnings", {
   # unrecognized sensor
   expect_warning(ss_read_log(paste0(path, "/test6"), verbose = FALSE))
 
+  # multiple configurations
+  expect_warning(y <- ss_read_log(paste0(path, "/test8"), verbose = FALSE))
+  expect_equal(y$string_configuration, "sub-surface buoy")
 })
+
+
+
+
