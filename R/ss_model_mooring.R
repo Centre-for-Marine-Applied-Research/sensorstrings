@@ -83,6 +83,7 @@ ss_model_mooring <- function(
     metadata = NULL,
     rope_type = "3/8in leaded polypropylene"
 ) {
+  rlang::check_installed("mooring", reason = "to use `ss_model_mooring()`.")
 
   if(is.null(metadata)) {
     metadata <- read_excel(

@@ -82,7 +82,6 @@ head(vemco)
 \seealso{
 Other compile:
 \code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
 \code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}}
 }
 \author{

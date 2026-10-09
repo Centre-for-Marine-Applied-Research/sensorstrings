@@ -26,11 +26,8 @@
 #'
 #' @return Returns a tibble of data from a sensor string deployment.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
 #' @importFrom lubridate parse_date_time
-#' @importFrom dplyr arrange bind_rows contains select tibble
+#' @importFrom dplyr any_of arrange bind_rows contains select tibble
 #'
 #' @export
 #'
@@ -181,15 +178,16 @@ ss_compile_deployment_data <- function(
       sensor_type, sensor_serial_number,
       contains("timestamp"),
       contains("low_tide"),
-      # variables in alphabetical order
-      contains("chlorophyll_blue"),
-      contains("chlorophyll_red"),
-      contains("dissolved_oxygen_percent"),
-      contains("dissolved_oxygen_uncorrected"),
-      contains("ph"),
-      contains("salinity"),
-      contains("sensor_depth_measured"),
-      contains("temperature"),
-      contains("tilt")
+      any_of(sort(ss_vars$variable))
+      # # variables in alphabetical order
+      # contains("chlorophyll_blue"),
+      # contains("chlorophyll_red"),
+      # contains("dissolved_oxygen_percent"),
+      # contains("dissolved_oxygen_uncorrected"),
+      # contains("ph"),
+      # contains("salinity"),
+      # contains("sensor_depth_measured"),
+      # contains("temperature"),
+      # contains("tilt")
     )
 }

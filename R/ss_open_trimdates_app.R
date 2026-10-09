@@ -57,6 +57,8 @@ ss_open_trimdates_app <- function(
     custom_end = NULL,
     point_size = 2) {
 
+  rlang::check_installed(c("shiny", "plotly"), reason = "to use `ss_open_trimdates_app()`.")
+
   ui <- shiny::fluidPage(
     plotly::plotlyOutput("vars_plot", height = "600px"),
     shiny::tableOutput("info")

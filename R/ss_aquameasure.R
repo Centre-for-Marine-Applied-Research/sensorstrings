@@ -90,7 +90,7 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' am <- ss_compile_aquameasure_data(
 #'   path,
 #'   sn_table = sn_table,
-#'   deployment_dates = deployment_dates
+#'   deployment_dates = deployment_dates, trim = FALSE
 #' )
 #' head(am)
 
@@ -226,14 +226,14 @@ ss_compile_aquameasure_data <- function(path,
 
     # remove duplicate timestamps and pivot wider
     am_i <- am_i |>
-      filter(!(timestamp_ %in% bad_ts$timestamp_)) |>
+      filter(!(timestamp_ %in% bad_ts$timestamp_))|>
       tidyr::pivot_wider(
         id_cols = "timestamp_",
         names_from = "Record Type", values_from = dplyr::all_of(vars)
       ) |>
       select(
         timestamp_,
-        do_percent_saturation = contains("Dissolved Oxygen_Dissolved Oxygen"),
+        dissolved_oxygen_percent_saturation = contains("Dissolved Oxygen_Dissolved Oxygen"),
         temperature_degree_c = contains("Temperature_Temperature"),
         salinity_psu = contains("Salinity_Salinity"),
         sensor_depth_measured_m = contains("Device Depth_Device Depth"),

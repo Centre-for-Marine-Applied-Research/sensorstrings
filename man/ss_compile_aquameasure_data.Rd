@@ -60,13 +60,12 @@ deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
 am <- ss_compile_aquameasure_data(
   path,
   sn_table = sn_table,
-  deployment_dates = deployment_dates
+  deployment_dates = deployment_dates, trim = FALSE
 )
 head(am)
 }
 \seealso{
 Other compile:
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
 \code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
 \code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
 }

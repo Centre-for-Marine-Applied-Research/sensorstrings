@@ -133,6 +133,8 @@ set_up_compile <- function(path,
 #' @param start_date placeholder
 #' @param end_date placeholder
 #'
+#' @importFrom dplyr any_of contains mutate select
+#'
 #' @return returns dat with additional columns
 #' @noRd
 
@@ -157,15 +159,7 @@ add_deployment_columns <- function(
       sensor_type,
       sensor_serial_number,
       sensor_depth_at_low_tide_m,
-      contains("blue_ug"),
-      contains("red_ug"),
-      dissolved_oxygen_percent_saturation = contains("percent_sat"),
-      dissolved_oxygen_uncorrected_mg_per_l = contains("uncorrected_mg_per_l"),
-      sensor_depth_measured_m = contains("sensor_depth_measured"),
-      contains("ph"),
-      contains("psu"),
-      contains("degree_c"),
-      contains("tilt")
+      any_of(sort(ss_vars$variable))
     )
 }
 

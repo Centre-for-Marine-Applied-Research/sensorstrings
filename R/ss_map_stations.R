@@ -21,6 +21,7 @@
 
 
 ss_map_stations <- function(dat) {
+  rlang::check_installed("leaflet", reason = "to use `ss_map_stations()`.")
 
   leaflet::leaflet(dat) |>
     leaflet::addProviderTiles("Esri.OceanBasemap") |>

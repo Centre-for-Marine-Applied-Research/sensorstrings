@@ -12,7 +12,7 @@ test_that("ss_write_report_table() returns a row for a deployment", {
   expect_equal(tab$`Deployment Date`, "2019-05-30")
   expect_equal(
     strsplit(tab$`Variables Measured`, "\n")[[1]],
-    c("depth", "dissolved oxygen (% sat)", "temperature")
+    c("temperature", "dissolved oxygen (% sat)", "depth", "tilt")
   )
 })
 
@@ -20,5 +20,5 @@ test_that("ss_write_report_table() keep_waterbody and var_sep work", {
   tab <- ss_write_report_table(dat_extdata, keep_waterbody = TRUE, var_sep = ", ")
 
   expect_equal(tab$Waterbody, "Shoal Bay")
-  expect_equal(tab$`Variables Measured`, "depth, dissolved oxygen (% sat), temperature")
+  expect_equal(tab$`Variables Measured`, "temperature, dissolved oxygen (% sat), depth, tilt")
 })

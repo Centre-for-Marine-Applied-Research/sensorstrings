@@ -24,18 +24,7 @@
 ss_pivot_longer <- function(dat_wide) {
   dat_wide |>
     pivot_longer(
-      cols = c(
-        contains("chlorophyll"),
-        contains("depth_measured"),
-        contains("dissolved_oxygen"),
-        contains("ph"),
-        contains("salinity"),
-        contains("temperature"),
-        contains("tilt")
-      ),
-      names_to = "variable",
-      values_to = "value",
-     # names_prefix = "value_",
+      any_of(ss_vars$variable), names_to = "variable", values_to = "value",
       values_drop_na = TRUE
     )
 }
