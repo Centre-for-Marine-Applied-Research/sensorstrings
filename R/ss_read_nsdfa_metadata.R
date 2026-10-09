@@ -35,7 +35,8 @@ ss_read_nsdfa_metadata <- function(path) {
     col_types = c(
       rep("guess", 9),
       "date", "text",
-      rep("numeric", 3),
+      "text", "text",
+      "numeric",
       "text", "date", "text",
       rep("numeric", 3),
       rep("guess", 10),
@@ -44,13 +45,13 @@ ss_read_nsdfa_metadata <- function(path) {
   )
 
   nsdfa_raw |>
-    # fix deployment/recovery dates (remove time if entered)
-    # the separate function will result in a Warning if there is no time entered in any row
-    separate(Depl_Date, into = c("Depl_Date", NA), " ") |>
-    separate(Recv_Date, into = c("Recv_Date", NA), " ") |>
     mutate(
       Depl_Date = as_date(Depl_Date),
       Recv_Date = as_date(Recv_Date),
+
+      Depl_Lat = as.numeric(gsub("\u00a0", "", Depl_Lat)), # remove trailing whitespace unicode character
+      Depl_Lon = as.numeric(gsub("\u00a0", "", Depl_Lon)),
+
       # fix spelling discrepancies
       Waterbody = case_when(
         Waterbody == "Pipers lake" ~ "Piper Lake",

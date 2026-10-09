@@ -78,6 +78,7 @@ utils::globalVariables(
     "depl_date",
 
     # ss_read_nsdfa_metadata
+    "Depl_Lat",
     "Depl_Lon",
     "Recv_Date",
 
