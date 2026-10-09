@@ -197,12 +197,12 @@ ss_compile_vdat_data <- function(
     # trim -------------------------------------------------------------
 
     # check there are more than 0 rows in dat
-    check_n_rows(dat_i, file_name = dat_files, trimmed = FALSE)
+    check_n_rows(dat_i, file_name = file_i, trimmed = FALSE)
 
     # trim to the dates in deployment_dates
     if (isTRUE(trim)) dat_i <- trim_data(dat_i, start_date, end_date)
 
-    check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
+    check_n_rows(dat_i, file_name = file_i, trimmed = trim)
 
     # find any duplicate timestamps
     bad_ts <- dat_i |>
