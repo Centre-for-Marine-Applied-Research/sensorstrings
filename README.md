@@ -116,7 +116,7 @@ for every function.
 library(sensorstrings)
 ```
 
-This example uses a string deployed from May 31 to October 19, 2019 with
+This example uses a string deployed from May 30 to October 19, 2019 with
 three sensors. The data files ship with the package.
 
 | Sensor          | Serial number | Depth (m) |
