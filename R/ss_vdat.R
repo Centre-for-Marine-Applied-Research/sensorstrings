@@ -12,6 +12,7 @@
 #'   original file.
 #'
 #' @importFrom data.table fread
+#' @importFrom dplyr count
 #'
 #' @export
 #' @examples
@@ -205,11 +206,15 @@ ss_compile_vdat_data <- function(
 
     # find any duplicate timestamps
     bad_ts <- dat_i |>
-      group_by(timestamp_utc) |>
-      summarise(n = n()) |>
-      filter(n > 3)
+      count(timestamp_utc, variable) |>
+      filter(n > 1) |>
+      distinct(timestamp_utc)
 
     if (nrow(bad_ts) > 0) {
+
+      dat_i <- dat_i |>
+        filter(!(timestamp_utc %in% bad_ts))
+
       message(
         "Duplicate timestamp(s) found and removed from vr2ar ",
         sn_i, ": ",
@@ -219,7 +224,6 @@ ss_compile_vdat_data <- function(
 
     # pivot wider
     dat_i <- dat_i |>
-      filter(!(timestamp_utc %in% bad_ts)) |>
       pivot_wider(values_from = value, names_from = variable) |>
       add_deployment_columns(start_date, end_date, sensor_info_i)
 
