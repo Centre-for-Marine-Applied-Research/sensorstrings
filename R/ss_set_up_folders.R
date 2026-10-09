@@ -40,22 +40,19 @@ ss_set_up_folders <- function(
     sensor_folders = FALSE) {
   parse_orders <- c("Ymd", "ymd", "dmY", "dmy", "mdY", "mdy")
 
-  # will give an error if depl_date is not in the correct order
-  depl_date_out <- as.character(
-    suppressWarnings(parse_date_time(depl_date, orders = parse_orders))
-  )
-
-  if (is.na(depl_date_out)) {
-    stop("depl_date << ", depl_date, " >> could not be converted to a date in format yyyy-mm-dd")
+  # check date in correct format
+  if(!grepl("^\\d{4}-\\d{2}-\\d{2}$", depl_date)) {
+    # if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
+    stop("'depl_date' in incorrect format. Must be yyyy-mm-dd.")
   }
 
   station_folders <- list.files(path_output)
 
   # ensure station is converted to snake case
-  station_snake <-  str_replace_all(str_to_lower(station), " ", "_")
+  station_snake <- tolower(gsub(" ", "_", station))
 
   # if the station folder does not exist, create it
-  if (!any(str_detect(station_folders, station_snake))) {
+  if (!(station_snake %in% station_folders)) {
     dir.create(paste0(path_output, "/", station_snake))
 
     message("Created folder << ", station_snake, " >> in <<", path_output, " >>")
@@ -65,9 +62,10 @@ ss_set_up_folders <- function(
 
   depl_folders <- list.files(path_output)
 
-  new_folder <- paste(station_snake, depl_date_out, sep = "_")
+  new_folder <- paste(station_snake, depl_date, sep = "_")
 
-  if (any(str_detect(depl_folders, new_folder))) {
+  # if depl folder already exists, stop
+  if (new_folder %in% depl_folders) {
     stop("Deployment folder << ", new_folder, " >> already exists in << ", path_output, " >>")
   }
 
