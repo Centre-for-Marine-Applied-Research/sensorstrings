@@ -67,9 +67,7 @@ ss_export_county_files <- function(
       # remove the UTC formatting for Open Data Portal
       mutate(timestamp_utc = format(timestamp_utc)) |>
       data.table::fwrite(file = output_csv, na = "", showProgress = TRUE)
-
-    invisible(output_csv)
-  }
+  } else output_csv <- NULL
 
   # Export rds --------------------------------------------------------------
   if(isTRUE(export_rds)) {
@@ -89,8 +87,9 @@ ss_export_county_files <- function(
 
     }
     saveRDS(dat, file = output_rds)
-    invisible(output_rds)
-  }
 
+  } else output_rds <- NULL
 
+  output_files <- c(output_csv, output_rds)
+  invisible(output_files)
 }
