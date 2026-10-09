@@ -165,6 +165,8 @@ get_xaxis_breaks <- function(dat){
 #' @return Returns \code{dat} with an additional column \code{variable_label}.
 #'
 #' @importFrom dplyr left_join mutate
+#'
+#' @noRd
 
 create_variable_labels <- function(dat, new_line = FALSE) {
 
