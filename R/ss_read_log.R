@@ -81,27 +81,29 @@ ss_read_log <- function(
 
   if (file_type == "xls" | file_type == "xlsx") {
     log <- read_excel(path, na = c("", "n/a", "N/A", "NA"))
-  }
+  } else {
+    if (file_type == "csv") {
+      log <- fread(
+        path,
+        data.table = FALSE,
+        na.strings = c("", "n/a", "N/A", "NA")
+      )
+    } else {
+      stop("Log must be a .csv, .xlsx, or .xls file: ", path)
+    }
 
-  if (file_type == "csv") {
-    log <- fread(
-      path,
-      data.table = FALSE,
-      na.strings = c("", "n/a", "N/A", "NA")
-    )
-  }
+    if(isTRUE(parse)) {
+      log <- ss_parse_log(
+        log,
+        deployment_dates = deployment_dates,
+        area_info = area_info,
+        sn_table = sn_table,
+        config = config,
+        verbose = verbose)
+    }
 
-  if(isTRUE(parse)) {
-    log <- ss_parse_log(
-      log,
-      deployment_dates = deployment_dates,
-      area_info = area_info,
-      sn_table = sn_table,
-      config = config,
-      verbose = verbose)
+    log
   }
-
-  log
 }
 
 

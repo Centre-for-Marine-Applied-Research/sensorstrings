@@ -1,4 +1,11 @@
 
+# ss_read_log() -----------------------------------------------------------
+
+test_that("ss_read_log returns Errors for empty folder or wrong file extension", {
+  expect_error(ss_read_log(paste0(path, "/test9"), verbose = FALSE))
+  expect_error(ss_read_log(paste0(path, "/test10"), verbose = FALSE))
+})
+
 # ss_parse_log() ----------------------------------------------------------
 
 test_that("ss_parse_log() returns correct dimensions", {
