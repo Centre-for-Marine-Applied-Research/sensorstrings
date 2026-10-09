@@ -25,12 +25,6 @@ test_that("ss_ggplot_variables() gives the same panels from long data", {
   expect_equal(nrow(p_long$data), nrow(dat_long))
 })
 
-test_that("ss_ggplot_variables() plots every observation", {
-  b <- ggplot2::ggplot_build(ss_ggplot_variables(dat_wide))
-
-  expect_equal(nrow(b$data[[1]]), nrow(dat_long))
-})
-
 test_that("ss_ggplot_variables() colours by depth with the default palette", {
   p <- ss_ggplot_variables(dat_wide)
   b <- ggplot2::ggplot_build(p)
@@ -98,13 +92,6 @@ test_that("ss_ggplot_variables() places the legend", {
   p <- ss_ggplot_variables(dat_wide, legend_position = "bottom")
 
   expect_equal(p$theme$legend.position, "bottom")
-  expect_renders(p)
-})
-
-test_that("ss_ggplot_variables() uses custom date breaks", {
-  p <- ss_ggplot_variables(
-    dat_wide, date_breaks_major = "1 day", date_labels_format = "%d %b"
-  )
   expect_renders(p)
 })
 

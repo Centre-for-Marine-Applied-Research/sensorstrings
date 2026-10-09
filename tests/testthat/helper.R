@@ -316,7 +316,7 @@ long_all2 <- ss_pivot_longer(wide_all)
 
 long_trim <- ss_pivot_longer(depl_trim)
 wide_trim <- ss_pivot_wider(long_trim)
-long_trim2 <- ss_pivot_longer(depl_trim)
+long_trim2 <- ss_pivot_longer(wide_trim)
 
 # convert coordinates -----------------------------------------------------
 

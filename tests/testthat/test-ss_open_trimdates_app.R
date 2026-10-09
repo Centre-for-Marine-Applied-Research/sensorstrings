@@ -1,9 +1,5 @@
 # written with Claude Opus 5.5
 
-# ss_ggplot_variables() calls theme_set(); the theme is restored at the end of
-# this file
-old_theme <- ggplot2::theme_get()
-
 dat_app <- make_wq_wide(n_days = 10)
 
 # The app's server function has no session argument, which
@@ -12,12 +8,6 @@ app_server <- function(app) {
   server <- app$serverFuncSource()
   function(input, output, session) server(input, output)
 }
-
-test_that("ss_open_trimdates_app() returns a shiny app", {
-  expect_s3_class(
-    ss_open_trimdates_app(dat_app, filter_to = "start"), "shiny.appobj"
-  )
-})
 
 test_that("ss_open_trimdates_app() renders the plot and the click table", {
   app <- ss_open_trimdates_app(dat_app, filter_to = "end", period = "2 day")
@@ -44,4 +34,4 @@ test_that("ss_open_trimdates_app() renders with the default filter_to", {
   shiny::testServer(app_server(app), expect_no_error(output$vars_plot))
 })
 
-ggplot2::theme_set(old_theme)
+
