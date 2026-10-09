@@ -125,29 +125,36 @@ ss_create_log_from_metadata <- function(
     )
   }
 
-  dat <- dat |>
-    mutate(
-      deployment_latitude = if_else(
-        is.na(deployment_latitude),
-        ss_convert_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
-        deployment_latitude
-      ),
-      deployment_longitude = if_else(
-        is.na(deployment_longitude),
-        ss_convert_coords_from_ddm_to_dd(deployment_longitude_w_ddm, west = TRUE),
-        deployment_longitude
-      ),
-      retrieval_latitude = if_else(
-        is.na(retrieval_latitude),
-        ss_convert_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
-        retrieval_latitude
-      ),
-      retrieval_longitude = if_else(
-        is.na(retrieval_longitude),
-        ss_convert_coords_from_ddm_to_dd(retrieval_longitude_w_ddm, west = TRUE),
-        retrieval_longitude
-      )
-    )
+  if (any(grepl("_ddm$", colnames(dat)))) {
+    dat <- ss_convert_coords_from_ddm_to_dd(dat)
+  } else {
+    message("No _ddm columns to convert to dd")
+  }
+
+  # dat <- dat |>
+  #   ss_convert_coords_from_ddm_to_dd()
+    # mutate(
+    #   deployment_latitude = if_else(
+    #     is.na(deployment_latitude),
+    #     ss_convert_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
+    #     deployment_latitude
+    #   ),
+    #   deployment_longitude = if_else(
+    #     is.na(deployment_longitude),
+    #     ss_convert_coords_from_ddm_to_dd(deployment_longitude_w_ddm, west = TRUE),
+    #     deployment_longitude
+    #   ),
+    #   retrieval_latitude = if_else(
+    #     is.na(retrieval_latitude),
+    #     ss_convert_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
+    #     retrieval_latitude
+    #   ),
+    #   retrieval_longitude = if_else(
+    #     is.na(retrieval_longitude),
+    #     ss_convert_coords_from_ddm_to_dd(retrieval_longitude_w_ddm, west = TRUE),
+    #     retrieval_longitude
+    #   )
+    # )
 
   # make log
   log <- dat |>

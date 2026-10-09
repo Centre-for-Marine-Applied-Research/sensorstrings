@@ -2,35 +2,47 @@
 % Please edit documentation in R/ss_convert_coords_from_ddm_to_dd.R
 \name{ss_convert_coords_from_ddm_to_dd}
 \alias{ss_convert_coords_from_ddm_to_dd}
-\title{Convert coordinates from degree-minute-decimal to decimal degree}
+\title{Convert coordinate columns from degree decimal minutes to decimal degrees}
 \usage{
-ss_convert_coords_from_ddm_to_dd(coords_ddm, west = TRUE)
+ss_convert_coords_from_ddm_to_dd(dat, keep_ddm = TRUE)
 }
 \arguments{
-\item{coords_ddm}{Vector of coordinate values in degree decimal minutes (xx
-xx.xxxx, e.g., 45 21.651 or 64 2.063). These will be converted to decimal
-degrees.}
+\item{dat}{Data frame with at least one \code{*_n_ddm}, \code{*_s_ddm},
+\code{*_e_ddm} or \code{*_w_ddm} column. Values must be in the form
+"degrees decimal-minutes", e.g., "45 21.651" or "64 2.063".}
 
-\item{west}{Logical argument indicating if the coordinates are in the Western
-hemisphere. If \code{TRUE} (the default), the returned longitudes will have
-a negative sign.}
+\item{keep_ddm}{Logical argument indicating whether to keep the
+\code{*_ddm} columns. Default is \code{TRUE}.}
 }
 \value{
-Returns a vector of coordinates in decimal-degree format.
+Returns \code{dat} with the decimal-degree columns added or filled
+  in.
 }
 \description{
-To apply to multiple columns using \code{dplyr::across}:
+Finds every column in \code{dat} whose name ends in
+  \code{_n_ddm}, \code{_s_ddm}, \code{_e_ddm} or \code{_w_ddm} (e.g.,
+  \code{deployment_latitude_n_ddm}, \code{retrieval_longitude_w_ddm}) and
+  converts it to decimal degrees.
+
+  The sign comes from the hemisphere letter in the column name: \code{_s_}
+  and \code{_w_} columns are returned as negative values; \code{_n_} and
+  \code{_e_} columns as positive values.
+
+  The result goes in a column with the hemisphere and \code{_ddm} removed
+  (\code{deployment_latitude_n_ddm} becomes \code{deployment_latitude}). If
+  that column already exists, only its \code{NA} values are filled in, so
+  coordinates already recorded in decimal degrees are kept.
 }
-\details{
-1. Define variables to convert:
+\examples{
+dat <- data.frame(
+  station = c("Borgles Island", "Birchy Head"),
+  deployment_latitude_n_ddm = c("44 46.345", "44 34.206"),
+  deployment_longitude_w_ddm = c("62 43.565", "64 2.063")
+)
 
-coords_ddm <- c("deployment_latitude_n_ddm", "deployment_longitude_w_ddm",
-"retrieval_latitude_n_ddm", "retrieval_longitude_w_ddm")
+ss_convert_coords_from_ddm_to_dd(dat)
 
-2. Use the .names argument to specify new column names so that the original
-columns are not over-written:
-
-\code{dat <- dat_raw |> mutate(across(any_of(coords_ddm),
-~ss_convert_coords_from_ddm_to_dd(.x), .names = "{str_remove(.col, '_w_ddm|_n_ddm')}"
-))}
+# existing decimal-degree values are kept; only the NA values are filled in
+dat$deployment_latitude <- c(44.77241, NA)
+ss_convert_coords_from_ddm_to_dd(dat, keep_ddm = FALSE)
 }

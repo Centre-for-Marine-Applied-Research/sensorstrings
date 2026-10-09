@@ -320,6 +320,15 @@ long_trim2 <- ss_pivot_longer(depl_trim)
 
 # convert coordinates -----------------------------------------------------
 
-coords_ddm <- c("45 21.651", "61 24.407", "44 26.238", "64 15.038")
-#coords_dd <- ss_convert_coords_from_ddm_to_dd(coords_ddm)
+dat_ddm <- data.frame(
+  station = c("A", "B", "C"),
+  deployment_latitude_n_ddm = c("45 21.651", "44 26.238", NA),
+  deployment_longitude_w_ddm = c("61 24.407", "64 15.038", "63 0"),
+  retrieval_latitude_s_ddm = c("33 52.000", NA, ""),
+  retrieval_longitude_e_ddm = c("151 12.500", NA, NA)
+)
+
+
+# coords_ddm <- c("45 21.651", "61 24.407", "44 26.238", "64 15.038")
+# #coords_dd <- ss_convert_coords_from_ddm_to_dd(coords_ddm)
 
