@@ -203,16 +203,11 @@ ss_compile_vdat_data <- function(
 
     check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
 
-    # pivot wider
-    dat_i <- dat_i |>
-      pivot_wider(values_from = value, names_from = variable) |>
-      add_deployment_columns(start_date, end_date, sensor_info_i)
-
     # find any duplicate timestamps
     bad_ts <- dat_i |>
       group_by(timestamp_utc) |>
       summarise(n = n()) |>
-      filter(n > 2)
+      filter(n > 3)
 
     if (nrow(bad_ts) > 0) {
       message(
@@ -222,8 +217,11 @@ ss_compile_vdat_data <- function(
       )
     }
 
+    # pivot wider
     dat_i <- dat_i |>
-      filter(!(timestamp_utc %in% bad_ts))
+      filter(!(timestamp_utc %in% bad_ts)) |>
+      pivot_wider(values_from = value, names_from = variable) |>
+      add_deployment_columns(start_date, end_date, sensor_info_i)
 
     vem_dat[[i]] <- dat_i
 
