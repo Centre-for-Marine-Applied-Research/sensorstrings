@@ -411,7 +411,7 @@ ss_parse_log <- function(
 
     if (length(config) > 1) { # if length is still > 1, pick the first
       warning(
-        "More than one configuration type entered in the Log. ",
+        "More than one configuration type entered in the Log. << ",
         paste(config, collapse = ", "), " >>. Using << ", config[1], " >>."
       )
       config <- config[1]
