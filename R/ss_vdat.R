@@ -213,7 +213,7 @@ ss_compile_vdat_data <- function(
     if (nrow(bad_ts) > 0) {
 
       dat_i <- dat_i |>
-        filter(!(timestamp_utc %in% bad_ts))
+        filter(!(timestamp_utc %in% bad_ts$timestamp_utc))
 
       message(
         "Duplicate timestamp(s) found and removed from vr2ar ",
