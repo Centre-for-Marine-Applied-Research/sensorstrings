@@ -40,17 +40,21 @@
 # unlink(template)
 
 ss_create_template <- function(
-    station = NULL, depl_date = NULL, initials = "", path = NULL
+    station, depl_date, initials = "", path = NULL
 ) {
 
-  if(is.null(station)) {
+  if(!is.character(station)) {
     stop("'station' must be a character string")
   }
 
   # check date in correct format
   if(!grepl("^\\d{4}-\\d{2}-\\d{2}$", depl_date)) {
-    # if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
+
     stop("'depl_date' in incorrect format. Must be yyyy-mm-dd.")
+  }
+
+  if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
+    stop("'depl_date' must not be NA.")
   }
 
   # TODO compare station to list in metadata tracking or cmpr

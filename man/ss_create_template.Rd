@@ -4,12 +4,7 @@
 \alias{ss_create_template}
 \title{Create file to compile and trim sensor string data}
 \usage{
-ss_create_template(
-  station = NULL,
-  depl_date = NULL,
-  initials = "",
-  path = NULL
-)
+ss_create_template(station, depl_date, initials = "", path = NULL)
 }
 \arguments{
 \item{station}{Character string of the station name. Will be converted to
