@@ -46,7 +46,7 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' Compile data from aquameasure sensors
 #'
 #' @description Compile and format temperature, dissolved oxygen, salinity,
-#'   chlorophyll (blue and red), and/or device depth and til data from
+#'   chlorophyll (blue and red), and/or device depth and tilt data from
 #'   aquameasure sensors.
 #'
 #' @details The raw aquameasure data must be saved in a folder named aquameasure
