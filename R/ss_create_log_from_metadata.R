@@ -120,7 +120,7 @@ ss_create_log_from_metadata <- function(
     )
 
   if (nrow(dat) == 0) {
-    warning(
+    stop(
       paste("No rows found in metadata for << ", station, deployment_date, " >>")
     )
   }
