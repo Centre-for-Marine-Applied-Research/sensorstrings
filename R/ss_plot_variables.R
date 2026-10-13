@@ -151,21 +151,7 @@ ss_plot_variables <- function(
   vars_to_plot <- dat |>
     select(variable) |>
     distinct() |>
-    mutate(variable = ordered(
-      variable,levels = ss_vars$variable)
-      # levels = c(
-      #   "temperature_degree_c",
-      #   "dissolved_oxygen_percent_saturation",
-      #   "dissolved_oxygen_uncorrected_mg_per_l",
-      #   "dissolved_oxygen_mg_per_l",
-      #   "salinity_psu",
-      #   "ph_ph",
-      #   "chlorophyll_blue_ug_per_l",
-      #   "chlorophyll_red_ug_per_l",
-      #   "sensor_depth_measured_m",
-      #   "tilt_degree"
-      #   ))
-    ) |>
+    mutate(variable = ordered(variable,levels = ss_vars$variable)) |>
     arrange(variable)
   vars_to_plot <- vars_to_plot$variable
 
