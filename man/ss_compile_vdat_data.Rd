@@ -2,7 +2,7 @@
 % Please edit documentation in R/ss_vdat.R
 \name{ss_compile_vdat_data}
 \alias{ss_compile_vdat_data}
-\title{Format temperature data from VR2AR deployment}
+\title{Format temperature, depth, and tilt data from VR2AR (vdat) deployment}
 \usage{
 ss_compile_vdat_data(path, sn_table, deployment_dates, trim = TRUE)
 }
@@ -30,8 +30,9 @@ TRUE}.}
 Returns a tibble with the data compiled from the file in path/vdat.
 }
 \description{
-Compiles and formats temperature and depth data from VR2AR data
-  offloaded in the new .vdat format and exported with Fathom software.
+Compiles and formats temperature, depth, and tilt data from
+  VR2AR data offloaded in the new .vdat format and exported with Fathom
+  software.
 }
 \details{
 The raw VR2AR data must be saved in a folder named vdat in csv
@@ -40,15 +41,25 @@ The raw VR2AR data must be saved in a folder named vdat in csv
   The device timestamp is used here. This may drift over time. Corrected time
   stamp is included in the .vdat file, but the date is not always appended.
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
+\examples{
+# full path to a VR2AR file processed with Fathom (vdat)
+path <- system.file(
+  "testdata", "vdat", "VR2AR-69_555438.csv", package = "sensorstrings"
+)
+
+sn_table <- data.frame(
+  sensor_type = "VR2AR-69",
+  sensor_serial_number = 555438,
+  depth = 5
+)
+
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+vdat <- ss_compile_vdat_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates,
+  trim = FALSE
+)
+head(vdat)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}

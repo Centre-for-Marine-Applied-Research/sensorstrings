@@ -4,18 +4,22 @@
 \alias{ss_set_up_folders}
 \title{Create folders for the raw sensor string data from a given deployment}
 \usage{
-ss_set_up_folders(path = NULL, station, depl_date, sensor_folders = FALSE)
+ss_set_up_folders(
+  station,
+  depl_date,
+  path_output = NULL,
+  sensor_folders = FALSE
+)
 }
 \arguments{
-\item{path}{File path to where the deployment folder should be created.}
-
 \item{station}{Station name.}
 
 \item{depl_date}{Deployment start date as a character string.}
 
+\item{path_output}{File path to where the station folder should be created.}
+
 \item{sensor_folders}{Logical argument indicating whether to create the
-aquameasure, hobo, log, and vemco folders in the deployment folder. These
-folders may also be created using \code{ss_download_data()}.}
+aquameasure, hobo, log, and vemco folders in the deployment folder.}
 }
 \value{
 Creates the folder structure for storing raw sensor string data from
@@ -23,4 +27,21 @@ Creates the folder structure for storing raw sensor string data from
 }
 \description{
 Create folders for the raw sensor string data from a given deployment
+}
+\examples{
+path <- file.path(tempdir(), "station_folders")
+dir.create(path, showWarnings = FALSE)
+
+# station folder + deployment folder
+ss_set_up_folders(station = "Borgles Island", depl_date = "2019-05-30", path_output = path)
+
+# also add the log, aquameasure, hobo, and vemco folders
+ss_set_up_folders(
+  station = "Borgles Island", depl_date = "2020-06-15",
+  path_output = path, sensor_folders = TRUE
+)
+
+list.dirs(path, full.names = FALSE)
+
+unlink(path, recursive = TRUE)
 }

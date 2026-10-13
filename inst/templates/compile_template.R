@@ -43,7 +43,7 @@ path <- ss_import_path(station, depl_date)
 ss_create_log_from_metadata(
   station = station,
   deployment_date = depl_date,
-  path_export = path
+  output_path = path
 )
 
 dat_raw <- ss_compile_deployment_data(path)
@@ -69,7 +69,6 @@ st_location <- data.frame(
 ss_leaflet_station_map(st_location)
 
 ss_check_station_radius(st_location)
-#ss_check_station_in_ocean(st_location) # slow because reads in shape file
 ss_check_station_drift(st_location, return_drift = TRUE) # need retrieval coords
 
 # SECTION 4: Identify Trim Dates --------------------------------------------------------------
@@ -91,7 +90,7 @@ depl_end <- as_datetime('2025-04-23 17:43:06')
 
 # SECTION 5: Trim Data --------------------------------------------------------------
 
-dat <- dat_raw %>%
+dat <- dat_raw |>
   filter(timestamp_utc >= depl_start, timestamp_utc <= depl_end)
 
 # review and adjust if necessary

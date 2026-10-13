@@ -39,14 +39,28 @@ serial numbers and sensor depth.}
 string configuration.}
 }
 \value{
-Returns a a data frame of the deployment metadata. Option to parse
-  the information into a list using \code{ss_parse_log()}.
+If \code{parse = TRUE} (the default), returns a list of deployment
+  metadata from \code{ss_parse_log()}. Otherwise returns a data frame of the
+  metadata.
 }
 \description{
 The log must be saved in .csv, .xlsx or .xls format. Value checks are applied
 in \code{ss_parse_log()}.
 }
-\details{
-"Old" log column names will be converted to the new standard (.e.,g
-"Location_Description" will be replaced with "station").
+\examples{
+# path to the deployment folder (which holds the Log folder)
+path <- system.file("extdata", package = "sensorstrings")
+
+# parsed into the list used by the ss_compile_*() functions
+log <- ss_read_log(path)
+log$sn_table
+
+# the log as a data frame
+ss_read_log(path, parse = FALSE)
+
+# or the full path to the log file
+ss_read_log(
+  file.path(path, "Log", "borgles_island_2019-05-30_log.csv"),
+  parse = FALSE
+)
 }

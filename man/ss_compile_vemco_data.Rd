@@ -2,7 +2,7 @@
 % Please edit documentation in R/ss_vemco.R
 \name{ss_compile_vemco_data}
 \alias{ss_compile_vemco_data}
-\title{Format temperature data from Vemco deployment}
+\title{Format temperature, depth, and tilt data from Vemco deployment}
 \usage{
 ss_compile_vemco_data(
   path,
@@ -36,14 +36,15 @@ TRUE}.}
 variable to compile. In some files (e.g., Borgles Island 2018-02-28), there
 is only one "Seawater depth" observation, but a full deployment of "Average
 seawater depth" observations. In this case, force the code to compile the
-average seawater depth with \code{depth_override = Average seawater depth}.}
+average seawater depth with \code{depth_override = "Average seawater
+depth"}.}
 }
 \value{
 Returns a tibble with the data compiled from the file in path/vemco.
 }
 \description{
-Compiles and formats temperature and seawater depth data from
-  VR2AR sensors.
+Compiles and formats temperature, seawater depth, and device
+  tilt data from VR2AR sensors processed with Vue software.
 }
 \details{
 The raw vemco data must be saved in a folder named vemco in csv
@@ -60,15 +61,21 @@ The raw vemco data must be saved in a folder named vemco in csv
   compiled. Otherwise, the function will stop with an error message.  (See
   argument \code{depth_override} for exception.)
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}}
+\examples{
+path <- system.file("extdata", package = "sensorstrings")
+
+sn_table <- data.frame(
+  sensor_type = "VR2AR",
+  sensor_serial_number = 547109,
+  depth = 15
+)
+
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+vemco <- ss_compile_vemco_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+head(vemco)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}

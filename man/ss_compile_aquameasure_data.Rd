@@ -30,7 +30,8 @@ Returns a tibble with the compiled data from each of the aquameasure
 }
 \description{
 Compile and format temperature, dissolved oxygen, salinity,
-  and/or device depth data from aquameasure sensors.
+  chlorophyll (blue and red), and/or device depth and tilt data from
+  aquameasure sensors.
 }
 \details{
 The raw aquameasure data must be saved in a folder named aquameasure
@@ -45,15 +46,21 @@ The raw aquameasure data must be saved in a folder named aquameasure
   "ERR" values are converted to \code{-111} (to distinguish from sensor error
   value of -101.5).
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_deployment_data]{ss_compile_deployment_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
+\examples{
+path <- system.file("extdata", package = "sensorstrings")
+
+sn_table <- data.frame(
+  sensor_type = "aquameasure",
+  sensor_serial_number = 670364,
+  depth = 5
+)
+
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+am <- ss_compile_aquameasure_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates, trim = FALSE
+)
+head(am)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}

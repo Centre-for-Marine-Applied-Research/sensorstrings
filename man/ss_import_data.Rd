@@ -4,10 +4,10 @@
 \alias{ss_import_data}
 \title{Import Water Quality data from rds files}
 \usage{
-ss_import_data(input_path = NULL, county = "all")
+ss_import_data(path = NULL, county = "all")
 }
 \arguments{
-\item{input_path}{Path to the *.rds files to be assembled. Default is the
+\item{path}{Path to the *.rds files to be assembled. Default is the
 assembled_data folder on the CMAR R drive (user must be connected to the
 Perennia VPN).}
 
@@ -18,4 +18,26 @@ to all counties.}
 }
 \description{
 Import Water Quality data from rds files
+}
+\examples{
+# The default (path = NULL) reads the assembled_data folder on the CMAR R
+# drive. Here, two small county files are saved in tempdir() first.
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+path <- file.path(tempdir(), "assembled_data")
+dir.create(path, showWarnings = FALSE)
+
+saveRDS(dat[1:10, ], file.path(path, "halifax_2025-01-01.rds"))
+saveRDS(
+  transform(dat[11:20, ], county = "Lunenburg"),
+  file.path(path, "lunenburg_2025-01-01.rds")
+)
+
+# all counties
+nrow(ss_import_data(path))
+
+# one county (the county must be part of the file name)
+unique(ss_import_data(path, county = "Halifax")$county)
+
+unlink(path, recursive = TRUE)
 }

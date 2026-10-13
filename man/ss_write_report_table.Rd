@@ -18,3 +18,11 @@ between variables for Word and pdf outputs.}
 \description{
 Writes deployment table for county report
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+ss_write_report_table(dat)
+
+# keep the waterbody column, and separate variables with a comma
+ss_write_report_table(dat, keep_waterbody = TRUE, var_sep = ", ")
+}

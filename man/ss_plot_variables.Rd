@@ -6,8 +6,7 @@
 \usage{
 ss_plot_variables(
   dat,
-  title = "",
-  color_palette = NULL,
+  colour_palette = NULL,
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
@@ -23,12 +22,9 @@ ss_plot_variables(
 \arguments{
 \item{dat}{Water Quality data in long or wide format.}
 
-\item{title}{Title for plot. Default is no title.}
-
-\item{color_palette}{Color palette of hex colors onto which
-\code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
-more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
-\code{pal = rev(viridis(6, option = "D"))}.}
+\item{colour_palette}{Colour palette of hex colours onto which
+\code{sensor_depth_at_low_tide_m} will be mapped. Default is
+\code{rev(viridis(6, option = "D"))}.}
 
 \item{date_breaks_major}{Intervals for major breaks. Default is selected by
 \code{get_xaxis_breaks()}.}
@@ -39,7 +35,7 @@ more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
 \item{standard_do_ylims}{If \code{TRUE}, the y-limits for dissolved oxygen
-are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
+are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
 are set to the \code{ggplot} default. Alternatively, a vector giving custom
 y-limits for the dissolved oxygen panel.}
 
@@ -49,35 +45,40 @@ c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
 the pH panel.}
 
 \item{standard_sal_ylims}{If \code{TRUE}, the y-limits for salinity are set
-to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
-default. Alternatively, a vector giving custom y-limits for the salinity
-panel.}
+to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the
+\code{ggplot} default. Alternatively, a vector giving custom y-limits for
+the salinity panel.}
 
 \item{yaxis_newline}{Logical argument indicating whether the units in the
-y-axis label should be on a new line. Default is \code{TRUE}.}
+y-axis label should be on a new line. Default is \code{FALSE}.}
 
 \item{alpha}{Value indicating the transparency of the points. 0 is most
 transparent; 1 is opaque.}
 
 \item{legend_name}{Name for the legend. Must be a character string. Default
-is \code{legend.name = "Depth (m)"}.}
+is \code{legend_name = "Depth (m)"}.}
 
-\item{legend_position}{Position for the legend. Passed to \code{ggpubr}.
-Default is \code{legend.position = "right"}.}
+\item{legend_position}{Position for the legend. Passed to \code{patchwork}.
+Default is \code{legend_position = "right"}.}
 }
 \value{
-Returns * object, a single figure with the plots for each variable in
-  \code{tidy.data} stacked in a column is returned.
+Returns a patchwork object, a single figure with the plots for each
+  variable in \code{dat} stacked in a column.
 }
 \description{
 Output is not compatible with ggplot2 functions or ggplotly(). Use
 \code{ss_ggplot_variables()} to work with those functions.
 }
-\seealso{
-Other plot:
-\code{\link[=ss_get_colour_palette]{ss_get_colour_palette()}}
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+ss_plot_variables(dat)
+
+# the legend on the bottom, units on a second line, and custom DO limits
+ss_plot_variables(
+  dat,
+  legend_position = "bottom",
+  yaxis_newline = TRUE,
+  standard_do_ylims = c(70, 150)
+)
 }
-\author{
-Danielle Dempsey
-}
-\concept{plot}

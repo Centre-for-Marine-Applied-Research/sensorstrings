@@ -9,26 +9,23 @@
 #'   If \code{superchill = NULL} (the default), shading will be applied if any
 #'   temperature values are less than or equal to the threshold.
 #'
-#' @param color_palette Optional vector of hex colors onto which depth will be
+#' @param colour_palette Optional vector of hex colors onto which depth will be
 #'   mapped.
 #'
-#' @param color_col Character string indicating the column to use to colour the
+#' @param colour_col Character string indicating the column to use to colour the
 #'   observations.
 #'
 #' @param legend_name Name for the depth legend. Default is \code{legend_name =
 #'   "Depth (m)"}.
 #'
 #' @param legend_position Position for the depth legend. Default is
-#'   \code{legend.position = "right"}.
-#'
-#' @param axis_label_newline Logical argument indicating whether to put units on
-#'   a new line.
+#'   \code{legend_position = "right"}.
 #'
 #' @param point_size Numeric value indicating size of points.
 #'
 #' @param convert_sn_to_factor Logical argument indicating whether to convert
 #'   column \code{sensor_serial_number} to a factor. Only used when
-#'   \code{color_col = "sensor_serial_number"}. Set to \code{FALSE} if making
+#'   \code{colour_col = "sensor_serial_number"}. Set to \code{FALSE} if making
 #'   separate plots with some overlapping serial numbers. In this case, the
 #'   \code{sensor_serial_number} should be converted to a factor before calling
 #'   the plot function.
@@ -36,57 +33,81 @@
 #' @return Returns a ggplot object of ocean variables plotted over time and
 #'   coloured by sensor depth.
 #'
-#' @importFrom dplyr %>% contains select mutate
-#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_set theme_light
+#' @importFrom dplyr contains select mutate
+#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_point geom_rect ggplot guides guide_legend scale_colour_manual scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom grDevices colorRampPalette
 #' @importFrom lubridate as_datetime
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom rlang sym
 #'
 #' @export
+#'
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' ss_ggplot_variables(dat)
+#'
+#' # colour by sensor serial number, with larger points and the legend on the
+#' # bottom
+#'
+#' ss_ggplot_variables(
+#'   dat,
+#'   colour_col = "sensor_serial_number",
+#'   legend_name = "Serial number",
+#'   legend_position = "bottom",
+#'   point_size = 1
+#' )
+#'
+#' # a ggplot object, so it can be changed with ggplot2 functions
+#' p <- ss_ggplot_variables(dat, date_breaks_major = "1 month")
+#' p + ggplot2::ggtitle("Borgles Island")
 
 ss_ggplot_variables <- function(
     dat,
     superchill = NULL,
-    color_palette = NULL,
-    color_col = "sensor_depth_at_low_tide_m",
+    colour_palette = NULL,
+    colour_col = "sensor_depth_at_low_tide_m",
     legend_name = "Depth (m)",
     legend_position = "right",
     date_breaks_major = NULL,
     date_breaks_minor = NULL,
     date_labels_format = "%Y-%m-%d",
-    axis_label_newline = FALSE,
+    yaxis_newline = FALSE,
     point_size = 0.25,
     convert_sn_to_factor = TRUE
     ) {
-  theme_set(theme_light())
 
-  if (is.null(color_palette)) {
-    color_palette <- ss_get_colour_palette(dat)
-  }
+  dat <- dat |>
+    rename(timestamp_ = contains("timestamp"))
 
-  if (color_col == "sensor_serial_number") {
+  if (colour_col == "sensor_serial_number") {
 
     if(isTRUE(convert_sn_to_factor)){
-      dat <- dat %>%
+      dat <- dat |>
         mutate(sensor_serial_number = factor(sensor_serial_number))
     }
 
     n_sensor_sn <- length(unique(dat$sensor_serial_number))
 
-    if(n_sensor_sn <= 8) {
-      color_palette <- brewer.pal(8, "Dark2")
-    } else {
-      color_palette <- colorRampPalette(brewer.pal(8, "Dark2"))(n_sensor_sn)
+    if (is.null(colour_palette)){
+      if (n_sensor_sn <= 8) {
+        colour_palette <- brewer.pal(8, "Dark2")
+      } else {
+        colour_palette <- colorRampPalette(brewer.pal(8, "Dark2"))(n_sensor_sn)
+      }
     }
   }
 
+  if (is.null(colour_palette)) {
+    colour_palette <- ss_get_colour_palette(dat)
+  }
+
   scale_colour <- scale_colour_manual(
-    name = legend_name, values = color_palette, drop = FALSE
+    name = legend_name, values = colour_palette, drop = FALSE
   )
 
   #  x-axis
-  axis_breaks <- ss_xaxis_breaks(dat)
+  axis_breaks <- get_xaxis_breaks(dat)
 
   if(!is.null(date_breaks_major)) axis_breaks$date_breaks_major <- date_breaks_major
   if(!is.null(date_breaks_minor)) axis_breaks$date_breaks_minor <- date_breaks_minor
@@ -97,25 +118,17 @@ ss_ggplot_variables <- function(
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,    # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$timestamp_utc),max(dat$timestamp_utc))
+    limits = c(min(dat$timestamp_), max(dat$timestamp_))
   )
 
 #  format data -------------------------------------------------------------
 
-  dat <- dat %>% rename(Date = contains("timestamp_"))
-
   if (!("variable" %in% colnames(dat))) {
-    dat <- dat %>%
+    dat <- dat |>
       ss_pivot_longer()
   }
 
-  if(isTRUE(axis_label_newline)) {
-    dat <- dat %>%
-      ss_create_variable_labels()
-  } else {
-    dat <- dat %>%
-      ss_create_variable_labels_no_newline()
-  }
+  dat <- create_variable_labels(dat, new_line = yaxis_newline)
 
   if(!("sensor_type" %in% colnames(dat))) {
     dat <- mutate(dat, sensor_type = "")
@@ -126,7 +139,7 @@ ss_ggplot_variables <- function(
   if(!("sensor_depth_at_low_tide_m" %in% colnames(dat))) {
     dat <- mutate(dat, sensor_depth_at_low_tide_m = "")
   } else {
-    dat <- dat %>%
+    dat <- dat |>
       ss_convert_depth_to_ordered_factor()
   }
 
@@ -134,9 +147,9 @@ ss_ggplot_variables <- function(
 
   # superchill
   if (is.null(superchill) && "temperature_degree_c" %in% unique(dat$variable)) {
-    min_temp <- (dat %>%
-                   filter(variable == "temperature_degree_c") %>%
-                   summarise(min_temp = min(value)))$min_temp
+    min_temp <- (dat |>
+                   filter(variable == "temperature_degree_c") |>
+                   summarise(min_temp = min(value, na.rm = TRUE)))$min_temp
 
     if (min_temp <= -0.7) {
       superchill <- TRUE
@@ -148,10 +161,10 @@ ss_ggplot_variables <- function(
   p <- ggplot(
     dat,
     aes(
-      Date, value,
-      colour = !!sym(color_col),
+     timestamp_, value,
+      colour = !!sym(colour_col),
       text = paste(
-        "date: ", Date, "\n",
+        "date: ", timestamp_, "\n",
         "value: ", value, "\n",
         "depth: ", sensor_depth_at_low_tide_m, "\n",
         "sensor_type: ", sensor_type, "\n",
@@ -165,6 +178,7 @@ ss_ggplot_variables <- function(
     facet_wrap(
       ~variable_label, scales = "free_y", ncol = 1, strip.position = "left"
       ) +
+    theme_light() +
     theme(
       axis.title.y = element_blank(),
       strip.placement = "outside",
@@ -172,7 +186,7 @@ ss_ggplot_variables <- function(
       strip.text = element_text(colour = "black", size = 10),
       legend.position = legend_position
     ) +
-    guides(color = guide_legend(override.aes = list(size = 4)))
+    guides(colour = guide_legend(override.aes = list(size = 4)))
 
   if(legend_position == "bottom") {
     p <- p +
@@ -182,15 +196,8 @@ ss_ggplot_variables <- function(
   # add superchill shading --------------------------------------------------
 
   if (isTRUE(superchill)) {
-    facet_panel <- data.frame(variable = "temperature_degree_c")
-
-    if(isTRUE(axis_label_newline)) {
-      facet_panel <- facet_panel %>%
-        ss_create_variable_labels()
-    } else {
-      facet_panel <- facet_panel %>%
-        ss_create_variable_labels_no_newline()
-    }
+    facet_panel <- data.frame(variable = "temperature_degree_c") |>
+      create_variable_labels(new_line = yaxis_newline)
 
     p <- p +
       geom_rect(

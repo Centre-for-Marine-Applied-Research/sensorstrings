@@ -11,11 +11,18 @@
 #' @return Returns a data frame of hobo or tidbit data, with the same columns as
 #'   in the original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "hobo", package = "sensorstrings")
+#'
+#' # folder and file name
+#' dat <- ss_read_hobo_data(path, "10755220.csv")
+#' head(dat)
+#'
+#' # or the full path to the file
+#' dat <- ss_read_hobo_data(file.path(path, "10755220.csv"))
 
 ss_read_hobo_data <- function(path, file_name = NULL) {
 
@@ -27,8 +34,6 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
   if (extract_file_extension(path) != "csv")  {
     stop("file must have extension '.csv'.\nLooked in ", path)
   }
-  # remove this so can delete assertthat dependency
-  # assert_that(has_extension(path, "csv"))
 
   # read in data
   # start with row that includes the "Date" header
@@ -79,17 +84,31 @@ ss_read_hobo_data <- function(path, file_name = NULL) {
 #' @return Returns a tibble with the data compiled from each of the hobo or
 #'   tidbit sensors.
 #'
-#' @family compile
-#'
-#' @author Danielle Dempsey
-#'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
+#' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate hours
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit
 #' @importFrom stringr regex str_extract str_remove
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "hobo",
+#'   sensor_serial_number = 10755220,
+#'   depth = 2
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' hobo <- ss_compile_hobo_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(hobo)
 
 ss_compile_hobo_data <- function(path,
                                  sn_table,
@@ -118,12 +137,10 @@ ss_compile_hobo_data <- function(path,
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
-
-    # if(!is.null(file_name)) file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    hobo_i <- ss_read_hobo_data(file_i) %>%
+    hobo_i <- ss_read_hobo_data(file_i) |>
       # to avoid deprecation Warning from GitHub Actions check
       filter(if_all(everything(), ~ !grepl("Logged", .)))
 
@@ -149,9 +166,9 @@ ss_compile_hobo_data <- function(path,
     }
 
     # Select and add columns of interest ----------------------------------------------
-    hobo_i <- hobo_i %>%
-      select(contains("Date Time"), contains("DO conc"), contains("Temp")) %>%
-      rename(timestamp_ = 1) %>%
+    hobo_i <- hobo_i |>
+      select(contains("Date Time"), contains("DO conc"), contains("Temp")) |>
+      rename(timestamp_ = 1) |>
       convert_timestamp_to_datetime()
 
     colnames(hobo_i) <- new_col_names$col_name
@@ -161,7 +178,7 @@ ss_compile_hobo_data <- function(path,
     # use serial number to identify the variable and depth (from sn_table)
     sensor_info_i <- dplyr::filter(sn_table, sensor_serial_number == sn_i)
 
-    hobo_i <- hobo_i %>%
+    hobo_i <- hobo_i |>
       add_deployment_columns(start_date, end_date, sn_table = sensor_info_i)
 
     check_n_rows(hobo_i, file_name = file_name, trimmed = FALSE)
@@ -175,7 +192,7 @@ ss_compile_hobo_data <- function(path,
     hobo_dat[[i]] <- hobo_i
   } # end loop over files
 
-  hobo_out <- hobo_dat %>%
+  hobo_out <- hobo_dat |>
     map_df(rbind)
 
   # Return compiled data ----------------------------------------------------

@@ -10,14 +10,21 @@
 #' @return Returns a data frame of vemco data, with the same columns as in the
 #'   original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "vemco", package = "sensorstrings")
+#'
+#' # folder and file name
+#' vemco_raw <- ss_read_vemco_data(path, "vemco-547109.csv")
+#' head(vemco_raw)
+#'
+#' # or the full path to the file
+#' vemco_raw <- ss_read_vemco_data(file.path(path, "vemco-547109.csv"))
 
 
-ss_read_vemco_data <- function(path, file_name) {
+ss_read_vemco_data <- function(path, file_name = NULL) {
 
   # finish path if needed
   if (isFALSE(utils::file_test("-f", path))) {
@@ -40,10 +47,10 @@ ss_read_vemco_data <- function(path, file_name) {
 }
 
 
-#' Format temperature data from Vemco deployment
+#' Format temperature, depth, and tilt data from Vemco deployment
 #'
-#' @description Compiles and formats temperature and seawater depth data from
-#'   VR2AR sensors.
+#' @description Compiles and formats temperature, seawater depth, and device
+#'   tilt data from VR2AR sensors processed with Vue software.
 #'
 #' @details The raw vemco data must be saved in a folder named vemco in csv
 #'   format. Folder name is not case-sensitive.
@@ -69,17 +76,33 @@ ss_read_vemco_data <- function(path, file_name) {
 #'   variable to compile. In some files (e.g., Borgles Island 2018-02-28), there
 #'   is only one "Seawater depth" observation, but a full deployment of "Average
 #'   seawater depth" observations. In this case, force the code to compile the
-#'   average seawater depth with \code{depth_override = Average seawater depth}.
+#'   average seawater depth with \code{depth_override = "Average seawater
+#'   depth"}.
 #'
 #' @return Returns a tibble with the data compiled from the file in path/vemco.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
-#' @importFrom dplyr %>% case_when contains filter group_by mutate select summarise tibble
+#' @importFrom dplyr case_when contains filter group_by mutate select summarise tibble
 #' @importFrom purrr list_rbind
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "VR2AR",
+#'   sensor_serial_number = 547109,
+#'   depth = 15
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' vemco <- ss_compile_vemco_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(vemco)
 
 ss_compile_vemco_data <- function(path,
                                   sn_table,
@@ -108,7 +131,6 @@ ss_compile_vemco_data <- function(path,
 
   # loop over each aM file
   for (i in seq_along(dat_files)) {
-    #file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
@@ -121,7 +143,7 @@ ss_compile_vemco_data <- function(path,
     date_tz <- extract_vemco_tz(dat_colnames)
 
     if (date_tz != "utc") {
-      message(paste0("Timestamp in file ", dat_files, "is in timezone: ", date_tz))
+      message(paste0("Timestamp in file ", file_i, " is in timezone: ", date_tz))
     }
 
     # serial number from data file
@@ -165,24 +187,24 @@ ss_compile_vemco_data <- function(path,
 
     if ("Tilt angle" %in% vars_desc) {
       tilt_var <- "Tilt angle"
-    }
+    } else tilt_var <- NULL
 
 
     if ("Date and Time (UTC)" %in% dat_colnames & "Date/Time" %in% dat_colnames) {
       warning("There are two datetime columns in the Vemco data")
     }
 
-    vars <- c(depth_var, temperature_var, tilt_var)
+    vars <- na.omit(c(depth_var, temperature_var, tilt_var))
 
     # extract sensor depth
-    dat_i <- dat_i %>%
+    dat_i <- dat_i |>
       select(
         timestamp_ = contains("Time"),
         Description,
         Data,
         Units
-      ) %>%
-      filter(Description %in% vars) %>%
+      ) |>
+      filter(Description %in% vars) |>
       mutate(
         Description = dplyr::case_when(
           Description == "Average seawater depth" ~ "sensor_depth_measured",
@@ -199,21 +221,21 @@ ss_compile_vemco_data <- function(path,
         ),
         Description = paste(Description, Units, sep = "_"),
         Data = as.numeric(Data)
-      ) %>%
+      ) |>
       convert_timestamp_to_datetime()
 
     # check there are more than 0 rows in dat
-    check_n_rows(dat_i, file_name = dat_files, trimmed = FALSE)
+    check_n_rows(dat_i, file_name = file_i, trimmed = FALSE)
 
     # trim to the dates in deployment_dates
     if (isTRUE(trim)) dat_i <- trim_data(dat_i, start_date, end_date)
 
-    check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
+    check_n_rows(dat_i, file_name = file_i, trimmed = trim)
 
     # find any duplicate timestamps
-    bad_ts <- dat_i %>%
-      group_by(timestamp_) %>%
-      summarise(n = n()) %>%
+    bad_ts <- dat_i |>
+      group_by(timestamp_) |>
+      summarise(n = n()) |>
       filter(n > length(vars))
 
     if (nrow(bad_ts) > 0) {
@@ -225,12 +247,12 @@ ss_compile_vemco_data <- function(path,
     }
 
     # remove duplicate timestamps and pivot wider
-    dat_i <- dat_i %>%
-      filter(!(timestamp_ %in% bad_ts$timestamp_)) %>%
+    dat_i <- dat_i |>
+      filter(!(timestamp_ %in% bad_ts$timestamp_)) |>
       tidyr::pivot_wider(
         id_cols = "timestamp_",
         names_from = "Description", values_from = Data
-      ) %>%
+      ) |>
       add_deployment_columns(start_date, end_date,  sensor_info_i)
 
     colnames(dat_i)[which(str_detect(colnames(dat_i), "timestamp"))] <- paste0("timestamp_", date_tz)
@@ -241,7 +263,7 @@ ss_compile_vemco_data <- function(path,
                   temperature_var, "&", depth_var))
   }
 
-  vem_out <- vem_dat %>%
+  vem_out <- vem_dat |>
     list_rbind()
 
   tibble(vem_out)

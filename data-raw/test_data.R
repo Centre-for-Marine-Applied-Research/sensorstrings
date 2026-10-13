@@ -135,9 +135,6 @@ readr::write_csv(
 
 file_name3 <- "aquaMeasure-675008.csv"
 
-
-
-
 dat_raw3 <- ss_read_aquameasure_data(path, file_name = file_name3)
 
 dat_out3 <- dat_raw3 %>%
@@ -173,6 +170,11 @@ vem <- vem_raw %>%
 
 data.table::fwrite(vem, file = "inst/testdata/vemco/vemco-547109.csv")
 
+
+vem_no_tilt <- vem %>%
+  filter(Description != "Tilt angle")
+
+data.table::fwrite(vem_no_tilt, file = "inst/testdata/vemco_no_tilt/vemco/vemco-547109.csv")
 
 
 # readr::write_csv(

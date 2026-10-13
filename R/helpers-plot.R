@@ -13,25 +13,28 @@
 #' @return Returns a vector of hex colours from the viridis palette (Option D,
 #'   direction = -1).
 #'
-#' @family plot
-#' @author Danielle Dempsey
-#'
 #' @importFrom viridis viridis
-#' @importFrom dplyr %>% contains select
+#' @importFrom dplyr contains select
 #'
 #' @export
 #'
+#' @examples
+#' # 3 depths: a 6-colour palette
+#' ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = c(2, 5, 15)))
+#'
+#' # 8 depths: one colour per depth
+#' ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = 1:8))
 
 ss_get_colour_palette <- function(dat) {
-  n_depth <- dat %>%
+  n_depth <- dat |>
     select(contains("low_tide"))
 
   if(ncol(n_depth) > 1) {
     stop("More than one column named with the string low_tide detected in dat.")
   }
 
-  n_depth <- n_depth %>%
-    distinct() %>%
+  n_depth <- n_depth |>
+    distinct() |>
     nrow()
 
   if (n_depth > 6) {
@@ -54,9 +57,9 @@ ss_get_colour_palette <- function(dat) {
 #' @return Returns a dataframe with 1 observation of 3 variables
 #'   \code{date_breaks_major}, \code{date_breaks_minor},
 #'   \code{date_labels_format}.
-#'
+#' @noRd
 
-ss_xaxis_breaks <- function(dat){
+get_xaxis_breaks <- function(dat){
 
   # timespan of the data
   dat <- rename(dat, timestamp_ = contains("timestamp"))
@@ -146,180 +149,40 @@ ss_xaxis_breaks <- function(dat){
     date_breaks_minor = date_breaks_minor,
     date_labels_format = date_labels_format
   )
-
 }
 
 #' Create plot labels from variable names
 #'
-#' @param dat Data frame of Water Quality data with variables in long
-#'   format.
+#' @param dat Data frame of Water Quality data with variables in long format.
 #'
-#' @return Returns \code{dat_long} with an addition column
-#'   \code{variable_label}. \code{variable_label}
+#' @param new_line Logical argument indicating whether to place the units of the
+#'   y-axis on a new line. If \code{FALSE}, the default, the variable name and
+#'   units are on the same line.
 #'
-#' @importFrom dplyr case_when mutate
+#' @return Returns \code{dat} with an additional column \code{variable_label}.
 #'
-#' @export
+#' @importFrom dplyr left_join mutate
+#'
+#' @noRd
 
-ss_create_variable_labels <- function(dat) {
-  var_order <- c(
-    "Temperature \n(\u00B0C)",
-    "Dissolved Oxygen \n(% sat)",
-    "Uncorrected \nDissolved Oxygen \n(mg / L)",
-    "Dissolved Oxygen \n(mg / L)",
-    "pH",
-    "Salinity \n(PSU)",
-    "Chlorophyll Blue \n(\u03BCg/L)",
-    "Chlorophyll Red \n(\u03BCg/L)",
-    "Sensor Depth \n(m)",
-    "Tilt \n(\u00B0)"
-  )
+create_variable_labels <- function(dat, new_line = FALSE) {
 
-  dat %>%
-    mutate(
-      variable_label = case_when(
-        variable == "chlorophyll_blue_ug_per_l" ~
-          "Chlorophyll Blue \n(\u03BCg/L)",
+ dat <- dat |>
+    left_join(ss_vars, by = "variable")
 
-        variable == "chlorophyll_red_ug_per_l" ~
-          "Chlorophyll Red \n(\u03BCg/L)",
+ if(isTRUE(new_line)) {
+   dat <- dat |>
+     mutate(
+       variable_label = ordered(label_new_line, levels = ss_vars$label_new_line)
+     )
+ } else{
+   dat <- dat |>
+     mutate(
+       variable_label = ordered(label_no_new_line, levels = ss_vars$label_no_new_line)
+     )
+ }
 
-        variable == "dissolved_oxygen_percent_saturation" ~
-          "Dissolved Oxygen \n(% sat)",
-        variable == "dissolved_oxygen_uncorrected_mg_per_l" ~
-          "Uncorrected \nDissolved Oxygen \n(mg / L)",
-        variable == "dissolved_oxygen_mg_per_l" ~
-          "Dissolved Oxygen \n(mg / L)",
-        variable == "ph_ph" ~ "pH",
-        variable == "salinity_psu" ~ "Salinity \n(PSU)",
-        variable == "sensor_depth_measured_m" ~ "Sensor Depth \n(m)",
-        variable == "temperature_degree_c" ~ "Temperature \n(\u00B0C)",
-        variable == "tilt_degree" ~ "Tilt \n(\u00B0)",
-        TRUE ~ variable
-      ),
-      variable_label = factor(
-        variable_label,
-        levels = var_order, ordered = TRUE
-      )
-    )
+ dat |>
+   select(-c(label_new_line, label_no_new_line))
 }
 
-#' Create plot labels from variable names without new lines
-#'
-#' @param dat Data frame of Water Quality data with variables in long
-#'   format. Entries in \code{variable} column must be
-#'   \code{dissolved_oxygen_percent_saturation},
-#'   \code{dissolved_oxygen_uncorrected_mg_per_l}, \code{salinity_psu},
-#'   \code{sensor_depth_measured_m}, or \code{temperature_degree_c}.
-#'
-#' @return Returns \code{dat_long} with an addition column
-#'   \code{variable_label}. \code{variable_label}
-#'
-#' @importFrom dplyr case_when mutate
-#'
-#' @export
-
-ss_create_variable_labels_no_newline <- function(dat) {
-  var_order <- c(
-    "Temperature (\u00B0C)",
-    "Dissolved Oxygen (% sat)",
-    "Uncorrected\nDissolved Oxygen (mg / L)",
-    "Dissolved Oxygen (mg / L)",
-    "pH",
-    "Salinity (PSU)",
-    "Chlorophyll Blue (\u03BCg / L)",
-    "Chlorophyll Red (\u03BCg / L)",
-    "Sensor Depth (m)",
-    "Tilt (\u00B0)"
-  )
-
-  dat %>%
-    mutate(
-      variable_label = case_when(
-        variable == "chlorophyll_blue_ug_per_l" ~ "Chlorophyll Blue (\u03BCg / L)",
-
-        variable == "chlorophyll_red_ug_per_l" ~ "Chlorophyll Red (\u03BCg / L)",
-
-        variable == "dissolved_oxygen_percent_saturation" ~
-          "Dissolved Oxygen (% sat)",
-        variable == "dissolved_oxygen_uncorrected_mg_per_l" ~
-          "Uncorrected\nDissolved Oxygen (mg / L)",
-        variable == "dissolved_oxygen_mg_per_l" ~
-          "Dissolved Oxygen (mg / L)",
-        variable == "ph_ph" ~ "pH",
-        variable == "salinity_psu" ~ "Salinity (PSU)",
-        variable == "sensor_depth_measured_m" ~ "Sensor Depth (m)",
-        variable == "temperature_degree_c" ~ "Temperature (\u00B0C)",
-        variable == "tilt_degree" ~ "Tilt (\u00B0)",
-        TRUE ~ variable
-      ),
-      variable_label = factor(
-        variable_label,
-        levels = var_order, ordered = TRUE
-      )
-    )
-}
-
-
-#' Filter data before plotting to zoom in on interesting features
-#'
-#' Called by \code{ss_open_trimdates_app()}.
-#'
-#' @inheritParams ss_open_trimdates_app
-#'
-#' @return Returns \code{dat} filtered to the specified dates.
-#'
-#' @importFrom lubridate period is.POSIXct  %m+% %m-%
-#' @importFrom plotly ggplotly
-#' @importFrom dplyr %>% filter
-#'
-#' @export
-
-filter_dat_to_plot <- function(
-    dat,
-    filter_to = c("start", "end", "custom"),
-    period = "2 days",
-    custom_start = NULL,
-    custom_end = NULL) {
-
-  if(!(filter_to %in% c("start", "end", "custom"))) {
-    stop("argument << filter_to >> must be one of 'start', 'end', or 'custom'")
-  }
-
-  # assert_that(filter_to %in% c("start", "end", "custom"))
-  #dat <- dat %>% rename(timestamp_ = contains("timestamp_"))
-
-  if (filter_to == "start") {
-    dat <- dat %>%
-      filter(
-        timestamp_utc <=
-          (na.omit(min(dat$timestamp_utc)) %m+% lubridate::period(period))
-      )
-  }
-
-  if (filter_to == "end") {
-    dat <- dat %>%
-      filter(
-        timestamp_utc >=
-          (na.omit(max(dat$timestamp_utc)) %m-% lubridate::period(period))
-      )
-  }
-
-  if (filter_to == "custom") {
-    # assert_that(is.POSIXct(custom_start))
-    # assert_that(is.POSIXct(custom_end))
-    if(!is.POSIXct(custom_start)) {
-      stop("'custom_start' must be of type 'POSIXct', not ", class(custom_start))
-    }
-    if(!is.POSIXct(custom_end)) {
-      stop("'custom_end' must be of type 'POSIXct', not ", class(custom_end))
-    }
-
-    dat <- dat %>%
-      filter(
-        timestamp_utc >= custom_start & timestamp_utc <= custom_end
-      )
-  }
-
-  dat
-}

@@ -5,12 +5,9 @@
 #'
 #' @param dat Water Quality data in long or wide format.
 #'
-#' @param title Title for plot. Default is no title.
-#'
-#' @param color_palette  Color palette of hex colors onto which
-#'   \code{sensor_depth_at_low_tide_m} will be mapped. Required if there are
-#'   more than 6 levels in \code{sensor_depth_at_low_tide_m}. Default is
-#'   \code{pal = rev(viridis(6, option = "D"))}.
+#' @param colour_palette  Colour palette of hex colours onto which
+#'   \code{sensor_depth_at_low_tide_m} will be mapped. Default is
+#'   \code{rev(viridis(6, option = "D"))}.
 #'
 #' @param date_breaks_major Intervals for major breaks. Default is selected by
 #'   \code{get_xaxis_breaks()}.
@@ -21,7 +18,7 @@
 #' @param date_labels_format Format for the date labels. Default is YYYY-mm-dd.
 #'
 #' @param standard_do_ylims If \code{TRUE}, the y-limits for dissolved oxygen
-#'   are set to c(60, 130) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
+#'   are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
 #'   are set to the \code{ggplot} default. Alternatively, a vector giving custom
 #'   y-limits for the dissolved oxygen panel.
 #'
@@ -31,38 +28,47 @@
 #'   the pH panel.
 #'
 #' @param standard_sal_ylims If \code{TRUE}, the y-limits for salinity are set
-#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the \code{ggplot}
-#'   default. Alternatively, a vector giving custom y-limits for the salinity
-#'   panel.
+#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the
+#'   \code{ggplot} default. Alternatively, a vector giving custom y-limits for
+#'   the salinity panel.
 #'
 #' @param yaxis_newline Logical argument indicating whether the units in the
-#'   y-axis label should be on a new line. Default is \code{TRUE}.
+#'   y-axis label should be on a new line. Default is \code{FALSE}.
 #'
 #' @param alpha Value indicating the transparency of the points. 0 is most
 #'   transparent; 1 is opaque.
 #'
 #' @param legend_name Name for the legend. Must be a character string. Default
-#'   is \code{legend.name = "Depth (m)"}.
+#'   is \code{legend_name = "Depth (m)"}.
 #'
-#' @param legend_position Position for the legend. Passed to \code{ggpubr}.
-#'   Default is \code{legend.position = "right"}.
+#' @param legend_position Position for the legend. Passed to \code{patchwork}.
+#'   Default is \code{legend_position = "right"}.
 #'
-#' @return Returns * object, a single figure with the plots for each variable in
-#'   \code{tidy.data} stacked in a column is returned.
+#' @return Returns a patchwork object, a single figure with the plots for each
+#'   variable in \code{dat} stacked in a column.
 #'
-#' @family plot
-#' @author Danielle Dempsey
-
-#' @importFrom dplyr any_of filter
-#' @importFrom ggpubr ggarrange
-#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_set theme_light
+#' @importFrom dplyr any_of filter select
+#' @importFrom patchwork wrap_plots
+#' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_light
 #' @importFrom viridis viridis
+#'
 #' @export
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' ss_plot_variables(dat)
+#'
+#' # the legend on the bottom, units on a second line, and custom DO limits
+#' ss_plot_variables(
+#'   dat,
+#'   legend_position = "bottom",
+#'   yaxis_newline = TRUE,
+#'   standard_do_ylims = c(70, 150)
+#' )
 
 ss_plot_variables <- function(
     dat,
-    title = "",
-    color_palette = NULL,
+    colour_palette = NULL,
 
     date_breaks_major = NULL,
     date_breaks_minor = NULL,
@@ -80,98 +86,69 @@ ss_plot_variables <- function(
     legend_position = "right"
 ){
 
-  theme_set(theme_light())
-
-  dat <- dat %>% select(-contains("flag"))
+  dat <- dat |>
+    select(-contains("flag"))
 
   if (!("variable" %in% colnames(dat))) {
-    vars_ss <- c(
-      "chlorophyll_blue_ug_per_l",
-      "chlorophyll_red_ug_per_l",
-      "dissolved_oxygen_percent_saturation",
-      "dissolved_oxygen_mg_per_l",
-      "ph_ph",
-      "salinity_psu",
-      "sensor_depth_measured_m",
-      "temperature_degree_c"
-    )
+    vars_ss <- ss_vars$variable
 
-    dat <- dat %>%
+    dat <- dat |>
       select(
         contains("timestamp_"), sensor_depth_at_low_tide_m, any_of(vars_ss)
-      ) %>%
+      ) |>
       ss_pivot_longer()
   }
 
-  if(isTRUE(yaxis_newline)) {
-    dat <- dat %>%
-      ss_create_variable_labels()
-  } else {
-    dat <- dat %>%
-      ss_create_variable_labels_no_newline()
-  }
-
-  dat <- dat %>% ss_convert_depth_to_ordered_factor()
+  dat <- dat |>
+    ss_convert_depth_to_ordered_factor() |>
+    create_variable_labels(new_line = yaxis_newline) |>
+    rename(timestamp_ = contains("timestamp"))
 
   # Common plot elements ----------------------------------------------------
   #  x-axis
-  axis_breaks <- ss_xaxis_breaks(dat)
+  axis_breaks <- get_xaxis_breaks(dat)
 
   if(!is.null(date_breaks_major)) axis_breaks$date_breaks_major <- date_breaks_major
   if(!is.null(date_breaks_minor)) axis_breaks$date_breaks_minor <- date_breaks_minor
   if(!is.null(date_labels_format)) axis_breaks$date_labels_format <- date_labels_format
 
   x_axis_date <- scale_x_datetime(
-    #name = "Date",
+    name = "Date",
     date_breaks = axis_breaks$date_breaks_major,          # major breaks
     date_minor_breaks = axis_breaks$date_breaks_minor,     # minor breaks
     date_labels = axis_breaks$date_labels_format,         # format for showing date
-    limits = c(min(dat$timestamp_utc),max(dat$timestamp_utc))
+    limits = c(min(dat$timestamp_), max(dat$timestamp_))
   )
 
   # theme
   string_theme <- theme(
-    #plot.title = element_text(face = "bold"),                # plot title format
-    #axis.title = element_text(size = 10),                    # axis titles size & color
-    axis.title.x = element_blank(),
+  #  axis.title.x = element_blank(),
     axis.text = element_text(size = 9, colour = "black"),    # axis text size & color
     legend.title = element_text(size = 10) ,                 # legend title size
     legend.text = element_text(size = 10)                   # legend text size
 
     )
 
-  # color scale
-  if(is.null(color_palette)){
-    color_palette <- ss_get_colour_palette(dat)
+  # colour scale
+  if(is.null(colour_palette)){
+    colour_palette <- ss_get_colour_palette(dat)
   }
-  string_color_scale <- scale_colour_manual(
-    name = legend_name, values = color_palette, drop = FALSE
+  string_colour_scale <- scale_colour_manual(
+    name = legend_name, values = colour_palette, drop = FALSE
   )
 
   # size of the points in the legend
-  legend_size <-  guides(color = guide_legend(override.aes = list(size = 5)))
+  legend_size <-  guides(colour = guide_legend(override.aes = list(size = 5)))
 
   # Loop over unique VARIABLE values --------------------------------------------------
 
   figs <- list(NULL)              # empty list for storing the figures
 
   # arrange variable to plot in consistent order
-  vars_to_plot <- dat %>%
-    select(variable) %>%
-    distinct() %>%
-    mutate(variable = ordered(
-      variable,
-      levels = c(
-        "temperature_degree_c",
-        "dissolved_oxygen_percent_saturation",
-        "dissolved_oxygen_uncorrected_mg_per_l",
-        "dissolved_oxygen_mg_per_l",
-        "salinity_psu",
-        "ph_ph",
-        "chlorophyll_blue_ug_per_l",
-        "chlorophyll_red_ug_per_l",
-        "sensor_depth_measured_m"))
-    ) %>%
+  vars_to_plot <- dat |>
+    select(variable) |>
+    distinct() |>
+    mutate(variable = ordered(variable,levels = ss_vars$variable)) |>
     arrange(variable)
   vars_to_plot <- vars_to_plot$variable
 
@@ -204,6 +181,14 @@ ss_plot_variables <- function(
       } else y_limits <- standard_do_ylims
     }
 
+    if(var_i == "dissolved_oxygen_uncorrected_mg_per_l") {
+      if(isTRUE(standard_do_ylims)) {
+        y_limits <- c(0, 15)
+      } else if(isFALSE(standard_do_ylims)) {
+        y_limits <- NULL
+      } else y_limits <- standard_do_ylims
+    }
+
     if(var_i == "ph_ph") {
       if(isTRUE(standard_ph_ylims)) {
         y_limits <- c(7.5, 8.5)
@@ -222,12 +207,13 @@ ss_plot_variables <- function(
 
     # plot var.i
     plot_i <- ggplot(
-      dat_i, aes(x = timestamp_utc, y = value, color = sensor_depth_at_low_tide_m)
+      dat_i, aes(x = timestamp_, y = value, colour = sensor_depth_at_low_tide_m)
     ) +
       geom_point(size = 0.25, alpha = alpha) +
       scale_y_continuous(name = y_lab, limits = y_limits) +
-      string_color_scale +
+      string_colour_scale +
       x_axis_date +
+      theme_light() +
       string_theme +
       legend_size
 
@@ -237,24 +223,10 @@ ss_plot_variables <- function(
 
 
   # RETURN TO GLOBAL ENV ----------------------------------------------------
-
-  # add plot title to the top plot (first variable in last variable in vars_to_plot)
-  #figs[[1]] <- figs[[1]] + labs(title = title)
-
-  # remove x-axis title from all except the bottom plot (last variable in vars_to_plot)
-  # if(n_vars > 1){
-  #   for(j in 1:(n_vars - 1)) {
-  #     figs[[j]] <- figs[[j]] + theme(axis.title.x = element_blank())
-  #   }
-  # }
-
-  # arrange and export
-  ggarrange(
-    plotlist = figs,
-    ncol = 1, common.legend = TRUE, legend = legend_position,
-    align = "v", heights = c(1, 1, 1, 1)
-  )
-
+  patchwork::wrap_plots(
+    figs, ncol = 1, guides = "collect", axes = "collect", axis_titles = "collect"
+    ) &
+    theme(legend.position = legend_position)
 }
 
 

@@ -4,8 +4,6 @@
 #'   corrects known errors (e.g., standardizes station and waterbody spellings,
 #'   fixes deployment dates, etc.).
 #'
-#'   **Might want to add 2021-08-27 1042 deployment
-#'
 #' @param path Path to the NSDFA tracking sheet (include file name and
 #'   extension).
 #'
@@ -14,11 +12,20 @@
 #' @importFrom readxl read_excel
 #' @importFrom dplyr case_when contains if_else filter mutate select tibble
 #' @importFrom lubridate as_date
-#' @importFrom janitor convert_to_date
 #'
 #' @export
+#'
+#' @examples
+#' # A small synthetic version of the NSDFA tracking sheet (TempMetaData tab).
+#' # The function fixes misspelled stations and waterbodies, removes times from
+#' # the dates, and makes positive longitudes negative. tidyr gives an
+#' # "Expected 2 pieces" warning for dates that have no time; this is expected.
+#'
+#' nsdfa <- ss_read_nsdfa_metadata(
+#' system.file("extdata/nsdfa_tracking_example.xlsx",  package = "sensorstrings"))
+#'
+#' nsdfa[, c("County", "Waterbody", "Station_Name", "Depl_Date", "Recv_Date", "Depl_Lon")]
 
-# add station 1042
 ss_read_nsdfa_metadata <- function(path) {
   # read in NSDFA Tracking Sheet
   nsdfa_raw <- read_excel(
@@ -28,7 +35,8 @@ ss_read_nsdfa_metadata <- function(path) {
     col_types = c(
       rep("guess", 9),
       "date", "text",
-      rep("numeric", 3),
+      "text", "text",
+      "numeric",
       "text", "date", "text",
       rep("numeric", 3),
       rep("guess", 10),
@@ -36,14 +44,14 @@ ss_read_nsdfa_metadata <- function(path) {
     )
   )
 
-  nsdfa_raw %>%
-    # fix deployment/recovery dates (remove time if entered)
-    # the separate function will result in a Warning if there is no time entered in any row
-    separate(Depl_Date, into = c("Depl_Date", NA), " ") %>%
-    separate(Recv_Date, into = c("Recv_Date", NA), " ") %>%
+  nsdfa_raw |>
     mutate(
       Depl_Date = as_date(Depl_Date),
       Recv_Date = as_date(Recv_Date),
+
+      Depl_Lat = as.numeric(gsub("\u00a0", "", Depl_Lat)), # remove trailing whitespace unicode character
+      Depl_Lon = as.numeric(gsub("\u00a0", "", Depl_Lon)),
+
       # fix spelling discrepancies
       Waterbody = case_when(
         Waterbody == "Pipers lake" ~ "Piper Lake",
@@ -132,8 +140,8 @@ ss_read_nsdfa_metadata <- function(path) {
           (Depl_Date == as_date("2020-07-16") | Depl_Date == as_date("2020-11-29"))
         ~ "Long Island 1",
         Station_Name == "Sissiboo Dock" ~ "Sissiboo",
-        Station_Name == "The Basin South" & Depl_Date == as_date("2021-09-08") |
-          Depl_Date == as_date("2022-09-12") ~ "The Basin",
+        Station_Name == "The Basin South" & (Depl_Date == as_date("2021-09-08") |
+          Depl_Date == as_date("2022-09-12")) ~ "The Basin",
         Waterbody == "Salt Bay" & Station_Name == "Salt Bay" ~ "Big Sluice",
         Waterbody == "Strait of Canso" & Station_Name == "Loch" ~ "Canso Lock",
         Waterbody == "Hourglass Lake" &
@@ -150,7 +158,7 @@ ss_read_nsdfa_metadata <- function(path) {
           Station_Name == "Sandy Cove" ~ "Sandy Cove Chedabucto",
         TRUE ~ Station_Name
       )
-    ) %>%
+    ) |>
     mutate(
       Depl_Date = case_when(
         # strings that we actually deployed on 2015-09-08

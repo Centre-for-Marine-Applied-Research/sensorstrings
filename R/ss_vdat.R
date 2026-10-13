@@ -11,16 +11,21 @@
 #' @return Returns a data frame of vr2ar data, with the same columns as in the
 #'   original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
+#' @importFrom dplyr count
 #'
 #' @export
+#' @examples
+#' path <- system.file("testdata", "vdat", package = "sensorstrings")
+#'
+#' # folder and file name
+#' vdat_raw <- ss_read_vdat_data(path, "VR2AR-69_555438.csv")
+#' head(vdat_raw)
+#'
+#' # or the full path to the file
+#' vdat_raw <- ss_read_vdat_data(file.path(path, "VR2AR-69_555438.csv"))
 
-# path <- "C:/Users/Danielle Dempsey/Desktop/RProjects/packages/sensorstrings/inst/testdata/vr2ar"
-# file_name <- "VR2AR-69_555438.csv"
-
-ss_read_vdat_data <- function(path, file_name) {
+ss_read_vdat_data <- function(path, file_name = NULL) {
 
   # finish path if needed
   if (isFALSE(utils::file_test("-f", path))) {
@@ -36,16 +41,16 @@ ss_read_vdat_data <- function(path, file_name) {
     fill = TRUE,
     header = FALSE,
     data.table = FALSE,
-    # encoding = "Latin-1",
     na.strings = ""
   )
 }
 
 
-#' Format temperature data from VR2AR deployment
+#' Format temperature, depth, and tilt data from VR2AR (vdat) deployment
 #'
-#' @description Compiles and formats temperature and depth data from VR2AR data
-#'   offloaded in the new .vdat format and exported with Fathom software.
+#' @description Compiles and formats temperature, depth, and tilt data from
+#'   VR2AR data offloaded in the new .vdat format and exported with Fathom
+#'   software.
 #'
 #' @details The raw VR2AR data must be saved in a folder named vdat in csv
 #'   format. Folder name is not case-sensitive.
@@ -61,14 +66,33 @@ ss_read_vdat_data <- function(path, file_name) {
 #'
 #' @return Returns a tibble with the data compiled from the file in path/vdat.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
-#' @importFrom dplyr %>% case_when filter group_by mutate select summarise tibble
+#' @importFrom dplyr case_when filter group_by mutate select summarise tibble
 #' @importFrom lubridate as_datetime
 #' @importFrom purrr list_rbind
 #'
 #' @export
+#'
+#' @examples
+#' # full path to a VR2AR file processed with Fathom (vdat)
+#' path <- system.file(
+#'   "testdata", "vdat", "VR2AR-69_555438.csv", package = "sensorstrings"
+#' )
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "VR2AR-69",
+#'   sensor_serial_number = 555438,
+#'   depth = 5
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' vdat <- ss_compile_vdat_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates,
+#'   trim = FALSE
+#' )
+#' head(vdat)
 
 ss_compile_vdat_data <- function(
     path, sn_table, deployment_dates, trim = TRUE
@@ -106,13 +130,13 @@ ss_compile_vdat_data <- function(
     colnames(dat_i) <- dat_i[2, ]
     dat_i <- dat_i[!is.na(colnames(dat_i))]
 
-    dat_i <- dat_i %>%
+    dat_i <- dat_i |>
       dplyr::filter(
-        `RECORD TYPE` %in% c("DEPTH_DESC", "DEPTH", "TEMP_DESC", "TEMP")
+        `RECORD TYPE` %in% c("DEPTH_DESC", "DEPTH", "TEMP_DESC", "TEMP", "ATTITUDE")
       )
 
-    depth_units_i <-  dat_i %>%
-      dplyr::filter(`RECORD TYPE` == "DEPTH_DESC") %>%
+    depth_units_i <-  dat_i |>
+      dplyr::filter(`RECORD TYPE` == "DEPTH_DESC") |>
       dplyr::pull(FIELD.6)
 
     # depth and temperature units
@@ -120,14 +144,13 @@ ss_compile_vdat_data <- function(
       stop(paste0("Sensor ", file_name, " has depth units of << ", depth_units_i, " >>"))
     }
 
-    temp_units_i <-  dat_i %>%
-      dplyr::filter(`RECORD TYPE` == "TEMP_DESC") %>%
+    temp_units_i <-  dat_i |>
+      dplyr::filter(`RECORD TYPE` == "TEMP_DESC") |>
       dplyr::pull(FIELD.6)
 
     if (!(temp_units_i %in% "Ambient (deg C)")) {
       stop(paste0("Sensor ", file_name, " has temperature units of << ", temp_units_i, " >>"))
     }
-
 
     # format data -------------------------------------------------------------
 
@@ -135,29 +158,27 @@ ss_compile_vdat_data <- function(
     colnames(dat_i) <- dat_i[1, ]
     dat_i <- dat_i[!is.na(colnames(dat_i))]
 
-    dat_i <- dat_i %>%
-      slice(-c(1:2)) %>%
+    dat_i <- dat_i |>
+      slice(-c(1:2)) |>
       select(
         timestamp_ = `Device Time (UTC)`,
         sensor_type = Model,
         sensor_serial_number = `Serial Number`,
         variable = DEPTH_DESC,
         value = `Depth (m)`
-      ) %>%
-      convert_timestamp_to_datetime() %>%
+      ) |>
+      convert_timestamp_to_datetime() |>
       mutate(
         timestamp_utc = timestamp_,
-        # time_correction_s = as.numeric(time_correction_s),
-        # timestamp_utc = timestamp_utc_uncorrected + lubridate::seconds(time_correction_s))
-
         sensor_serial_number = as.numeric(sensor_serial_number),
         value = as.numeric(value),
         variable = case_when(
           variable == "DEPTH" ~ "sensor_depth_measured_m",
           variable == "TEMP" ~ "temperature_degree_c",
+          variable == "ATTITUDE" ~ "tilt_degree",
           TRUE ~ NA
         )
-      ) %>%
+      ) |>
       select(-timestamp_)
 
     # serial number from data file
@@ -173,20 +194,24 @@ ss_compile_vdat_data <- function(
     # trim -------------------------------------------------------------
 
     # check there are more than 0 rows in dat
-    check_n_rows(dat_i, file_name = dat_files, trimmed = FALSE)
+    check_n_rows(dat_i, file_name = file_i, trimmed = FALSE)
 
     # trim to the dates in deployment_dates
     if (isTRUE(trim)) dat_i <- trim_data(dat_i, start_date, end_date)
 
-    check_n_rows(dat_i, file_name = dat_files, trimmed = trim)
+    check_n_rows(dat_i, file_name = file_i, trimmed = trim)
 
     # find any duplicate timestamps
-    bad_ts <- dat_i %>%
-      group_by(timestamp_utc) %>%
-      summarise(n = n()) %>%
-      filter(n > 2)
+    bad_ts <- dat_i |>
+      count(timestamp_utc, variable) |>
+      filter(n > 1) |>
+      distinct(timestamp_utc)
 
     if (nrow(bad_ts) > 0) {
+
+      dat_i <- dat_i |>
+        filter(!(timestamp_utc %in% bad_ts$timestamp_utc))
+
       message(
         "Duplicate timestamp(s) found and removed from vr2ar ",
         sn_i, ": ",
@@ -194,18 +219,17 @@ ss_compile_vdat_data <- function(
       )
     }
 
-    # remove duplicate timestamps and pivot wider
-    dat_i <- dat_i %>%
-      filter(!(timestamp_utc %in% bad_ts$timestamp_utc)) %>%
-      pivot_wider(values_from = value, names_from = variable) %>%
-      add_deployment_columns(start_date, end_date,  sensor_info_i)
+    # pivot wider
+    dat_i <- dat_i |>
+      pivot_wider(values_from = value, names_from = variable) |>
+      add_deployment_columns(start_date, end_date, sensor_info_i)
 
     vem_dat[[i]] <- dat_i
 
-    message(paste("vemco data from sensor << ", sn_i, " >> compiled"))
+    message(paste("vdat data from sensor << ", sn_i, " >> compiled"))
   }
 
-  vem_out <- vem_dat %>%
+  vem_out <- vem_dat |>
     list_rbind()
 
   tibble(vem_out)

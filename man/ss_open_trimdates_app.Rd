@@ -20,7 +20,7 @@ sensor_depth_at_low_tide_m, sensor_type, sensor-serial number, and the
 variables to plot (e.g., temperature_degree_c).}
 
 \item{filter_to}{Shortcut for specifying where to filter \code{dat} before
-plotting. Options are "start", "end", or "custom".}
+plotting. Options are "start", "end", or "custom". Default is "start".}
 
 \item{period}{Character string that can be converted to a \code{lubridate}
 period. Default is \code{"2 days"}.}
@@ -39,4 +39,27 @@ Opens a shiny app displaying an interactive plot of variables in
 }
 \description{
 Open interactive plot
+}
+\examples{
+if (requireNamespace("shiny", quietly = TRUE) &&
+    requireNamespace("plotly", quietly = TRUE)) {
+  dat <- ss_compile_deployment_data(
+    system.file("extdata", package = "sensorstrings"), trim = FALSE
+  )
+
+  # the app object is created here, and opens when printed or run
+  app <- ss_open_trimdates_app(dat, filter_to = "end", period = "1 day")
+
+  # the app is interactive, so only open it in an interactive session
+  if (interactive()) shiny::runApp(app)
+
+  # zoom in on a custom time window
+  app2 <- ss_open_trimdates_app(
+    dat,
+    filter_to = "custom",
+    custom_start = as.POSIXct("2019-05-30 12:00", tz = "UTC"),
+    custom_end = as.POSIXct("2019-06-01 00:00", tz = "UTC")
+  )
+  if (interactive()) shiny::runApp(app2)
+}
 }

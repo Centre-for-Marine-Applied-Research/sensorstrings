@@ -1,43 +1,7 @@
-#' Convert column names from old log into the new format
-#'
-#' @param log Log file as read in from \code{ss_read_log()}.
-#'
-#' @returns Returns log with columns names matching those as if it head been
-#'   read in from
-#'
-#' @importFrom dplyr contains rename
-#'
-#' @export
-
-ss_convert_old_log <- function(log) {
-
-  log <- log %>%
-    rename(
-      waterbody = contains("Deployment_Waterbody"),
-      station = contains("Location_Description"),
-      lease = contains("Lease#"),
-      deployment_date = Deployment,
-      retrieval_date = Retrieval,
-      deployment_latitude = contains("Logger_Latitude"),
-      deployment_longitude = contains("Logger_Longitude"),
-      sensor_type = contains("Logger_Model"),
-      sensor_serial_number = contains("Serial#"),
-      sensor_depth_m = contains("Sensor_Depth")
-    )
-
-  colnames(log) <- tolower(colnames(log))
-
-  log
-}
-
-
 #' Read in deployment log
 #'
 #' The log must be saved in .csv, .xlsx or .xls format. Value checks are applied
 #' in \code{ss_parse_log()}.
-#'
-#' "Old" log column names will be converted to the new standard (.e.,g
-#' "Location_Description" will be replaced with "station").
 #'
 #' @inheritParams ss_parse_log
 #'
@@ -49,16 +13,32 @@ ss_convert_old_log <- function(log) {
 #' @param parse Logical argument indicating whether to parse log into a list
 #'   used by \code{ss_compile_*} functions.
 #'
-#' @return Returns a a data frame of the deployment metadata. Option to parse
-#'   the information into a list using \code{ss_parse_log()}.
+#' @return If \code{parse = TRUE} (the default), returns a list of deployment
+#'   metadata from \code{ss_parse_log()}. Otherwise returns a data frame of the
+#'   metadata.
 #'
 #' @importFrom data.table fread
-#' @importFrom dplyr %>%
 #' @importFrom readxl read_excel
 #' @importFrom stringr str_extract
 #' @importFrom utils file_test
 #'
 #' @export
+#' @examples
+#' # path to the deployment folder (which holds the Log folder)
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' # parsed into the list used by the ss_compile_*() functions
+#' log <- ss_read_log(path)
+#' log$sn_table
+#'
+#' # the log as a data frame
+#' ss_read_log(path, parse = FALSE)
+#'
+#' # or the full path to the log file
+#' ss_read_log(
+#'   file.path(path, "Log", "borgles_island_2019-05-30_log.csv"),
+#'   parse = FALSE
+#' )
 
 ss_read_log <- function(
     path,
@@ -78,8 +58,8 @@ ss_read_log <- function(
   # if path goes to the deployment folder, finish with log folder + file name + extension
   if (isFALSE(utils::file_test("-f", path))) {
 
-    folder <- list.files(path) %>%
-      str_extract(regex("log", ignore_case = TRUE)) %>%
+    folder <- list.files(path) |>
+      str_extract(regex("log", ignore_case = TRUE)) |>
       na.omit()
 
     path <- paste0(path, "/", folder)
@@ -101,32 +81,29 @@ ss_read_log <- function(
 
   if (file_type == "xls" | file_type == "xlsx") {
     log <- read_excel(path, na = c("", "n/a", "N/A", "NA"))
-  }
+  } else {
+    if (file_type == "csv") {
+      log <- fread(
+        path,
+        data.table = FALSE,
+        na.strings = c("", "n/a", "N/A", "NA")
+      )
+    } else {
+      stop("Log must be a .csv, .xlsx, or .xls file: ", path)
+    }
 
-  if (file_type == "csv") {
-    log <- fread(
-      path,
-      data.table = FALSE,
-      na.strings = c("", "n/a", "N/A", "NA")
-    )
-  }
+    if(isTRUE(parse)) {
+      log <- ss_parse_log(
+        log,
+        deployment_dates = deployment_dates,
+        area_info = area_info,
+        sn_table = sn_table,
+        config = config,
+        verbose = verbose)
+    }
 
-  old_col_names <- c("Location_Description", "Logger_Model", "Serial#")
-  if(any(old_col_names %in% colnames(log))) {
-    log <- ss_convert_old_log(log)
+    log
   }
-
-  if(isTRUE(parse)) {
-    log <- ss_parse_log(
-      log,
-      deployment_dates = deployment_dates,
-      area_info = area_info,
-      sn_table = sn_table,
-      config = config,
-      verbose = verbose)
-  }
-
-  log
 }
 
 
@@ -138,10 +115,8 @@ ss_read_log <- function(
 #' \code{deployment_longitude}, \code{sensor_type}, \code{sensor_serial_number},
 #' \code{sensor_depth_m}. Missing information will be filled in with \code{NA}.
 #'
-#' Old log column names will also be accepted.
-#'
-#' If \code{verbose = TRUE}, a message will be printed if there is more than one
-#' unique entry in \code{waterbody}, \code{station}, \code{deployment_date},
+#' A Warning will be printed if there is more than one unique entry in
+#' \code{waterbody}, \code{station}, \code{deployment_date},
 #' \code{retrieval_date}, \code{deployment_latitude}, or
 #' \code{deployment_longitude}.
 #'
@@ -174,19 +149,33 @@ ss_read_log <- function(
 #'
 #' @return Returns a list with up to 4 elements. \code{deployment_dates} is a
 #'   data frame with two columns: \code{start_date} and \code{end_date}.
-#'   \code{area_info} is a data frame with five columns: \code{county},
-#'   \code{waterbody}, \code{latitude}, \code{longitude}, \code{station}, and
-#'   \code{lease}. \code{sn_table} is a data frame with three columns:
-#'   \code{log_sensor} (sensor name as recorded in the log),
+#'   \code{area_info} is a data frame with six columns: \code{region} or
+#'   \code{county}, \code{waterbody}, \code{latitude}, \code{longitude},
+#'   \code{station}, and \code{lease}. \code{sn_table} is a data frame with
+#'   three columns: \code{log_sensor} (sensor name as recorded in the log),
 #'   \code{sensor_serial_number}, and \code{depth}. \code{string_configuration}
 #'   is a character string indicating how the sensor string was moored.
 #'
-#' @importFrom dplyr %>% contains filter mutate select
+#' @importFrom dplyr contains filter mutate select
 #' @importFrom lubridate is.Date ymd
 #' @importFrom stringr str_replace str_detect
 #' @importFrom tidyr separate
 #'
 #' @export
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' log_raw <- ss_read_log(path, parse = FALSE)
+#'
+#' log <- ss_parse_log(log_raw)
+#'
+#' log$deployment_dates
+#' log$area_info
+#' log$sn_table
+#' log$string_configuration
+#'
+#' # only return the serial number table
+#' ss_parse_log(log_raw, deployment_dates = FALSE, area_info = FALSE, config = FALSE)
 
 ss_parse_log <- function(
     log,
@@ -305,7 +294,7 @@ ss_parse_log <- function(
       long <- unique(log$deployment_longitude)
       if (any(long > 0)) stop("Longitude must be a negative value")
       if (length(long) > 1) warning("Multiple longitudes recorded in log")
-      if (!is.numeric(long)) warning("Latitude is not numeric")
+      if (!is.numeric(long)) warning("Longitude is not numeric")
     } else {
       if(isTRUE(verbose)) {
         message("Column deployment_longitude not found in log. longitude will be recorded as NA.")
@@ -352,14 +341,14 @@ ss_parse_log <- function(
     if(!("sensor_depth_m" %in% cols)) {
       log <- mutate(log, sensor_depth_m = NA_real_)
     }
-    depth <- log %>%
-      select(sensor_type, sensor_serial_number, sensor_depth_m) %>%
+    depth <- log |>
+      select(sensor_type, sensor_serial_number, sensor_depth_m) |>
       mutate(numeric_depth = suppressWarnings(as.numeric(sensor_depth_m)))
 
     if (any(is.na((depth$numeric_depth)))) {
-      depth_char <- depth %>%
-        filter(is.na(numeric_depth)) %>%
-        select(-numeric_depth) %>%
+      depth_char <- depth |>
+        filter(is.na(numeric_depth)) |>
+        select(-numeric_depth) |>
         mutate(
           depth_print = paste(
             sensor_type, sensor_serial_number, sensor_depth_m)
@@ -371,14 +360,14 @@ ss_parse_log <- function(
     }
 
     # serial number table -----------------------------------------------------
-    sn_table <- log %>%
+    sn_table <- log |>
       select(
         log_sensor = sensor_type,
         sensor_serial_number,
         depth = sensor_depth_m
       )
 
-    sensors <- sn_table %>%
+    sensors <- sn_table |>
       mutate(
         log_sensor = str_replace(log_sensor, "_", " "),
         log_sensor = tolower(log_sensor),
@@ -389,8 +378,8 @@ ss_parse_log <- function(
       )
 
     # warning if there are any sensors in the log that are NOT recognized by package
-    n_sensors <- sensors %>%
-      select(contains("detect")) %>%
+    n_sensors <- sensors |>
+      select(contains("detect")) |>
       apply(1, sum)
 
     if (any(n_sensors == 0)) {
@@ -417,6 +406,18 @@ ss_parse_log <- function(
       config <- unique(log$configuration)
     } else config <- NA
 
+    if (length(config) > 1) {
+      config <- config[!is.na(config)] # remove NAs from config
+    }
+
+    if (length(config) > 1) { # if length is still > 1, pick the first
+      warning(
+        "More than one configuration type entered in the Log. << ",
+        paste(config, collapse = ", "), " >>. Using << ", config[1], " >>."
+      )
+      config <- config[1]
+    }
+
     if (!(config %in% config_options)) {
       warning("<< ", config, " >> is not an accepted sensor string configuration")
     }
@@ -428,9 +429,6 @@ ss_parse_log <- function(
       config <- "unknown"
     }
 
-    if (length(config) > 1) {
-      warning("More than one configuration type entered in the Log.")
-    }
   } else config <- NULL
 
   # return list of deployment info -------------------------------------------

@@ -6,7 +6,7 @@
 #'   variables to plot (e.g., temperature_degree_c).
 #'
 #' @param filter_to Shortcut for specifying where to filter \code{dat} before
-#'   plotting. Options are "start", "end", or "custom".
+#'   plotting. Options are "start", "end", or "custom". Default is "start".
 #'
 #' @param period Character string that can be converted to a \code{lubridate}
 #'   period. Default is \code{"2 days"}.
@@ -22,11 +22,31 @@
 #' @return Opens a shiny app displaying an interactive plot of variables in
 #'   \code{dat}, coloured by depth.
 #'
-#' @importFrom shiny fluidPage renderTable shinyApp tableOutput
-#' @importFrom plotly ggplotly event_data plotlyOutput renderPlotly
 #' @importFrom lubridate as_datetime
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("shiny", quietly = TRUE) &&
+#'     requireNamespace("plotly", quietly = TRUE)) {
+#'   dat <- ss_compile_deployment_data(
+#'     system.file("extdata", package = "sensorstrings"), trim = FALSE
+#'   )
+#'
+#'   # the app object is created here, and opens when printed or run
+#'   app <- ss_open_trimdates_app(dat, filter_to = "end", period = "1 day")
+#'
+#'   # the app is interactive, so only open it in an interactive session
+#'   if (interactive()) shiny::runApp(app)
+#'
+#'   # zoom in on a custom time window
+#'   app2 <- ss_open_trimdates_app(
+#'     dat,
+#'     filter_to = "custom",
+#'     custom_start = as.POSIXct("2019-05-30 12:00", tz = "UTC"),
+#'     custom_end = as.POSIXct("2019-06-01 00:00", tz = "UTC")
+#'   )
+#'   if (interactive()) shiny::runApp(app2)
+#' }
 
 
 ss_open_trimdates_app <- function(
@@ -36,32 +56,33 @@ ss_open_trimdates_app <- function(
     custom_start = NULL,
     custom_end = NULL,
     point_size = 2) {
-  # Define UI for application that draws a histogram
-  ui <- fluidPage(
-    plotlyOutput("vars_plot", height = "600px"),
-    tableOutput("info")
+
+  rlang::check_installed(c("shiny", "plotly"), reason = "to use `ss_open_trimdates_app()`.")
+
+  ui <- shiny::fluidPage(
+    plotly::plotlyOutput("vars_plot", height = "600px"),
+    shiny::tableOutput("info")
   )
 
   ts_save <- data.frame(ts = NA_character_)
 
-  # Define server logic required to draw a histogram
   server <- function(input, output) {
-    output$vars_plot <- renderPlotly({
-      dat <- dat %>%
-        filter_dat_to_plot(
+    output$vars_plot <- plotly::renderPlotly({
+      dat <- dat |>
+        ss_filter_dat_to_plot(
           filter_to = filter_to,
           period = period,
           custom_start = custom_start,
           custom_end = custom_end
         )
 
-      p <- ss_ggplot_variables(dat) + geom_point(size = point_size)
+      p <- ss_ggplot_variables(dat, point_size = point_size)
 
-      ggplotly(p, source = "plot1", tooltip = "text")
+      plotly::ggplotly(p, source = "plot1", tooltip = "text")
     })
 
-    output$info <- renderTable({
-      ts_info <- event_data("plotly_click", source = "plot1")
+    output$info <- shiny::renderTable({
+      ts_info <- plotly::event_data("plotly_click", source = "plot1")
 
       if (is.null(ts_info)) {
         "Click events appear here (double-click chart to clear)"
@@ -77,5 +98,5 @@ ss_open_trimdates_app <- function(
   }
 
   # Run the application
-  shinyApp(ui = ui, server = server)
+  shiny::shinyApp(ui = ui, server = server)
 }

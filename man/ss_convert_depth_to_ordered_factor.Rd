@@ -12,7 +12,7 @@ ss_convert_depth_to_ordered_factor(dat)
 }
 \value{
 Returns \code{dat}, with the \code{sensor_depth_at_low_tide_m} column
-  converted to an ordered factor. The shallowest depth with have a factor
+  converted to an ordered factor. The shallowest depth will have a factor
   value of 1; the deepest depth will have the largest factor value.
 }
 \description{
@@ -21,7 +21,14 @@ This function simplifies converting the
   or \code{character} to an ordered factor, which is preferred for using the
   function \code{ss_ggplot_variables()}.
 }
-\author{
-Danielle Dempsey
+\examples{
+dat <- data.frame(
+  sensor_depth_at_low_tide_m = c(10, 2, 5, 2),
+  temperature_degree_c = c(8, 15, 12, 14)
+)
+
+dat_ordered <- ss_convert_depth_to_ordered_factor(dat)
+
+dat_ordered
+levels(dat_ordered$sensor_depth_at_low_tide_m)
 }
-\concept{format}

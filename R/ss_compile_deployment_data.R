@@ -1,19 +1,15 @@
-#' @title Compile aquameasure, hobo, tidbit, and vemco data from a single
-#'   deployment
+#' @title Compile Water Quality data from a sensor string deployment
 #'
-#' @details Reads the deployment log and then calls
-#'   \code{ss_compile_aquameasure_data()}, \code{ss_compile_hobo_data()}, and
-#'   \code{ss_compile_vemco_data()} and returns the results in a single data
-#'   frame.
+#' @details Reads the deployment log and then calls the
+#'   \code{ss_compile_*_data()}, functions and returns the results in a single
+#'   data frame.
 #'
-#'   aquameasure data must be in a folder named aquameasure, hobo data must be
-#'   in a folder named hobo, tidbit data must be in a folder named tidbit, and
-#'   vemco data must be in a folder name vemco (folder names are not case
-#'   sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in the
-#'   same folder.
+#'   Data files must be in a folder named after the sensor manufacturer and/or
+#'   model (e.g., aquameasure, hobo, hobo_ph, vemco, vdat). Folder names
+#'   are not case sensitive. These folders must be in the same folder.
 #'
 #'   VR2AR data processed with the Fathom software must be in a folder called
-#'   vr2ar.
+#'   vdat.
 #'
 #'   Columns with deployment details are added (e.g., county, waterbody,
 #'   latitude, longitude, station, lease, string_configuration).
@@ -22,22 +18,31 @@
 #' @inheritParams ss_compile_vemco_data
 #' @inheritParams ss_read_log
 #'
-#' @param path File path to the log, aquameasure, hobo, tidbit, and/or vemco
-#'   folders.
+#' @param path File path to the log, aquameasure, hobo, hobo_ph, vdat,
+#'   and/or vemco folders.
 #'
 #' @param ignore_sensors Vector of sensor serial numbers for sensors that are in
 #'   the deployment log, but should NOT be compiled (e.g., data file missing).
 #'
-#' @return Returns a data frame of data from a sensor string deployment.
-#'
-#' @family compile
-#' @author Danielle Dempsey
+#' @return Returns a tibble of data from a sensor string deployment.
 #'
 #' @importFrom lubridate parse_date_time
-#' @importFrom dplyr %>% arrange bind_rows contains select tibble
+#' @importFrom dplyr any_of arrange bind_rows contains select tibble
 #'
 #' @export
-
+#'
+#' @examples
+#' #path to the log, aquameasure, hobo, and vemco folders
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' dat <- ss_compile_deployment_data(path)
+#' head(dat)
+#'
+#' # leave the data untrimmed, and skip one of the sensors in the log
+#' dat_untrimmed <- ss_compile_deployment_data(
+#'   path, trim = FALSE, ignore_sensors = 547109
+#' )
+#' unique(dat_untrimmed$sensor_type)
 
 ss_compile_deployment_data <- function(
     path,
@@ -51,13 +56,13 @@ ss_compile_deployment_data <- function(
 
   area_info <- depl_log$area_info
 
-  sn_table <- depl_log$sn_table %>%
+  sn_table <- depl_log$sn_table |>
     filter(!(sensor_serial_number %in% ignore_sensors))
 
   depl_data <- tibble(NULL)
 
   # aquameasure -------------------------------------------------------------
-  sn_am <- sn_table %>%
+  sn_am <- sn_table |>
     filter(str_detect(log_sensor, regex("aquameasure", ignore_case = TRUE)))
 
   if (nrow(sn_am) > 0) {
@@ -71,7 +76,7 @@ ss_compile_deployment_data <- function(
   }
 
   # hobo --------------------------------------------------------------------
-  sn_hobo <- sn_table %>%
+  sn_hobo <- sn_table |>
     filter(
       str_detect(log_sensor, regex("hobo", ignore_case = TRUE)),
       !str_detect(log_sensor, regex("ph", ignore_case = TRUE))
@@ -90,7 +95,7 @@ ss_compile_deployment_data <- function(
 
 
 # hobo ph -----------------------------------------------------------------
-  sn_hobo_ph <- sn_table %>%
+  sn_hobo_ph <- sn_table |>
     filter(str_detect(log_sensor, regex("ph", ignore_case = TRUE)))
 
   if (nrow(sn_hobo_ph) > 0) {
@@ -104,7 +109,7 @@ ss_compile_deployment_data <- function(
   }
 
   # tidbit --------------------------------------------------------------------
-  sn_tidbit <- sn_table %>%
+  sn_tidbit <- sn_table |>
     filter(str_detect(log_sensor, regex("tidbit", ignore_case = TRUE)))
 
   if (nrow(sn_tidbit) > 0) {
@@ -119,7 +124,7 @@ ss_compile_deployment_data <- function(
   }
 
   # vemco .vrl files -------------------------------------------------------------------
-  sn_vem <- sn_table %>%
+  sn_vem <- sn_table |>
     filter(
       str_detect(log_sensor, regex("VR2AR", ignore_case = TRUE)),
       !str_detect(log_sensor, regex("-69"))
@@ -137,7 +142,7 @@ ss_compile_deployment_data <- function(
   }
 
   # vemco .vdat -------------------------------------------------------------------
-  sn_vdat <- sn_table %>%
+  sn_vdat <- sn_table |>
     filter(
       str_detect(log_sensor, regex("VR2AR-69|VR2ARX-69", ignore_case = TRUE)
       )
@@ -154,7 +159,7 @@ ss_compile_deployment_data <- function(
   }
 
   # add area info columns and export ----------------------------------------
-  depl_data %>%
+  depl_data |>
     mutate(
       region = area_info$region,
       county = area_info$county,
@@ -164,8 +169,8 @@ ss_compile_deployment_data <- function(
       station = as.character(area_info$station),
       lease = as.character(area_info$lease),
       string_configuration = depl_log$string_configuration
-    ) %>%
-    arrange(sensor_depth_at_low_tide_m) %>%
+    ) |>
+    arrange(sensor_depth_at_low_tide_m) |>
     select(
       region, county, waterbody, station, lease, latitude, longitude,
       deployment_range,
@@ -173,15 +178,16 @@ ss_compile_deployment_data <- function(
       sensor_type, sensor_serial_number,
       contains("timestamp"),
       contains("low_tide"),
-      # variables in alphabetical order
-      contains("chlorophyll_blue"),
-      contains("chlorophyll_red"),
-      contains("dissolved_oxygen_percent"),
-      contains("dissolved_oxygen_uncorrected"),
-      contains("ph"),
-      contains("salinity"),
-      contains("sensor_depth_measured"),
-      contains("temperature"),
-      contains("tilt")
+      any_of(sort(ss_vars$variable))
+      # # variables in alphabetical order
+      # contains("chlorophyll_blue"),
+      # contains("chlorophyll_red"),
+      # contains("dissolved_oxygen_percent"),
+      # contains("dissolved_oxygen_uncorrected"),
+      # contains("ph"),
+      # contains("salinity"),
+      # contains("sensor_depth_measured"),
+      # contains("temperature"),
+      # contains("tilt")
     )
 }

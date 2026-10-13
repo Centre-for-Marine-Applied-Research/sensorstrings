@@ -4,18 +4,18 @@
 #'   station and date of interest, re-formats into the deployment log format,
 #'   and exports to the Log folder.
 #'
-#' @param path_metadata Path to the metadata tracking sheet (including the file
+#' @param path Path to the metadata tracking sheet (including the file
 #'   name and extension). This must be a .xlsx file.
 #'
 #' @param sheet Name of the tab with the deployment information.
 #'
 #' @param google_sheet Logical argument indicating whether metadata is stored in
-#'   a google sheet. If \code{TRUE}, \code{path_metadata} is not required.
+#'   a google sheet. If \code{TRUE}, \code{path} is not required.
 #'
 #' @param google_sheet_link Link the to metadata sheet on google drive. If
 #'   \code{NULL}, the New Brunswick metadata sheet will be imported.
 #'
-#' @param path_export Path to the station deployment folder.
+#' @param output_path Path to the station deployment folder.
 #'
 #' @param station Station name.
 #'
@@ -28,7 +28,7 @@
 #'
 #' @return Returns deployment log in .csv format.
 #'
-#' @importFrom dplyr %>% if_else filter mutate transmute
+#' @importFrom dplyr if_else filter mutate transmute
 #' @importFrom lubridate as_date
 #' @importFrom googlesheets4 read_sheet gs4_deauth
 #' @importFrom readxl read_excel
@@ -36,26 +36,55 @@
 #' @importFrom utils write.csv
 #'
 #' @export
+#'
+#' @examples
+#' # The default (path = NULL) reads the metadata tracking sheet from the CMAR R
+#' # drive. Here, path points to a small example sheet with the same "tracker"
+#' # tab, and the log is written to a deployment folder in tempdir().
+#' output_path <- file.path(tempdir(), "borgles_island_2019-05-30")
+#' dir.create(output_path, showWarnings = FALSE)
+#'
+#' ss_create_log_from_metadata(
+#'   output_path = output_path,
+#'   station = "borgles_island",
+#'   deployment_date = "2019-05-30",
+#'   path = system.file("extdata/metadata_tracking_example.xlsx", package = "sensorstrings")
+#' )
+#'
+#' # the new log can be read with ss_read_log()
+#' ss_read_log(output_path, parse = FALSE)
+#'
+#' unlink(output_path, recursive = TRUE)
+#'
+#' if (FALSE) {
+#'   # google_sheet = TRUE reads the New Brunswick metadata Google Sheet (or the
+#'   # sheet at google_sheet_link). Needs an internet connection, so not run.
+#'   ss_create_log_from_metadata(
+#'     output_path = tempdir(),
+#'     station = "station name",
+#'     deployment_date = "2024-05-01",
+#'     google_sheet = TRUE
+#'   )
+#' }
 
 ss_create_log_from_metadata <- function(
-    path_metadata = NULL,
+    output_path,
+    station,
+    deployment_date,
+    path = NULL,
     sheet = "tracker",
     google_sheet = FALSE,
     google_sheet_link = NULL,
-    path_export,
-    station,
-    deployment_date,
     to_title = TRUE
 ){
 
   if(isFALSE(google_sheet)) {
-    if(is.null(path_metadata)) {
-      path_metadata <- file.path(
+    if(is.null(path)) {
+      path <- file.path(
         "R:/tracking_sheets/metadata_tracking/water_quality_deployment_tracking.xlsx"
       )
     }
-
-    dat_raw <- read_excel(path_metadata, sheet = sheet, na = "")
+    dat_raw <- read_excel(path, sheet = sheet, na = "")
   }
 
   if(isTRUE(google_sheet)) {
@@ -78,50 +107,57 @@ ss_create_log_from_metadata <- function(
   } else station_title <- station
 
   if(!(station_title %in% dat_raw$station)) {
-    stop(paste0(station_title, " not found in metatdata tracking sheet"))
+    stop(paste0(station_title, " not found in metadata tracking sheet"))
   }
 
   # remove _dd from NB metadata sheet
   colnames(dat_raw) <- gsub("tude_dd", "tude", colnames(dat_raw))
 
-  dat <- dat_raw %>%
+  dat <- dat_raw |>
     filter(
       station == !!station_title,
       deployment_date == !!as_date(deployment_date)
     )
 
   if (nrow(dat) == 0) {
-    warning(
-      paste("No rows found in metatdata for << ", station, deployment_date, " >>")
+    stop(
+      paste("No rows found in metadata for << ", station, deployment_date, " >>")
     )
   }
 
-  dat <- dat %>%
-    mutate(
-      deployment_latitude = if_else(
-        is.na(deployment_latitude),
-        ss_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
-        deployment_latitude
-      ),
-      deployment_longitude = if_else(
-        is.na(deployment_longitude),
-        -ss_coords_from_ddm_to_dd(deployment_longitude_w_ddm),
-        deployment_longitude
-      ),
-      retrieval_latitude = if_else(
-        is.na(retrieval_latitude),
-        ss_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
-        retrieval_latitude
-      ),
-      retrieval_longitude = if_else(
-        is.na(retrieval_longitude),
-        -ss_coords_from_ddm_to_dd(retrieval_longitude_w_ddm),
-        retrieval_longitude
-      )
-    )
+  if (any(grepl("_ddm$", colnames(dat)))) {
+    dat <- ss_convert_coords_from_ddm_to_dd(dat)
+  } else {
+    message("No _ddm columns to convert to dd")
+  }
+
+  # dat <- dat |>
+  #   ss_convert_coords_from_ddm_to_dd()
+    # mutate(
+    #   deployment_latitude = if_else(
+    #     is.na(deployment_latitude),
+    #     ss_convert_coords_from_ddm_to_dd(deployment_latitude_n_ddm),
+    #     deployment_latitude
+    #   ),
+    #   deployment_longitude = if_else(
+    #     is.na(deployment_longitude),
+    #     ss_convert_coords_from_ddm_to_dd(deployment_longitude_w_ddm, west = TRUE),
+    #     deployment_longitude
+    #   ),
+    #   retrieval_latitude = if_else(
+    #     is.na(retrieval_latitude),
+    #     ss_convert_coords_from_ddm_to_dd(retrieval_latitude_n_ddm),
+    #     retrieval_latitude
+    #   ),
+    #   retrieval_longitude = if_else(
+    #     is.na(retrieval_longitude),
+    #     ss_convert_coords_from_ddm_to_dd(retrieval_longitude_w_ddm, west = TRUE),
+    #     retrieval_longitude
+    #   )
+    # )
 
   # make log
-  log <- dat %>%
+  log <- dat |>
     select(
       any_of(c("county", "region")),
       waterbody, station, lease,
@@ -132,7 +168,7 @@ ss_create_log_from_metadata <- function(
       retrieval_latitude, retrieval_longitude,
       sensor_type, sensor_serial_number, sensor_depth_m,
       string_configuration
-    ) %>%
+    ) |>
     dplyr::mutate(
       #Location_Description = str_to_title(Location_Description),
       sensor_serial_number = as.numeric(sensor_serial_number),
@@ -148,17 +184,18 @@ ss_create_log_from_metadata <- function(
     "log.csv", sep = "_"
   )
 
-  path_export <- file.path(paste0(path_export, "/log"))
+  output_path <- file.path(paste0(output_path, "/log"))
 
-  if (!dir.exists(path_export)) dir.create(path_export)
+  if (!dir.exists(output_path)) dir.create(output_path)
 
   write.csv(
     log,
-    file = paste(path_export, file_name, sep = "/"),
+    file = paste(output_path, file_name, sep = "/"),
     row.names = FALSE
   )
 
-  message(file_name, " exported to ", path_export)
+  message(file_name, " exported to ", output_path)
+  invisible(output_path)
 }
 
 

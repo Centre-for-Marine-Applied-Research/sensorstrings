@@ -4,7 +4,7 @@
 \alias{ss_read_vemco_data}
 \title{Import data from vemco csv files}
 \usage{
-ss_read_vemco_data(path, file_name)
+ss_read_vemco_data(path, file_name = NULL)
 }
 \arguments{
 \item{path}{File path to the vemco folder, or full path to the data
@@ -23,6 +23,13 @@ Import data from vemco csv files
 \details{
 The Vemco data must be saved in csv format.
 }
-\author{
-Danielle Dempsey
+\examples{
+path <- system.file("extdata", "vemco", package = "sensorstrings")
+
+# folder and file name
+vemco_raw <- ss_read_vemco_data(path, "vemco-547109.csv")
+head(vemco_raw)
+
+# or the full path to the file
+vemco_raw <- ss_read_vemco_data(file.path(path, "vemco-547109.csv"))
 }

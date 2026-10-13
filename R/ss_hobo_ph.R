@@ -4,7 +4,7 @@
 #'
 #'   All of the csv files in the hobo_ph folder will be compiled.
 #'
-#'   The timestamp column must be in the order "mdY HMS".
+#'   The timestamp column must be in the order "mdY HMS", “Ymd HMS”, or “Ymd”.
 #'
 #'   If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 #'
@@ -29,20 +29,35 @@
 #'   after 20:00 AST, which is 00:00 UTC the next day.) Default is \code{trim =
 #'   TRUE}.
 #'
-#' @return Returns a tibble with the data compiled from each of the hobo or
-#'   tidbit sensors.
+#' @return Returns a tibble with the data compiled from each of the hobo pH
+#'   sensors.
 #'
-#' @family compile
-#'
-#' @author Danielle Dempsey
-#'
-#' @importFrom dplyr %>% contains everything filter if_all mutate rename select tibble
+#' @importFrom dplyr contains everything filter if_all mutate rename select tibble
 #' @importFrom lubridate dst force_tz with_tz
 #' @importFrom purrr map_df
 #' @importFrom stats na.omit
 #' @importFrom stringr regex str_extract str_remove
 #'
 #' @export
+#'
+#' @examples
+#' # path holds a folder called hobo_ph
+#' path <- system.file("testdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "hobo ph",
+#'   sensor_serial_number = 22058687,
+#'   depth = 1
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2025-03-08", END = "2025-03-09")
+#'
+#' hobo_ph <- ss_compile_hobo_ph_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates
+#' )
+#' head(hobo_ph)
 
 ss_compile_hobo_ph_data <- function(path,
                                  sn_table,
@@ -67,21 +82,18 @@ ss_compile_hobo_ph_data <- function(path,
   # initialize list for storing the output
   hobo_dat <- list(NULL)
 
-  #browser()
   # loop over each HOBO file
   for (i in seq_along(dat_files)) {
     # Import Data -------------------------------------------------------------
-
-    # if(!is.null(file_name)) file_name <- dat_files[i]
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    hobo_i <- ss_read_hobo_data(file_i) %>%
+    hobo_i <- ss_read_hobo_data(file_i) |>
       # to avoid deprecation Warning from GitHub Actions check
       filter(if_all(everything(), ~ !grepl("Logged", .)))
 
     # extract units and make column names
-    hobo_units <- extract_hobo_ph_units(hobo_i)
+    hobo_units <- extract_hobo_units(hobo_i)
     new_col_names <- make_column_names(hobo_units)
 
     # sn and timezone checks --------------------------------------------------
@@ -89,7 +101,6 @@ ss_compile_hobo_ph_data <- function(path,
 
     tz_i <- filter(hobo_units, str_detect(variable, pattern = "Date"))
 
-    #browser()
     # is this file in the sn_table
     if (!(sn_i %in% sn_table$sensor_serial_number)) {
       stop(paste0("Serial number ", sn_i[1], " does not match any serial numbers in sn_table"))
@@ -99,34 +110,34 @@ ss_compile_hobo_ph_data <- function(path,
     if(isTRUE(tz_check)) {
       if (tz_i$units != "utc") {
         warning(paste0("The timezone of file ", file_name,
-                       " will be converted from: ", tz_i$units, "to UTC"))
+                       " will be converted from: ", tz_i$units, " to UTC"))
       }
     }
 
     # Select and add columns of interest ----------------------------------------------
-    hobo_i <- hobo_i %>%
-      select(contains("Date"), contains("pH"), contains("Temp")) %>%
-      rename(timestamp_ = 1) %>%
+    hobo_i <- hobo_i |>
+      select(contains("Date"), contains("pH"), contains("Temp")) |>
+      rename(timestamp_ = 1) |>
       convert_timestamp_to_datetime(parse_orders = c("mdY HMS", "Ymd HMS", "Ymd"))
 
     colnames(hobo_i) <- new_col_names$col_name
 
     # could combine these if statements
     if(tz_i$units == "ast/adt") {
-      hobo_i <- hobo_i %>%
+      hobo_i <- hobo_i |>
         mutate(
           timestamp_at = force_tz(`timestamp_ast/adt`, tzone = "America/Halifax"),
           timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
-        ) %>%
+        ) |>
         select(timestamp_utc, ph_ph, temperature_degree_c)
     }
 
     if(tz_i$units == "adt") {
-      hobo_i <- hobo_i %>%
+      hobo_i <- hobo_i |>
         mutate(
           timestamp_at = force_tz(timestamp_adt, tzone = "America/Halifax"),
           timestamp_utc = with_tz(timestamp_at, tzone = "UTC")
-        ) %>%
+        ) |>
         select(timestamp_utc, ph_ph, temperature_degree_c)
     }
 
@@ -136,7 +147,7 @@ ss_compile_hobo_ph_data <- function(path,
     # use serial number to identify the variable and depth (from sn_table)
     sensor_info_i <- dplyr::filter(sn_table, sensor_serial_number == sn_i)
 
-    hobo_i <- hobo_i %>%
+    hobo_i <- hobo_i |>
       add_deployment_columns(start_date, end_date, sn_table = sensor_info_i)
 
     check_n_rows(hobo_i, file_name = file_name, trimmed = FALSE)
@@ -150,7 +161,7 @@ ss_compile_hobo_ph_data <- function(path,
     hobo_dat[[i]] <- hobo_i
   } # end loop over files
 
-  hobo_out <- hobo_dat %>%
+  hobo_out <- hobo_dat |>
     map_df(rbind)
 
   # Return compiled data ----------------------------------------------------

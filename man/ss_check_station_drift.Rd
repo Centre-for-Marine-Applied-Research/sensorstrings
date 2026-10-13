@@ -35,3 +35,21 @@ Logical value. Returns \code{TRUE} if the distance between deployment
 Check station deployment and retrieval locations are within acceptable
 distance
 }
+\examples{
+if (requireNamespace("sf", quietly = TRUE)) {
+ # deployment and retrieval coordinates are the same
+ log_coords <- data.frame(
+ station = "Birchy Head",
+ latitude = 44.56, longitude = -64.03,
+ retrieval_latitude = 44.56, retrieval_longitude = -64.03
+ )
+ print(ss_check_station_drift(log_coords))
+ # retrieval coordinates about 5.5 km east: returns FALSE with a warning
+ log_coords$retrieval_longitude <- -63.96
+ print(ss_check_station_drift(log_coords))
+
+ # return the drift distance (m) instead of TRUE/FALSE
+ print(ss_check_station_drift(log_coords, return_drift = TRUE))
+ }
+
+}

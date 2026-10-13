@@ -2,7 +2,7 @@
 % Please edit documentation in R/ss_pivot.R
 \name{ss_pivot_wider}
 \alias{ss_pivot_wider}
-\title{Pivot sensor string data from wide to long format}
+\title{Pivot sensor string data from long to wide format}
 \usage{
 ss_pivot_wider(dat_long)
 }
@@ -15,5 +15,13 @@ Returns \code{dat_long} in wide format, with a separate column for
   each \code{variable}.
 }
 \description{
-Pivot sensor string data from wide to long format
+Pivot sensor string data from long to wide format
+}
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+dat_long <- ss_pivot_longer(dat)
+
+dat_wide <- ss_pivot_wider(dat_long)
+head(dat_wide)
 }

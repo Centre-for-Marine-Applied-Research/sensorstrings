@@ -7,14 +7,14 @@
 ss_ggplot_variables(
   dat,
   superchill = NULL,
-  color_palette = NULL,
-  color_col = "sensor_depth_at_low_tide_m",
+  colour_palette = NULL,
+  colour_col = "sensor_depth_at_low_tide_m",
   legend_name = "Depth (m)",
   legend_position = "right",
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
-  axis_label_newline = FALSE,
+  yaxis_newline = FALSE,
   point_size = 0.25,
   convert_sn_to_factor = TRUE
 )
@@ -27,17 +27,17 @@ indicate temperatures below the superchill threshold (<= - 0.7 degrees C).
 If \code{superchill = NULL} (the default), shading will be applied if any
 temperature values are less than or equal to the threshold.}
 
-\item{color_palette}{Optional vector of hex colors onto which depth will be
+\item{colour_palette}{Optional vector of hex colors onto which depth will be
 mapped.}
 
-\item{color_col}{Character string indicating the column to use to colour the
+\item{colour_col}{Character string indicating the column to use to colour the
 observations.}
 
 \item{legend_name}{Name for the depth legend. Default is \code{legend_name =
 "Depth (m)"}.}
 
 \item{legend_position}{Position for the depth legend. Default is
-\code{legend.position = "right"}.}
+\code{legend_position = "right"}.}
 
 \item{date_breaks_major}{Intervals for major breaks. Default is selected by
 \code{get_xaxis_breaks()}.}
@@ -47,14 +47,14 @@ observations.}
 
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
-\item{axis_label_newline}{Logical argument indicating whether to put units on
-a new line.}
+\item{yaxis_newline}{Logical argument indicating whether the units in the
+y-axis label should be on a new line. Default is \code{FALSE}.}
 
 \item{point_size}{Numeric value indicating size of points.}
 
 \item{convert_sn_to_factor}{Logical argument indicating whether to convert
 column \code{sensor_serial_number} to a factor. Only used when
-\code{color_col = "sensor_serial_number"}. Set to \code{FALSE} if making
+\code{colour_col = "sensor_serial_number"}. Set to \code{FALSE} if making
 separate plots with some overlapping serial numbers. In this case, the
 \code{sensor_serial_number} should be converted to a factor before calling
 the plot function.}
@@ -65,4 +65,24 @@ Returns a ggplot object of ocean variables plotted over time and
 }
 \description{
 Plot variables at depth
+}
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+ss_ggplot_variables(dat)
+
+# colour by sensor serial number, with larger points and the legend on the
+# bottom
+
+ss_ggplot_variables(
+  dat,
+  colour_col = "sensor_serial_number",
+  legend_name = "Serial number",
+  legend_position = "bottom",
+  point_size = 1
+)
+
+# a ggplot object, so it can be changed with ggplot2 functions
+p <- ss_ggplot_variables(dat, date_breaks_major = "1 month")
+p + ggplot2::ggtitle("Borgles Island")
 }

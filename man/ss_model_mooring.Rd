@@ -20,7 +20,7 @@ ss_model_mooring(
 
 \item{metadata}{Default \code{NULL} will read in the metadata tracking sheet
 from the CMAR shared drive (user must be connected to the Perennia VPN).
-Otherwise, a dataframe with the relevant columns may be included
+Otherwise, a data frame with the relevant columns may be included
 (instrument, sensor_depth_m, sounding_m, vr2ar_lug_height_above_seafloor_m,
 anchor_type, float_type). Instrument, anchor type, and float_type must be
 compatible with the \code{mooring} package.}
@@ -57,4 +57,33 @@ m.
 
 If the sounding is shallower than the deepest sensor, the sounding is set to
 the deepest depth + 2 m.
+}
+\examples{
+if (requireNamespace("mooring", quietly = TRUE)) {
+  # The default (metadata = NULL) reads the metadata tracking sheet from the
+  # CMAR R drive. Here, the metadata for one deployment are supplied directly.
+  # Instrument, anchor, and float names must match the mooring package
+  # (see mooring::instrument("?"), mooring::anchor("?"), mooring::float("?")).
+  metadata <- data.frame(
+    station = "Borgles Island",
+    deployment_date = as.Date("2019-05-30"),
+    instrument = c("Hobo Temp U22", "aquaMeasure DOT", "VR2AR reciever"),
+    sensor_depth_m = c(2, 5, 15),
+    sounding_m = 18,
+    vr2ar_lug_height_above_seafloor_m = 1,
+    anchor_type = "1 Railway Wheel",
+    float_type = "14in centre hole tfloat"
+  )
+
+  m <- ss_model_mooring(
+    station = "Borgles Island", depl_date = "2019-05-30", metadata = metadata
+  )
+  summary(m)
+  plot(m)
+
+  # e.g., knockdown in a 0.5 m/s current
+  m_knockdown <- mooring::knockdown(m, u = 0.5)
+  print(mooring::depth(m_knockdown))
+  plot(m_knockdown)
+}
 }

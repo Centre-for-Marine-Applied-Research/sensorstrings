@@ -10,10 +10,19 @@
 #' @return Returns a data frame of aquameasure data, with the same columns as in
 #'   the original file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fread
+#'
 #' @export
+#' @examples
+#' path <- system.file("extdata", "aquameasure", package = "sensorstrings")
+#'
+#' # folder and file name
+#' dat <- ss_read_aquameasure_data(path, "aquameasure-670364.csv")
+#' head(dat)
+#'
+#' # or the full path to the file
+#' dat <- ss_read_aquameasure_data(file.path(path, "aquameasure-670364.csv"))
+
 
 ss_read_aquameasure_data <- function(path, file_name = NULL) {
 
@@ -25,12 +34,10 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
   if (extract_file_extension(path) != "csv")  {
     stop("file must have extension '.csv'.\nLooked in ", path)
   }
-  # remove this so can delete assertthat dependency
- # assert_that(has_extension(path, "csv"))
 
   data.table::fread(
     path,
-    header = TRUE, data.table = FALSE, na.strings = "", # might need to add ERR to na.strings
+    header = TRUE, data.table = FALSE, na.strings = "",
     fill = TRUE
   )
 }
@@ -39,7 +46,8 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' Compile data from aquameasure sensors
 #'
 #' @description Compile and format temperature, dissolved oxygen, salinity,
-#'   and/or device depth data from aquameasure sensors.
+#'   chlorophyll (blue and red), and/or device depth and tilt data from
+#'   aquameasure sensors.
 #'
 #' @details The raw aquameasure data must be saved in a folder named aquameasure
 #'   in csv format. Folder name is not case-sensitive.
@@ -58,15 +66,31 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @return Returns a tibble with the compiled data from each of the aquameasure
 #'   files saved in path/aquameasure.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
-#' @importFrom dplyr %>% across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
+#' @importFrom dplyr across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect str_remove str_replace
 #' @importFrom tidyr separate pivot_wider
 #'
 #' @export
+#'
+#' @examples
+#' path <- system.file("extdata", package = "sensorstrings")
+#'
+#' sn_table <- data.frame(
+#'   sensor_type = "aquameasure",
+#'   sensor_serial_number = 670364,
+#'   depth = 5
+#' )
+#'
+#' deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+#'
+#' am <- ss_compile_aquameasure_data(
+#'   path,
+#'   sn_table = sn_table,
+#'   deployment_dates = deployment_dates, trim = FALSE
+#' )
+#' head(am)
+
 
 ss_compile_aquameasure_data <- function(path,
                                         sn_table,
@@ -94,12 +118,11 @@ ss_compile_aquameasure_data <- function(path,
 
   # loop over each aM file
   for (i in seq_along(dat_files)) {
-    #file_name <- dat_files[i]
 
     file_i <- dat_files[i]
     file_name <- sub(".csv", "", sub(".*/", "", file_i, perl = TRUE))
 
-    am_i <- ss_read_aquameasure_data(file_i) %>%
+    am_i <- ss_read_aquameasure_data(file_i) |>
       filter(!str_detect(`Record Type`, "aquaMeasure-"))
 
     # remove "Water" from colnames of files downloaded from new app
@@ -111,8 +134,8 @@ ss_compile_aquameasure_data <- function(path,
     # sn and timezone checks --------------------------------------------------
 
     # serial number
-    sn_i <- am_i %>%
-      distinct(Sensor) %>%
+    sn_i <- am_i |>
+      distinct(Sensor) |>
       separate(Sensor, into = c("sensor", "serial number"), sep = "-")
     sn_i <- sn_i$`serial number`
 
@@ -134,11 +157,11 @@ ss_compile_aquameasure_data <- function(path,
 
     # if the serial number doesn't match any of the entries in sn_table
     if (!(sn_i %in% sn_table$sensor_serial_number)) {
-      stop(paste0("Serial number ", sn_i[1], "does not match any serial numbers in sn_table"))
+      stop(paste0("Serial number ", sn_i[1], " does not match any serial numbers in sn_table"))
     }
 
     if (date_tz != "utc") {
-      message(paste0("Timestamp in file ", file_name, "is in timezone: ", date_tz))
+      message(paste0("Timestamp in file ", file_name, " is in timezone: ", date_tz))
     }
 
     # Clean and format data ---------------------------------------------------
@@ -148,7 +171,7 @@ ss_compile_aquameasure_data <- function(path,
 
     # Re-name the "Temp(Water)" column to "Temperature"
     if (!("Temperature" %in% am_colnames) & "Temp(Water)" %in% am_colnames) {
-      am_i <- am_i %>% rename(Temperature = `Temp(Water)`)
+      am_i <- am_i |> rename(Temperature = `Temp(Water)`)
     }
 
     # re-format and add other columns of interest --------------------------------------------------------
@@ -159,22 +182,20 @@ ss_compile_aquameasure_data <- function(path,
     # variables to process
     vars <- extract_aquameasure_vars(colnames(am_i))
 
-   # browser()
-
-    am_i <- am_i %>%
+    am_i <- am_i |>
       select(
         timestamp_ = contains("stamp"),
         `Record Type`,
         all_of(vars)
-      ) %>%
+      ) |>
       # remove "Water" from colnames of files downloaded from new app
-      mutate(`Record Type` = str_remove(`Record Type`, "Water ")) %>%
+      mutate(`Record Type` = str_remove(`Record Type`, "Water ")) |>
       filter(
         !str_detect(timestamp_, "after"),
         !str_detect(timestamp_, "undefined"),
         `Record Type` %in% vars
-      ) %>%
-      convert_timestamp_to_datetime() %>%
+      ) |>
+      convert_timestamp_to_datetime() |>
       # remove "Water" from colnames of files downloaded from new app
       mutate(`Record Type` = str_remove(`Record Type`, "Water "))
 
@@ -187,9 +208,9 @@ ss_compile_aquameasure_data <- function(path,
     check_n_rows(am_i, file_name = file_name, trimmed = trim)
 
     # find if any duplicate timestamps
-    bad_ts <- am_i %>%
-      group_by(timestamp_) %>%
-      summarise(n = n()) %>%
+    bad_ts <- am_i |>
+      group_by(timestamp_) |>
+      summarise(n = n()) |>
       filter(n > length(vars))
 
     if (nrow(bad_ts) > 0) {
@@ -201,39 +222,31 @@ ss_compile_aquameasure_data <- function(path,
     }
 
     # remove duplicate timestamps and pivot wider
-    am_i <- am_i %>%
-      filter(!(timestamp_ %in% bad_ts$timestamp_)) %>%
+    am_i <- am_i |>
+      filter(!(timestamp_ %in% bad_ts$timestamp_))|>
       tidyr::pivot_wider(
         id_cols = "timestamp_",
         names_from = "Record Type", values_from = dplyr::all_of(vars)
-      ) %>%
+      ) |>
       select(
         timestamp_,
-        do_percent_saturation = contains("Dissolved Oxygen_Dissolved Oxygen"),
+        dissolved_oxygen_percent_saturation = contains("Dissolved Oxygen_Dissolved Oxygen"),
         temperature_degree_c = contains("Temperature_Temperature"),
         salinity_psu = contains("Salinity_Salinity"),
         sensor_depth_measured_m = contains("Device Depth_Device Depth"),
         chlorophyll_blue_ug_per_l = contains("Chlorophyll Blue_Chlorophyll Blue"),
         chlorophyll_red_ug_per_l = contains("Chlorophyll Red_Chlorophyll Red"),
         tilt_degree = contains("Device Tilt_device Tilt")
-      ) %>%
+      ) |>
       add_deployment_columns(start_date, end_date, sensor_info_i)
 
     colnames(am_i)[which(str_detect(colnames(am_i), "timestamp"))] <- paste0("timestamp_", date_tz)
 
 
     # convert ERR to -111 so that column can be saved as numeric --------------
-    vars_ss <- c(
-      "chlorophyll_blue_ug_per_l",
-      "chlorophyll_red_ug_per_l",
-      "dissolved_oxygen_percent_saturation",
-      "salinity_psu",
-      "sensor_depth_measured_m",
-      "temperature_degree_c",
-      "tilt_degree"
-    )
+    vars_ss <- ss_vars$variable
 
-    am_i <- am_i %>%
+    am_i <- am_i |>
       mutate(
         across(.cols = any_of(vars_ss),
                .fns = ~str_replace_all(.x, pattern = "ERR", replacement = "-111")),
@@ -244,7 +257,7 @@ ss_compile_aquameasure_data <- function(path,
     am_dat[[i]] <- am_i
   } # end loop over files
 
-  am_out <- am_dat %>%
+  am_out <- am_dat |>
     map_df(bind_rows)
 
   message("aquameasure data compiled")

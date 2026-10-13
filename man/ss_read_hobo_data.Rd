@@ -23,6 +23,13 @@ Import data from hobo or tidbit csv file
 \details{
 The data must be saved in csv format.
 }
-\author{
-Danielle Dempsey
+\examples{
+path <- system.file("extdata", "hobo", package = "sensorstrings")
+
+# folder and file name
+dat <- ss_read_hobo_data(path, "10755220.csv")
+head(dat)
+
+# or the full path to the file
+dat <- ss_read_hobo_data(file.path(path, "10755220.csv"))
 }

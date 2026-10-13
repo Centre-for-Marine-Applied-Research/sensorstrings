@@ -4,12 +4,7 @@
 \alias{ss_create_template}
 \title{Create file to compile and trim sensor string data}
 \usage{
-ss_create_template(
-  station = NULL,
-  depl_date = NULL,
-  initials = "",
-  path = NULL
-)
+ss_create_template(station, depl_date, initials = "", path = NULL)
 }
 \arguments{
 \item{station}{Character string of the station name. Will be converted to
@@ -25,9 +20,29 @@ drive in folder << station >> / << station_depl_date >>. Must be connected
 to the Perennia VPN.}
 }
 \value{
-Creates an R file for compiling and trimming data for the specified
-  deployment. A message indicates if template file was successfully copied.
+Invisibly returns the path to the template file. Creates the file if
+  it doesn't already exist. Otherwise, returns a Warning and leaves the file
+  unchanged.
 }
 \description{
 Create file to compile and trim sensor string data
+}
+\examples{
+# The default (path = NULL) writes to the station folder on the CMAR R drive.
+# Here the template is written to tempdir().
+template <- ss_create_template(
+  station = "Borgles Island",
+  depl_date = "2019-05-30",
+  initials = "DD",
+  path = tempdir()
+)
+
+head(readLines(template), 20)
+
+# a second call leaves the existing file alone and gives a warning
+ss_create_template(
+  station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
+)
+
+unlink(template)
 }

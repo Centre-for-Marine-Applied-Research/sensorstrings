@@ -12,28 +12,52 @@
 #'   drive in folder << station >> / << station_depl_date >>. Must be connected
 #'   to the Perennia VPN.
 #'
-#' @return Creates an R file for compiling and trimming data for the specified
-#'   deployment. A message indicates if template file was successfully copied.
+#' @return Invisibly returns the path to the template file. Creates the file if
+#'   it doesn't already exist. Otherwise, returns a Warning and leaves the file
+#'   unchanged.
 #'
 #' @importFrom utils packageVersion
 #'
 #' @export
+#'
+#' @examples
+#' # The default (path = NULL) writes to the station folder on the CMAR R drive.
+#' # Here the template is written to tempdir().
+#' template <- ss_create_template(
+#'   station = "Borgles Island",
+#'   depl_date = "2019-05-30",
+#'   initials = "DD",
+#'   path = tempdir()
+#' )
+#'
+#' head(readLines(template), 20)
+#'
+#' # a second call leaves the existing file alone and gives a warning
+#' ss_create_template(
+#'   station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
+#' )
+#'
+#' unlink(template)
 
 ss_create_template <- function(
-    station = NULL, depl_date = NULL, initials = "", path = NULL
+    station, depl_date, initials = "", path = NULL
 ) {
 
-  if(is.null(station)) {
+  if(!is.character(station)) {
     stop("'station' must be a character string")
   }
 
   # check date in correct format
+  if(!grepl("^\\d{4}-\\d{2}-\\d{2}$", depl_date)) {
+
+    stop("'depl_date' in incorrect format. Must be yyyy-mm-dd.")
+  }
+
   if (is.na(as.Date(depl_date, format = "%Y-%m-%d"))) {
-    stop("'depl_date' in incorrect format. Should be yyyy-mm-dd.")
+    stop("'depl_date' must not be NA.")
   }
 
   # TODO compare station to list in metadata tracking or cmpr
-
   station <- tolower(gsub(" ", "_", station))
 
   if(is.null(path)) {
@@ -91,8 +115,10 @@ ss_create_template <- function(
     message("Template created in ", path)
   } else {
     warning(
-      "New template was not generated.\nFile already exists: ", path
+      "New template was not generated.\nFile already exists: ", new_file
     )
   }
+
+  invisible(new_file)
 
 }

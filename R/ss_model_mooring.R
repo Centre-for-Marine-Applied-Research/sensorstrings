@@ -26,11 +26,13 @@
 #'
 #' @param station Character string. Station name, as it appears in
 #'   \code{metadata}.
+#'
 #' @param depl_date Character string of the deployment date, in the order
 #'   "yyyy-mm-dd".
+#'
 #' @param metadata Default \code{NULL} will read in the metadata tracking sheet
 #'   from the CMAR shared drive (user must be connected to the Perennia VPN).
-#'   Otherwise, a dataframe with the relevant columns may be included
+#'   Otherwise, a data frame with the relevant columns may be included
 #'   (instrument, sensor_depth_m, sounding_m, vr2ar_lug_height_above_seafloor_m,
 #'   anchor_type, float_type). Instrument, anchor type, and float_type must be
 #'   compatible with the \code{mooring} package.
@@ -42,11 +44,38 @@
 #'   package.
 #'
 #' @importFrom dplyr case_when desc filter group_by mutate select ungroup
-#' @importFrom mooring anchor float instrument mooring wire
 #' @importFrom readxl read_excel
 #'
 #' @export
 #'
+#' @examples
+#' if (requireNamespace("mooring", quietly = TRUE)) {
+#'   # The default (metadata = NULL) reads the metadata tracking sheet from the
+#'   # CMAR R drive. Here, the metadata for one deployment are supplied directly.
+#'   # Instrument, anchor, and float names must match the mooring package
+#'   # (see mooring::instrument("?"), mooring::anchor("?"), mooring::float("?")).
+#'   metadata <- data.frame(
+#'     station = "Borgles Island",
+#'     deployment_date = as.Date("2019-05-30"),
+#'     instrument = c("Hobo Temp U22", "aquaMeasure DOT", "VR2AR reciever"),
+#'     sensor_depth_m = c(2, 5, 15),
+#'     sounding_m = 18,
+#'     vr2ar_lug_height_above_seafloor_m = 1,
+#'     anchor_type = "1 Railway Wheel",
+#'     float_type = "14in centre hole tfloat"
+#'   )
+#'
+#'   m <- ss_model_mooring(
+#'     station = "Borgles Island", depl_date = "2019-05-30", metadata = metadata
+#'   )
+#'   summary(m)
+#'   plot(m)
+#'
+#'   # e.g., knockdown in a 0.5 m/s current
+#'   m_knockdown <- mooring::knockdown(m, u = 0.5)
+#'   print(mooring::depth(m_knockdown))
+#'   plot(m_knockdown)
+#' }
 
 ss_model_mooring <- function(
     station,
@@ -54,6 +83,7 @@ ss_model_mooring <- function(
     metadata = NULL,
     rope_type = "3/8in leaded polypropylene"
 ) {
+  rlang::check_installed("mooring", reason = "to use `ss_model_mooring()`.")
 
   if(is.null(metadata)) {
     metadata <- read_excel(
@@ -76,17 +106,18 @@ ss_model_mooring <- function(
         instrument = case_when(
           sensor_type == "HOBO Pro V2" ~ "Hobo Temp U22",
           sensor_type == "HOBO DO" ~ "Hobo DO U26",
-          str_detect(sensor_type, "VR2AR") ~ "VR2AR reciever",
+          str_detect(sensor_type, "VR2AR") ~ "VR2AR reciever", # to match mis-spelling in mooring package
           TRUE ~ sensor_type
         ),
-        # might make more sense to do this after unique() so only making the conversiom
-        # once
         primary_buoy_type = gsub("\"", "in", primary_buoy_type),
         float_type = case_when(
           primary_buoy_type == "14in hard vinyl" ~ "14in centre hole tfloat",
           primary_buoy_type == "11in hard vinyl" ~ "11in centre hole tfloat",
         )
       )
+  } else {
+    metadata <- metadata |>
+      filter(station == !!station, deployment_date == as_date(depl_date))
   }
 
   # make sure sensors are ordered from deepest to most shallow
@@ -111,9 +142,14 @@ ss_model_mooring <- function(
   first_rope_length_m <- unique(
     as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
 
-  anchor_type <- anchor(gsub("[s]$", "", unique(metadata$anchor_type)))
+  # mooring expects "6 rotor", "7 rotor", etc.
+  anchor_name <- unique(metadata$anchor_type)
+  if (!anchor_name %in% mooring::anchor("?")) {
+    anchor_name <- sub("s$", "", anchor_name)
+  }
+  anchor_type <- mooring::anchor(anchor_name)
 
-  float_type <- float(unique(metadata$float_type))
+  float_type <- mooring::float(unique(metadata$float_type))
 
   ss <- list()
   ss[[1]] <- anchor_type
@@ -122,14 +158,14 @@ ss_model_mooring <- function(
   # must start from BOTTOM UP
   for (i in 1:nrow(metadata)) {
 
-    inst_i <- instrument(model = metadata[i, ]$instrument)
+    inst_i <- mooring::instrument(model = metadata[i, ]$instrument)
 
     # from anchor to vr2
     if (i == 1) {
-      wire_i <- wire(model = rope_type, length = first_rope_length_m)
+      wire_i <- mooring::wire(model = rope_type, length = first_rope_length_m)
     } else {
       # from sensor i-1 to sensor i
-      wire_i <- wire(
+      wire_i <- mooring::wire(
         model = rope_type,
         length = metadata[i-1, ]$sensor_depth_m - metadata[i, ]$sensor_depth_m - inst_i@height)
     }
@@ -142,25 +178,11 @@ ss_model_mooring <- function(
   }
 
   # rope from shallowest sensor to the float
-  ss[[j]] <- wire(model = rope_type, length = 0.05)
+  ss[[j]] <- mooring::wire(model = rope_type, length = 0.05)
   ss[[j + 1]] <- float_type
   ss[["waterDepth"]] <- sounding_m
 
-  m <- do.call(mooring, ss)
+  m <- do.call(mooring::mooring, ss)
 
   m
 }
-
-# m <- model_mooring(station, depl_date)
-#
-# plot(m, fancy = TRUE)
-#
-# msk <- m |>
-#   segmentize(by = 100)
-#
-# msk <- msk |>
-#   knockdown(u = 0.5)
-# plot(msk, fancy = TRUE)
-#
-#
-# plot(m, fancy = TRUE, showDepths = TRUE)

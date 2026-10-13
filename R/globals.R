@@ -23,6 +23,7 @@ utils::globalVariables(
     "Temp(Water)",
     "Record Type",
     "Record Number",
+
     #  "do_percent_saturation",
     "dissolved_oxygen_percent_saturation",
     "temperature_degree_c",
@@ -65,19 +66,19 @@ utils::globalVariables(
     # ss_pivot
     "value",
 
-    # ss_download_data
-    "name",
-
     # ss_plot_variables
     "Date",
 
     # ss_create_variable_labels
     "variable_label",
+    "label_new_line",
+    "label_no_new_line",
 
     # ss_generate_depl_filepath
     "depl_date",
 
     # ss_read_nsdfa_metadata
+    "Depl_Lat",
     "Depl_Lon",
     "Recv_Date",
 
@@ -123,6 +124,7 @@ utils::globalVariables(
     "Longitude",
     "Station",
     "Depth (m)",
+    "report_entry",
 
     # ss_check_station_locations
     "retrieval_latitude",
@@ -152,12 +154,6 @@ utils::globalVariables(
     "degree_decimal_minutes",
     "retrieval_latitude_n_ddm",
     "retrieval_longitude_w_ddm",
-
-    # ss_convert_old_log
-    "Deployment_Waterbody",
-    "Lease#",
-    "Logger_Latitude",
-    "Logger_Longitude",
 
     ## ss_hobo_ph
     "ph_ph",

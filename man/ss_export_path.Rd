@@ -4,18 +4,22 @@
 \alias{ss_export_path}
 \title{Generate file path and name to export compiled sensor string data}
 \usage{
-ss_export_path(dat, prov = "ns", sub_folder = NULL, ext = "rds")
+ss_export_path(dat, prov = "ns", path = NULL, sub_folder = NULL, ext = "rds")
 }
 \arguments{
 \item{dat}{Data frame of sensor string data in wide or long format. Must
 include columns \code{county}, \code{station}, and \code{deployment_range}.}
 
 \item{prov}{Character string indicating which province the deployment is
-from. Options are "ns" (the default) and "nb". This dicates the file path
+from. Options are "ns" (the default) and "nb". This dictates the file path
 for where the data will be exported on the CMAR R drive.}
 
-\item{sub_folder}{Character string of the sub-folder name (inside county
-folder) where \code{dat} should be exported. Default is \code{sub-folder =
+\item{path}{File path where \code{sub_folder} is created. If \code{NULL}
+(the default), this is a folder on the CMAR shared drive, dictated by
+the value of \code{prov}.}
+
+\item{sub_folder}{Character string of the sub_folder name (inside county
+folder) where \code{dat} should be exported. Default is \code{sub_folder =
 "new"}.}
 
 \item{ext}{File extension. Default is \code{ext = "rds"}.}
@@ -26,4 +30,12 @@ A file path for exporting deployment data, including file name and
 }
 \description{
 Generate file path and name to export compiled sensor string data
+}
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+path <- file.path(tempdir(), "deployment_data")
+dir.create(file.path(path, "halifax", "new"), recursive = TRUE, showWarnings = FALSE)
+
+ss_export_path(dat, path = path)
 }

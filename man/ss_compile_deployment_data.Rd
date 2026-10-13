@@ -2,8 +2,7 @@
 % Please edit documentation in R/ss_compile_deployment_data.R
 \name{ss_compile_deployment_data}
 \alias{ss_compile_deployment_data}
-\title{Compile aquameasure, hobo, tidbit, and vemco data from a single
-  deployment}
+\title{Compile Water Quality data from a sensor string deployment}
 \usage{
 ss_compile_deployment_data(
   path,
@@ -13,8 +12,8 @@ ss_compile_deployment_data(
 )
 }
 \arguments{
-\item{path}{File path to the log, aquameasure, hobo, tidbit, and/or vemco
-folders.}
+\item{path}{File path to the log, aquameasure, hobo, hobo_ph, vdat,
+and/or vemco folders.}
 
 \item{trim}{Logical value indicating whether to trim the data to the dates
 specified in \code{deployment_dates}. (Note: four hours are added to the
@@ -29,42 +28,40 @@ the deployment log, but should NOT be compiled (e.g., data file missing).}
 variable to compile. In some files (e.g., Borgles Island 2018-02-28), there
 is only one "Seawater depth" observation, but a full deployment of "Average
 seawater depth" observations. In this case, force the code to compile the
-average seawater depth with \code{depth_override = Average seawater depth}.}
+average seawater depth with \code{depth_override = "Average seawater
+depth"}.}
 }
 \value{
-Returns a data frame of data from a sensor string deployment.
+Returns a tibble of data from a sensor string deployment.
 }
 \description{
-Compile aquameasure, hobo, tidbit, and vemco data from a single
-  deployment
+Compile Water Quality data from a sensor string deployment
 }
 \details{
-Reads the deployment log and then calls
-  \code{ss_compile_aquameasure_data()}, \code{ss_compile_hobo_data()}, and
-  \code{ss_compile_vemco_data()} and returns the results in a single data
-  frame.
+Reads the deployment log and then calls the
+  \code{ss_compile_*_data()}, functions and returns the results in a single
+  data frame.
 
-  aquameasure data must be in a folder named aquameasure, hobo data must be
-  in a folder named hobo, tidbit data must be in a folder named tidbit, and
-  vemco data must be in a folder name vemco (folder names are not case
-  sensitive). The aquameasure, hobo, tidbit, and vemco folders must be in the
-  same folder.
+  Data files must be in a folder named after the sensor manufacturer and/or
+  model (e.g., aquameasure, hobo, hobo_ph, vemco, vdat). Folder names
+  are not case sensitive. These folders must be in the same folder.
 
   VR2AR data processed with the Fathom software must be in a folder called
-  vr2ar.
+  vdat.
 
   Columns with deployment details are added (e.g., county, waterbody,
   latitude, longitude, station, lease, string_configuration).
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_hobo_data]{ss_compile_hobo_data()}},
-\code{\link[=ss_compile_hobo_ph_data]{ss_compile_hobo_ph_data()}},
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
+\examples{
+#path to the log, aquameasure, hobo, and vemco folders
+path <- system.file("extdata", package = "sensorstrings")
+
+dat <- ss_compile_deployment_data(path)
+head(dat)
+
+# leave the data untrimmed, and skip one of the sensors in the log
+dat_untrimmed <- ss_compile_deployment_data(
+  path, trim = FALSE, ignore_sensors = 547109
+)
+unique(dat_untrimmed$sensor_type)
 }
-\author{
-Danielle Dempsey
-}
-\concept{compile}
