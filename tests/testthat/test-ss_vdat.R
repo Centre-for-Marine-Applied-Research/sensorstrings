@@ -4,7 +4,7 @@ test_that("ss_read_vdat_data() reads in all observations", {
   expect_equal(nrow(vdat1), 44)
 })
 
-test_that("ss_read_vr2ar_data() reads data when path includes file name", {
+test_that("ss_read_vdat_data() reads data when path includes file name", {
   expect_equal(vdat1, vdat2)
 })
 

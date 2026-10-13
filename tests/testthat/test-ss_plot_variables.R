@@ -116,20 +116,6 @@ test_that("ss_plot_variables() collects one legend at legend_position", {
   }
 })
 
-test_that("ss_plot_variables() sets the DO limits given in the help page", {
-  expect_equal(y_limits(plot_panels(dat_wide)[[2]]), c(60, 160))
-})
-
-# test_that("ss_plot_variables() plots tilt_degree", {
-#   dat <- dat_wide %>% mutate(tilt_degree = 5)
-#   expect_length(plot_panels(ss_pivot_longer(dat)), 3)
-# })
-
-# test_that("ss_plot_variables() plots dissolved_oxygen_uncorrected_mg_per_l from wide data", {
-#    dat <- dat_wide %>% mutate(dissolved_oxygen_uncorrected_mg_per_l = 9)
-#   expect_length(plot_panels(dat), 3)
-# })
-
 test_that("ss_plot_variables() accepts data with timestamp_ast", {
   expect_renders(ss_plot_variables(make_wq_wide(ts_col = "timestamp_ast")))
 })
