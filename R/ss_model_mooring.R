@@ -106,11 +106,9 @@ ss_model_mooring <- function(
         instrument = case_when(
           sensor_type == "HOBO Pro V2" ~ "Hobo Temp U22",
           sensor_type == "HOBO DO" ~ "Hobo DO U26",
-          str_detect(sensor_type, "VR2AR") ~ "VR2AR receiver",
+          str_detect(sensor_type, "VR2AR") ~ "VR2AR reciever", # to match mis-spelling in mooring package
           TRUE ~ sensor_type
         ),
-        # might make more sense to do this after unique() so only making the conversion
-        # once
         primary_buoy_type = gsub("\"", "in", primary_buoy_type),
         float_type = case_when(
           primary_buoy_type == "14in hard vinyl" ~ "14in centre hole tfloat",
@@ -144,7 +142,10 @@ ss_model_mooring <- function(
   first_rope_length_m <- unique(
     as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
 
-  anchor_type <- mooring::anchor(gsub("[s]$", "", unique(metadata$anchor_type)))
+ # browser()
+
+  # mooring expects "6 rotor", "7 rotor", etc.
+  anchor_type <- mooring::anchor(gsub("[ors]$", "", unique(metadata$anchor_type)))
 
   float_type <- mooring::float(unique(metadata$float_type))
 
