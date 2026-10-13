@@ -33,11 +33,3 @@ ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = c(2, 5, 15)))
 # 8 depths: one colour per depth
 ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = 1:8))
 }
-\seealso{
-Other plot:
-\code{\link[=ss_plot_variables]{ss_plot_variables()}}
-}
-\author{
-Danielle Dempsey
-}
-\concept{plot}

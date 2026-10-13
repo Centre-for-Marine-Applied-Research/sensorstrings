@@ -47,9 +47,6 @@
 #' @return Returns a patchwork object, a single figure with the plots for each
 #'   variable in \code{dat} stacked in a column.
 #'
-#' @family plot
-#' @author Danielle Dempsey
-
 #' @importFrom dplyr any_of filter select
 #' @importFrom patchwork wrap_plots
 #' @importFrom ggplot2 aes geom_point ggplot guides labs scale_x_datetime scale_y_continuous theme theme_light

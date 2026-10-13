@@ -81,9 +81,6 @@ ss_read_vemco_data <- function(path, file_name = NULL) {
 #'
 #' @return Returns a tibble with the data compiled from the file in path/vemco.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
 #' @importFrom dplyr case_when contains filter group_by mutate select summarise tibble
 #' @importFrom purrr list_rbind
 #'

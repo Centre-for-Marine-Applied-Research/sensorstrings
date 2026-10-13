@@ -63,12 +63,3 @@ vdat <- ss_compile_vdat_data(
 )
 head(vdat)
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_aquameasure_data]{ss_compile_aquameasure_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
-}
-\author{
-Danielle Dempsey
-}
-\concept{compile}

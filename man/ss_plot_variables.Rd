@@ -82,11 +82,3 @@ ss_plot_variables(
   standard_do_ylims = c(70, 150)
 )
 }
-\seealso{
-Other plot:
-\code{\link[=ss_get_colour_palette]{ss_get_colour_palette()}}
-}
-\author{
-Danielle Dempsey
-}
-\concept{plot}

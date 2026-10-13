@@ -66,9 +66,6 @@ ss_read_vdat_data <- function(path, file_name = NULL) {
 #'
 #' @return Returns a tibble with the data compiled from the file in path/vdat.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
 #' @importFrom dplyr case_when filter group_by mutate select summarise tibble
 #' @importFrom lubridate as_datetime
 #' @importFrom purrr list_rbind

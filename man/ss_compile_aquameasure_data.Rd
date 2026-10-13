@@ -64,12 +64,3 @@ am <- ss_compile_aquameasure_data(
 )
 head(am)
 }
-\seealso{
-Other compile:
-\code{\link[=ss_compile_vdat_data]{ss_compile_vdat_data()}},
-\code{\link[=ss_compile_vemco_data]{ss_compile_vemco_data()}}
-}
-\author{
-Danielle Dempsey
-}
-\concept{compile}

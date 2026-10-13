@@ -32,7 +32,3 @@ dat_ordered <- ss_convert_depth_to_ordered_factor(dat)
 dat_ordered
 levels(dat_ordered$sensor_depth_at_low_tide_m)
 }
-\author{
-Danielle Dempsey
-}
-\concept{format}

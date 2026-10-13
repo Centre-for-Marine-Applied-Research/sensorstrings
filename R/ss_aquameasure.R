@@ -66,9 +66,6 @@ ss_read_aquameasure_data <- function(path, file_name = NULL) {
 #' @return Returns a tibble with the compiled data from each of the aquameasure
 #'   files saved in path/aquameasure.
 #'
-#' @family compile
-#' @author Danielle Dempsey
-#'
 #' @importFrom dplyr across all_of any_of bind_rows distinct group_by mutate n select slice summarise tibble
 #' @importFrom lubridate parse_date_time
 #' @importFrom stringr str_detect str_remove str_replace

@@ -12,8 +12,6 @@
 #'   converted to an ordered factor. The shallowest depth will have a factor
 #'   value of 1; the deepest depth will have the largest factor value.
 #'
-#' @family format
-#' @author Danielle Dempsey
 #' @importFrom dplyr mutate arrange
 #'
 #' @export

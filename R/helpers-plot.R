@@ -13,9 +13,6 @@
 #' @return Returns a vector of hex colours from the viridis palette (Option D,
 #'   direction = -1).
 #'
-#' @family plot
-#' @author Danielle Dempsey
-#'
 #' @importFrom viridis viridis
 #' @importFrom dplyr contains select
 #'
