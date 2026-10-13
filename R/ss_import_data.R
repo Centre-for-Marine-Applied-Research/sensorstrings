@@ -51,7 +51,7 @@ ss_import_data <- function(path = NULL, county = "all") {
 
   # list rds files on the path and import -----------------------------------
 
-  dat <- list.files(path, full.names = TRUE, pattern = ".rds")
+  dat <- list.files(path, full.names = TRUE, pattern = "\\.rds$")
 
   # filter for specified county(ies)
   # format county argument as a regular expression for use in str_subset
