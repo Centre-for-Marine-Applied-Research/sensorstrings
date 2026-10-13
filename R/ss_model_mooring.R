@@ -142,10 +142,12 @@ ss_model_mooring <- function(
   first_rope_length_m <- unique(
     as.numeric(metadata$vr2ar_lug_height_above_seafloor_m))
 
- # browser()
-
   # mooring expects "6 rotor", "7 rotor", etc.
-  anchor_type <- mooring::anchor(gsub("[ors]$", "", unique(metadata$anchor_type)))
+  anchor_name <- unique(metadata$anchor_type)
+  if (!anchor_name %in% mooring::anchor("?")) {
+    anchor_name <- sub("s$", "", anchor_name)
+  }
+  anchor_type <- mooring::anchor(anchor_name)
 
   float_type <- mooring::float(unique(metadata$float_type))
 
