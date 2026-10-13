@@ -234,7 +234,7 @@ ss_check_station_drift <- function(
   drift_units = units(drift_distance)$numerator
   if(drift_units != "m") {
     warning(
-    paste0("Drift distance was calculated in units of ", drift_units, "not metres")
+    paste0("Drift distance was calculated in units of ", drift_units, " not metres")
     )
   }
 

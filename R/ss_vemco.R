@@ -146,7 +146,7 @@ ss_compile_vemco_data <- function(path,
     date_tz <- extract_vemco_tz(dat_colnames)
 
     if (date_tz != "utc") {
-      message(paste0("Timestamp in file ", file_i, "is in timezone: ", date_tz))
+      message(paste0("Timestamp in file ", file_i, " is in timezone: ", date_tz))
     }
 
     # serial number from data file

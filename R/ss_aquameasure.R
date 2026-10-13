@@ -160,11 +160,11 @@ ss_compile_aquameasure_data <- function(path,
 
     # if the serial number doesn't match any of the entries in sn_table
     if (!(sn_i %in% sn_table$sensor_serial_number)) {
-      stop(paste0("Serial number ", sn_i[1], "does not match any serial numbers in sn_table"))
+      stop(paste0("Serial number ", sn_i[1], " does not match any serial numbers in sn_table"))
     }
 
     if (date_tz != "utc") {
-      message(paste0("Timestamp in file ", file_name, "is in timezone: ", date_tz))
+      message(paste0("Timestamp in file ", file_name, " is in timezone: ", date_tz))
     }
 
     # Clean and format data ---------------------------------------------------

@@ -55,7 +55,7 @@ ss_set_up_folders <- function(
   if (!(station_snake %in% station_folders)) {
     dir.create(paste0(path_output, "/", station_snake))
 
-    message("Created folder << ", station_snake, " >> in <<", path_output, " >>")
+    message("Created folder << ", station_snake, " >> in << ", path_output, " >>")
   }
 
   path_output <- paste0(path_output, "/", station_snake)

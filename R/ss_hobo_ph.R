@@ -110,7 +110,7 @@ ss_compile_hobo_ph_data <- function(path,
     if(isTRUE(tz_check)) {
       if (tz_i$units != "utc") {
         warning(paste0("The timezone of file ", file_name,
-                       " will be converted from: ", tz_i$units, "to UTC"))
+                       " will be converted from: ", tz_i$units, " to UTC"))
       }
     }
 
