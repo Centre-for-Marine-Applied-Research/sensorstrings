@@ -28,11 +28,24 @@
 #'
 #' @return Exports \code{dat} as a csv and/or rds file.
 #'
-#' @author Danielle Dempsey
-#'
 #' @importFrom data.table fwrite
 #' @importFrom dplyr mutate
+#'
 #' @export
+#'
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' output_path <- paste0(tempdir())
+#'
+#' ss_export_county_files(dat, county = "halifax", output_path = output_path)
+#'
+#' list.files(tempdir(), pattern = "halifax")
+#'
+#' unlink(list.files(tempdir(), pattern = "halifax", full.names = TRUE))
+
+
+
 
 ss_export_county_files <- function(
     dat,

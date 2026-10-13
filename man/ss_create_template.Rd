@@ -38,4 +38,11 @@ template <- ss_create_template(
 )
 
 head(readLines(template), 20)
+
+# a second call leaves the existing file alone and gives a warning
+ss_create_template(
+  station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
+)
+
+unlink(template)
 }

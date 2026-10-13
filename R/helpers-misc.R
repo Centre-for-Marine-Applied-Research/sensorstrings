@@ -44,6 +44,14 @@ extract_file_extension <- function(file_input) {
 #' @importFrom tidyr separate
 #'
 #' @export
+#'
+#' @examples
+#' dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#'
+#' path <- file.path(tempdir(), "deployment_data")
+#' dir.create(file.path(path, "halifax", "new"), recursive = TRUE, showWarnings = FALSE)
+#'
+#' ss_export_path(dat, path = path)
 
 ss_export_path <- function(
     dat, prov = "ns", path = NULL, sub_folder = NULL, ext = "rds") {

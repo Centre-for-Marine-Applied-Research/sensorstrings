@@ -31,3 +31,11 @@ A file path for exporting deployment data, including file name and
 \description{
 Generate file path and name to export compiled sensor string data
 }
+\examples{
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+
+path <- file.path(tempdir(), "deployment_data")
+dir.create(file.path(path, "halifax", "new"), recursive = TRUE, showWarnings = FALSE)
+
+ss_export_path(dat, path = path)
+}
