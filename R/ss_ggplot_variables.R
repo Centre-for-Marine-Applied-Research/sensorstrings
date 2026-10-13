@@ -149,7 +149,7 @@ ss_ggplot_variables <- function(
   if (is.null(superchill) && "temperature_degree_c" %in% unique(dat$variable)) {
     min_temp <- (dat |>
                    filter(variable == "temperature_degree_c") |>
-                   summarise(min_temp = min(value)))$min_temp
+                   summarise(min_temp = min(value, na.rm = TRUE)))$min_temp
 
     if (min_temp <= -0.7) {
       superchill <- TRUE
