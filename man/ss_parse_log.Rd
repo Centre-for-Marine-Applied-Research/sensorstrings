@@ -49,8 +49,8 @@ The function will attempt to parse the following columns: \code{county},
 \code{sensor_depth_m}. Missing information will be filled in with \code{NA}.
 }
 \details{
-If \code{verbose = TRUE}, a message will be printed if there is more than one
-unique entry in \code{waterbody}, \code{station}, \code{deployment_date},
+A Warning will be printed if there is more than one unique entry in
+\code{waterbody}, \code{station}, \code{deployment_date},
 \code{retrieval_date}, \code{deployment_latitude}, or
 \code{deployment_longitude}.
 
