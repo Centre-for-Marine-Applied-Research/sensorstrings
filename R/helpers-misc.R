@@ -56,6 +56,8 @@ extract_file_extension <- function(file_input) {
 ss_export_path <- function(
     dat, prov = "ns", path = NULL, sub_folder = NULL, ext = "rds") {
 
+  prov <- match.arg(prov, c("ns", "nb"))
+
   if(is.null(path)) {
     if (prov == "ns")  path <- file.path("R:/data_branches/water_quality/processed_data/deployment_data")
     if (prov == "nb") path <- file.path("R:/data_branches/nb_water_quality/processed_data/deployment_data")
@@ -129,6 +131,7 @@ ss_export_path <- function(
 #' unlink(path, recursive = TRUE)
 
 ss_import_path <- function(station, depl_date, prov = "ns", path = NULL) {
+  prov <- match.arg(prov, c("ns", "nb"))
 
   if(is.null(path)) {
     if (prov == "ns") path <- file.path("R:/data_branches/water_quality/station_folders")
