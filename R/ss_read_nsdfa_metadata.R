@@ -12,9 +12,9 @@
 #' @importFrom readxl read_excel
 #' @importFrom dplyr case_when contains if_else filter mutate select tibble
 #' @importFrom lubridate as_date
-#' @importFrom janitor convert_to_date
 #'
 #' @export
+#'
 #' @examples
 #' # A small synthetic version of the NSDFA tracking sheet (TempMetaData tab).
 #' # The function fixes misspelled stations and waterbodies, removes times from
