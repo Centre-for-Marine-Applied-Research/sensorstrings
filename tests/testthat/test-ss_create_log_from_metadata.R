@@ -60,7 +60,7 @@ test_that("ss_create_log_from_metadata() gives Errors and Warnings", {
     ),
     "not found"
   )
-  expect_warning(
+  expect_error(
     suppressMessages(ss_create_log_from_metadata(
       out, "borgles_island", "2000-01-01", path = metadata_xlsx
     )),
