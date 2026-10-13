@@ -29,7 +29,7 @@ test_that("ss_check_station_radius() returns correct result", {
 
 })
 
-test_that("ss_check_station_station_drift() returns correct result", {
+test_that("ss_check_station_drift() returns correct result", {
 
   expect_true(
     ss_check_station_drift(
