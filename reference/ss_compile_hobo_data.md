@@ -65,15 +65,35 @@ All of the csv files in the hobo or tidbit folder will be compiled.
 The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p",
 "Ymd HM", "Ymd HMS", "dmY HM", or "dmY HMS".
 
-## See also
+## Examples
 
-Other compile:
-[`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
-[`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
-[`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
-[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md),
-[`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md)
+``` r
+path <- system.file("extdata", package = "sensorstrings")
 
-## Author
+sn_table <- data.frame(
+  sensor_type = "hobo",
+  sensor_serial_number = 10755220,
+  depth = 2
+)
 
-Danielle Dempsey
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+hobo <- ss_compile_hobo_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+#> hobo data compiled
+head(hobo)
+#> # A tibble: 6 × 6
+#>   deployment_range          timestamp_utc       sensor_type sensor_serial_number
+#>   <chr>                     <dttm>              <chr>                      <dbl>
+#> 1 2019-May-30 to 2019-Oct-… 2019-05-30 21:00:00 hobo                    10755220
+#> 2 2019-May-30 to 2019-Oct-… 2019-05-31 01:00:00 hobo                    10755220
+#> 3 2019-May-30 to 2019-Oct-… 2019-05-31 05:00:00 hobo                    10755220
+#> 4 2019-May-30 to 2019-Oct-… 2019-05-31 09:00:00 hobo                    10755220
+#> 5 2019-May-30 to 2019-Oct-… 2019-05-31 13:00:00 hobo                    10755220
+#> 6 2019-May-30 to 2019-Oct-… 2019-05-31 17:00:00 hobo                    10755220
+#> # ℹ 2 more variables: sensor_depth_at_low_tide_m <dbl>,
+#> #   temperature_degree_c <dbl>
+```

@@ -8,14 +8,14 @@ Plot variables at depth
 ss_ggplot_variables(
   dat,
   superchill = NULL,
-  color_palette = NULL,
-  color_col = "sensor_depth_at_low_tide_m",
+  colour_palette = NULL,
+  colour_col = "sensor_depth_at_low_tide_m",
   legend_name = "Depth (m)",
   legend_position = "right",
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "%Y-%m-%d",
-  axis_label_newline = FALSE,
+  yaxis_newline = FALSE,
   point_size = 0.25,
   convert_sn_to_factor = TRUE
 )
@@ -34,11 +34,11 @@ ss_ggplot_variables(
   `superchill = NULL` (the default), shading will be applied if any
   temperature values are less than or equal to the threshold.
 
-- color_palette:
+- colour_palette:
 
   Optional vector of hex colors onto which depth will be mapped.
 
-- color_col:
+- colour_col:
 
   Character string indicating the column to use to colour the
   observations.
@@ -49,7 +49,7 @@ ss_ggplot_variables(
 
 - legend_position:
 
-  Position for the depth legend. Default is `legend.position = "right"`.
+  Position for the depth legend. Default is `legend_position = "right"`.
 
 - date_breaks_major:
 
@@ -64,9 +64,10 @@ ss_ggplot_variables(
 
   Format for the date labels. Default is YYYY-mm-dd.
 
-- axis_label_newline:
+- yaxis_newline:
 
-  Logical argument indicating whether to put units on a new line.
+  Logical argument indicating whether the units in the y-axis label
+  should be on a new line. Default is `FALSE`.
 
 - point_size:
 
@@ -76,7 +77,7 @@ ss_ggplot_variables(
 
   Logical argument indicating whether to convert column
   `sensor_serial_number` to a factor. Only used when
-  `color_col = "sensor_serial_number"`. Set to `FALSE` if making
+  `colour_col = "sensor_serial_number"`. Set to `FALSE` if making
   separate plots with some overlapping serial numbers. In this case, the
   `sensor_serial_number` should be converted to a factor before calling
   the plot function.
@@ -85,3 +86,31 @@ ss_ggplot_variables(
 
 Returns a ggplot object of ocean variables plotted over time and
 coloured by sensor depth.
+
+## Examples
+
+``` r
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#> aquameasure data compiled
+#> hobo data compiled
+#> vemco data from sensor <<  547109  >> compiled: Temperature & Seawater depth
+
+ss_ggplot_variables(dat)
+
+
+# colour by sensor serial number, with larger points and the legend on the
+# bottom
+
+ss_ggplot_variables(
+  dat,
+  colour_col = "sensor_serial_number",
+  legend_name = "Serial number",
+  legend_position = "bottom",
+  point_size = 1
+)
+
+
+# a ggplot object, so it can be changed with ggplot2 functions
+p <- ss_ggplot_variables(dat, date_breaks_major = "1 month")
+p + ggplot2::ggtitle("Borgles Island")
+```

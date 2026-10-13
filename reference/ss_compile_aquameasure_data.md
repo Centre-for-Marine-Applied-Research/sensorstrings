@@ -1,7 +1,8 @@
 # Compile data from aquameasure sensors
 
-Compile and format temperature, dissolved oxygen, salinity, and/or
-device depth data from aquameasure sensors.
+Compile and format temperature, dissolved oxygen, salinity, chlorophyll
+(blue and red), and/or device depth and tilt data from aquameasure
+sensors.
 
 ## Usage
 
@@ -55,15 +56,36 @@ The timestamp columns must be in the order "ymd IMS p", "Ymd IMS p",
 "ERR" values are converted to `-111` (to distinguish from sensor error
 value of -101.5).
 
-## See also
+## Examples
 
-Other compile:
-[`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
-[`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
-[`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
-[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md),
-[`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md)
+``` r
+path <- system.file("extdata", package = "sensorstrings")
 
-## Author
+sn_table <- data.frame(
+  sensor_type = "aquameasure",
+  sensor_serial_number = 670364,
+  depth = 5
+)
 
-Danielle Dempsey
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+am <- ss_compile_aquameasure_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates, trim = FALSE
+)
+#> aquameasure data compiled
+head(am)
+#> # A tibble: 6 × 8
+#>   deployment_range          timestamp_utc       sensor_type sensor_serial_number
+#>   <chr>                     <dttm>              <chr>                      <dbl>
+#> 1 2019-May-30 to 2019-Oct-… 2018-02-28 17:43:00 aquameasure               670364
+#> 2 2019-May-30 to 2019-Oct-… 2018-02-28 19:35:00 aquameasure               670364
+#> 3 2019-May-30 to 2019-Oct-… 2018-02-28 21:37:00 aquameasure               670364
+#> 4 2019-May-30 to 2019-Oct-… 2018-02-28 23:39:00 aquameasure               670364
+#> 5 2019-May-30 to 2019-Oct-… 2018-03-01 01:41:00 aquameasure               670364
+#> 6 2019-May-30 to 2019-Oct-… 2018-03-01 05:35:00 aquameasure               670364
+#> # ℹ 4 more variables: sensor_depth_at_low_tide_m <dbl>,
+#> #   dissolved_oxygen_percent_saturation <dbl>, temperature_degree_c <dbl>,
+#> #   tilt_degree <dbl>
+```

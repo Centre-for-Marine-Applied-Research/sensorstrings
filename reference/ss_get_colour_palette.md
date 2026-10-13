@@ -29,11 +29,15 @@ D). If there are 6 or less unique values of
 are more than 6 unique values of `sensor_depth_at_low_tide_m`, there
 will be one colour for each depth.
 
-## See also
+## Examples
 
-Other plot:
-[`ss_plot_variables()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_plot_variables.md)
+``` r
+# 3 depths: a 6-colour palette
+ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = c(2, 5, 15)))
+#> [1] "#FDE725FF" "#7AD151FF" "#22A884FF" "#2A788EFF" "#414487FF" "#440154FF"
 
-## Author
-
-Danielle Dempsey
+# 8 depths: one colour per depth
+ss_get_colour_palette(data.frame(sensor_depth_at_low_tide_m = 1:8))
+#> [1] "#FDE725FF" "#9FDA3AFF" "#4AC16DFF" "#1FA187FF" "#277F8EFF" "#365C8DFF"
+#> [7] "#46337EFF" "#440154FF"
+```

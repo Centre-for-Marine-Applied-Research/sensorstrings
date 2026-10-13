@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">sensorstrings</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,6 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -41,111 +42,6 @@
 
 
       <dl><dt>
-
-          <code><a href="add_deployment_columns.html">add_deployment_columns()</a></code>
-
-        </dt>
-        <dd>Add and reorder columns</dd>
-
-        <dt>
-
-          <code><a href="check_n_rows.html">check_n_rows()</a></code>
-
-        </dt>
-        <dd>Check number of rows of data file</dd>
-
-        <dt>
-
-          <code><a href="convert_timestamp_to_datetime.html">convert_timestamp_to_datetime()</a></code>
-
-        </dt>
-        <dd>Convert timestamp to datetime</dd>
-
-        <dt>
-
-          <code><a href="extract_aquameasure_tz.html">extract_aquameasure_tz()</a></code>
-
-        </dt>
-        <dd>Extract the timezone of aquameasure timestamps</dd>
-
-        <dt>
-
-          <code><a href="extract_aquameasure_vars.html">extract_aquameasure_vars()</a></code>
-
-        </dt>
-        <dd>Extract the variables included in aquameasure file from the column names</dd>
-
-        <dt>
-
-          <code><a href="extract_deployment_dates.html">extract_deployment_dates()</a></code>
-
-        </dt>
-        <dd>Extract deployment dates</dd>
-
-        <dt>
-
-          <code><a href="extract_file_extension.html">extract_file_extension()</a></code>
-
-        </dt>
-        <dd>Extracts the extension of a file name</dd>
-
-        <dt>
-
-          <code><a href="extract_hobo_ph_units.html">extract_hobo_ph_units()</a></code>
-
-        </dt>
-        <dd>Extract units from column names of hobo pH data</dd>
-
-        <dt>
-
-          <code><a href="extract_hobo_sn.html">extract_hobo_sn()</a></code>
-
-        </dt>
-        <dd>Extract hobo serial number from the data file</dd>
-
-        <dt>
-
-          <code><a href="extract_hobo_units.html">extract_hobo_units()</a></code>
-
-        </dt>
-        <dd>Extract units from column names of hobo data</dd>
-
-        <dt>
-
-          <code><a href="extract_vemco_tz.html">extract_vemco_tz()</a></code>
-
-        </dt>
-        <dd>Extract the timezone of vemco timestamps</dd>
-
-        <dt>
-
-          <code><a href="filter_dat_to_plot.html">filter_dat_to_plot()</a></code>
-
-        </dt>
-        <dd>Filter data before plotting to zoom in on interesting features</dd>
-
-        <dt>
-
-          <code><a href="make_column_names.html">make_column_names()</a></code>
-
-        </dt>
-        <dd>Paste variable name and units to create column names</dd>
-
-        <dt>
-
-          <code><a href="set_up_compile.html">set_up_compile()</a></code>
-
-        </dt>
-        <dd>Set up parameters, Errors, and Warnings for the <code>compile_**</code> functions</dd>
-
-        <dt>
-
-          <code><a href="ss_assemble_region_data.html">ss_assemble_region_data()</a></code>
-
-        </dt>
-        <dd>Assemble region data</dd>
-
-        <dt>
 
           <code><a href="ss_check_station_drift.html">ss_check_station_drift()</a></code>
 
@@ -178,7 +74,7 @@
           <code><a href="ss_compile_deployment_data.html">ss_compile_deployment_data()</a></code>
 
         </dt>
-        <dd>Compile aquameasure, hobo, tidbit, and vemco data from a single deployment</dd>
+        <dd>Compile Water Quality data from a sensor string deployment</dd>
 
         <dt>
 
@@ -199,14 +95,21 @@
           <code><a href="ss_compile_vdat_data.html">ss_compile_vdat_data()</a></code>
 
         </dt>
-        <dd>Format temperature data from VR2AR deployment</dd>
+        <dd>Format temperature, depth, and tilt data from VR2AR (vdat) deployment</dd>
 
         <dt>
 
           <code><a href="ss_compile_vemco_data.html">ss_compile_vemco_data()</a></code>
 
         </dt>
-        <dd>Format temperature data from Vemco deployment</dd>
+        <dd>Format temperature, depth, and tilt data from Vemco deployment</dd>
+
+        <dt>
+
+          <code><a href="ss_convert_coords_from_ddm_to_dd.html">ss_convert_coords_from_ddm_to_dd()</a></code>
+
+        </dt>
+        <dd>Convert coordinate columns from degree decimal minutes to decimal degrees</dd>
 
         <dt>
 
@@ -214,20 +117,6 @@
 
         </dt>
         <dd>Converts values in the depth column to an ordered factor</dd>
-
-        <dt>
-
-          <code><a href="ss_convert_old_log.html">ss_convert_old_log()</a></code>
-
-        </dt>
-        <dd>Convert column names from old log into the new format</dd>
-
-        <dt>
-
-          <code><a href="ss_coords_from_ddm_to_dd.html">ss_coords_from_ddm_to_dd()</a></code>
-
-        </dt>
-        <dd>Convert coordinates from degree-minute-decimal to decimal degree</dd>
 
         <dt>
 
@@ -245,20 +134,6 @@
 
         <dt>
 
-          <code><a href="ss_create_variable_labels.html">ss_create_variable_labels()</a></code>
-
-        </dt>
-        <dd>Create plot labels from variable names</dd>
-
-        <dt>
-
-          <code><a href="ss_create_variable_labels_no_newline.html">ss_create_variable_labels_no_newline()</a></code>
-
-        </dt>
-        <dd>Create plot labels from variable names without new lines</dd>
-
-        <dt>
-
           <code><a href="ss_export_county_files.html">ss_export_county_files()</a></code>
 
         </dt>
@@ -270,6 +145,13 @@
 
         </dt>
         <dd>Generate file path and name to export compiled sensor string data</dd>
+
+        <dt>
+
+          <code><a href="ss_filter_dat_to_plot.html">ss_filter_dat_to_plot()</a></code>
+
+        </dt>
+        <dd>Filter data before plotting to zoom in on interesting features</dd>
 
         <dt>
 
@@ -301,10 +183,10 @@
 
         <dt>
 
-          <code><a href="ss_leaflet_station_map.html">ss_leaflet_station_map()</a></code>
+          <code><a href="ss_map_stations.html">ss_map_stations()</a></code>
 
         </dt>
-        <dd>Interactive map of station location</dd>
+        <dd>Interactive map of station location(s)</dd>
 
         <dt>
 
@@ -332,14 +214,14 @@
           <code><a href="ss_pivot_longer.html">ss_pivot_longer()</a></code>
 
         </dt>
-        <dd>Pivot sensor string data from long to wide format</dd>
+        <dd>Pivot sensor string data from wide to long format</dd>
 
         <dt>
 
           <code><a href="ss_pivot_wider.html">ss_pivot_wider()</a></code>
 
         </dt>
-        <dd>Pivot sensor string data from wide to long format</dd>
+        <dd>Pivot sensor string data from long to wide format</dd>
 
         <dt>
 
@@ -403,20 +285,6 @@
 
         </dt>
         <dd>Writes deployment table for county report</dd>
-
-        <dt>
-
-          <code><a href="ss_xaxis_breaks.html">ss_xaxis_breaks()</a></code>
-
-        </dt>
-        <dd>Returns nice major and minor breaks and label format based on timespan of the data</dd>
-
-        <dt>
-
-          <code><a href="trim_data.html">trim_data()</a></code>
-
-        </dt>
-        <dd>Trim data to specified start and end dates.</dd>
       </dl></div>
   </main></div>
 

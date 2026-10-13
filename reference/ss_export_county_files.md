@@ -18,7 +18,8 @@ ss_export_county_files(
 
 - dat:
 
-  Dataframe to be exported, e.g., output from `export_county_data()`.
+  Dataframe to be exported, e.g., output from
+  `qc_assemble_county_data()`.
 
 - county:
 
@@ -27,16 +28,16 @@ ss_export_county_files(
 
 - output_path:
 
-  Path to where there assembled file(s) will be exported. The default
-  will export the csv file to the open_data folder and the rds file to
-  the processed_data/assembled_data folder (both on the R drive). For
-  custom `output_path` entries, the csv and rds files will be exported
-  to the same folder.
+  Path to where the assembled file(s) will be exported. The default will
+  export the csv file to the open_data folder and the rds file to the
+  processed_data/assembled_data folder (both on the R drive). For custom
+  `output_path` entries, the csv and rds files will be exported to the
+  same folder.
 
 - export_csv:
 
   Logical argument indicating whether the data should be exported as a
-  csv file. File name will be county_todays-date.csv. Default is `TRUE`.
+  csv file. File name will be todays-date_county.csv. Default is `TRUE`.
 
   Note: `timestamp_utc` is converted to a character before exporting to
   remove UTC formatting (2018-12-23T05:00:00Z). When re-imported into R,
@@ -49,13 +50,29 @@ ss_export_county_files(
 - export_rds:
 
   Logical argument indicating whether the assembled data should be
-  exported as a \*.rds file. File name will be county_todays-date.rds.
+  exported as a \*.rds file. File name will be todays-date_county.rds.
   Default is `TRUE`.
 
 ## Value
 
 Exports `dat` as a csv and/or rds file.
 
-## Author
+## Examples
 
-Danielle Dempsey
+``` r
+dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstrings"))
+#> aquameasure data compiled
+#> hobo data compiled
+#> vemco data from sensor <<  547109  >> compiled: Temperature & Seawater depth
+
+output_path <- paste0(tempdir())
+
+ss_export_county_files(dat, county = "halifax", output_path = output_path)
+#> exporting csv for 2026-10-13_halifax
+#> exporting rds for 2026-10-13_halifax
+
+list.files(tempdir(), pattern = "halifax")
+#> [1] "2026-10-13_halifax.csv" "2026-10-13_halifax.rds"
+
+unlink(list.files(tempdir(), pattern = "halifax", full.names = TRUE))
+```

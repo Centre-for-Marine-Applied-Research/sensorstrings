@@ -24,7 +24,7 @@ ss_parse_log(
 - log:
 
   Log data frame, e.g., as exported from
-  [`ss_read_log()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_read_log.md).
+  [`ss_read_log()`](https://centre-for-marine-applied-research.github.io/sensorstrings/reference/ss_read_log.md).
 
 - deployment_dates:
 
@@ -55,19 +55,17 @@ ss_parse_log(
 
 Returns a list with up to 4 elements. `deployment_dates` is a data frame
 with two columns: `start_date` and `end_date`. `area_info` is a data
-frame with five columns: `county`, `waterbody`, `latitude`, `longitude`,
-`station`, and `lease`. `sn_table` is a data frame with three columns:
-`log_sensor` (sensor name as recorded in the log),
+frame with six columns: `region` or `county`, `waterbody`, `latitude`,
+`longitude`, `station`, and `lease`. `sn_table` is a data frame with
+three columns: `log_sensor` (sensor name as recorded in the log),
 `sensor_serial_number`, and `depth`. `string_configuration` is a
 character string indicating how the sensor string was moored.
 
 ## Details
 
-Old log column names will also be accepted.
-
-If `verbose = TRUE`, a message will be printed if there is more than one
-unique entry in `waterbody`, `station`, `deployment_date`,
-`retrieval_date`, `deployment_latitude`, or `deployment_longitude`.
+A Warning will be printed if there is more than one unique entry in
+`waterbody`, `station`, `deployment_date`, `retrieval_date`,
+`deployment_latitude`, or `deployment_longitude`.
 
 Entries in the `sensor_type` column must include the string
 "aquameasure", "hobo", "tidbit", or "vr2ar" (not case sensitive).
@@ -77,3 +75,45 @@ sensor in the log.
 
 Code will stop with an error if `deployment_longitude` is a positive
 value.
+
+## Examples
+
+``` r
+path <- system.file("extdata", package = "sensorstrings")
+
+log_raw <- ss_read_log(path, parse = FALSE)
+
+log <- ss_parse_log(log_raw)
+
+log$deployment_dates
+#>   start_date   end_date
+#> 1 2019-05-30 2019-10-19
+log$area_info
+#>   region  county waterbody latitude longitude        station lease
+#> 1     NA Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA
+log$sn_table
+#>        log_sensor sensor_serial_number depth
+#> 1     HOBO Pro V2             10755220     2
+#> 2 aquaMeasure DOT               670364     5
+#> 3           VR2AR               547109    15
+log$string_configuration
+#> [1] "sub-surface buoy"
+
+# only return the serial number table
+ss_parse_log(log_raw, deployment_dates = FALSE, area_info = FALSE, config = FALSE)
+#> $deployment_dates
+#> NULL
+#> 
+#> $area_info
+#> NULL
+#> 
+#> $sn_table
+#>        log_sensor sensor_serial_number depth
+#> 1     HOBO Pro V2             10755220     2
+#> 2 aquaMeasure DOT               670364     5
+#> 3           VR2AR               547109    15
+#> 
+#> $string_configuration
+#> NULL
+#> 
+```

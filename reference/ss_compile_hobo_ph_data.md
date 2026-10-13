@@ -49,7 +49,7 @@ ss_compile_hobo_ph_data(
 
 ## Value
 
-Returns a tibble with the data compiled from each of the hobo or tidbit
+Returns a tibble with the data compiled from each of the hobo pH
 sensors.
 
 ## Details
@@ -58,19 +58,41 @@ Exported data must be saved in a folder named hobo_ph in csv format.
 
 All of the csv files in the hobo_ph folder will be compiled.
 
-The timestamp column must be in the order "mdY HMS".
+The timestamp column must be in the order "mdY HMS", “Ymd HMS”, or
+“Ymd”.
 
 If the timestamp is recorded in AST/ADT, it will be converted to UTC.
 
-## See also
+## Examples
 
-Other compile:
-[`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
-[`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
-[`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
-[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md),
-[`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md)
+``` r
+# path holds a folder called hobo_ph
+path <- system.file("testdata", package = "sensorstrings")
 
-## Author
+sn_table <- data.frame(
+  sensor_type = "hobo ph",
+  sensor_serial_number = 22058687,
+  depth = 1
+)
 
-Danielle Dempsey
+deployment_dates <- data.frame(START = "2025-03-08", END = "2025-03-09")
+
+hobo_ph <- ss_compile_hobo_ph_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+#> hobo_ph data compiled
+head(hobo_ph)
+#> # A tibble: 6 × 7
+#>   deployment_range          timestamp_utc       sensor_type sensor_serial_number
+#>   <chr>                     <dttm>              <chr>                      <dbl>
+#> 1 2025-Mar-08 to 2025-Mar-… 2025-03-08 01:56:06 hobo ph                 22058687
+#> 2 2025-Mar-08 to 2025-Mar-… 2025-03-08 02:06:06 hobo ph                 22058687
+#> 3 2025-Mar-08 to 2025-Mar-… 2025-03-09 02:16:06 hobo ph                 22058687
+#> 4 2025-Mar-08 to 2025-Mar-… 2025-03-09 02:26:06 hobo ph                 22058687
+#> 5 2025-Mar-08 to 2025-Mar-… 2025-03-09 02:36:06 hobo ph                 22058687
+#> 6 2025-Mar-08 to 2025-Mar-… 2025-03-09 02:46:06 hobo ph                 22058687
+#> # ℹ 3 more variables: sensor_depth_at_low_tide_m <dbl>, ph_ph <dbl>,
+#> #   temperature_degree_c <dbl>
+```

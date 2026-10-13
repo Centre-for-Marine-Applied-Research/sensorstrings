@@ -2,7 +2,7 @@
 
 The log must be saved in .csv, .xlsx or .xls format. Value checks are
 applied in
-[`ss_parse_log()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_parse_log.md).
+[`ss_parse_log()`](https://centre-for-marine-applied-research.github.io/sensorstrings/reference/ss_parse_log.md).
 
 ## Usage
 
@@ -58,11 +58,63 @@ ss_read_log(
 
 ## Value
 
-Returns a a data frame of the deployment metadata. Option to parse the
-information into a list using
-[`ss_parse_log()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_parse_log.md).
+If `parse = TRUE` (the default), returns a list of deployment metadata
+from
+[`ss_parse_log()`](https://centre-for-marine-applied-research.github.io/sensorstrings/reference/ss_parse_log.md).
+Otherwise returns a data frame of the metadata.
 
-## Details
+## Examples
 
-"Old" log column names will be converted to the new standard (.e.,g
-"Location_Description" will be replaced with "station").
+``` r
+# path to the deployment folder (which holds the Log folder)
+path <- system.file("extdata", package = "sensorstrings")
+
+# parsed into the list used by the ss_compile_*() functions
+log <- ss_read_log(path)
+log$sn_table
+#>        log_sensor sensor_serial_number depth
+#> 1     HOBO Pro V2             10755220     2
+#> 2 aquaMeasure DOT               670364     5
+#> 3           VR2AR               547109    15
+
+# the log as a data frame
+ss_read_log(path, parse = FALSE)
+#>    county waterbody        station lease deployment_date retrieval_date
+#> 1 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#> 2 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#> 3 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#>   deployment_latitude deployment_longitude retrieval_latitude
+#> 1            44.77241            -62.72608           44.77241
+#> 2            44.77241            -62.72608           44.77241
+#> 3            44.77241            -62.72608           44.77241
+#>   retrieval_longitude     sensor_type sensor_serial_number sensor_depth_m
+#> 1           -62.72608     HOBO Pro V2             10755220              2
+#> 2           -62.72608 aquaMeasure DOT               670364              5
+#> 3           -62.72608           VR2AR               547109             15
+#>   string_configuration
+#> 1     sub-surface buoy
+#> 2     sub-surface buoy
+#> 3     sub-surface buoy
+
+# or the full path to the log file
+ss_read_log(
+  file.path(path, "Log", "borgles_island_2019-05-30_log.csv"),
+  parse = FALSE
+)
+#>    county waterbody        station lease deployment_date retrieval_date
+#> 1 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#> 2 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#> 3 Halifax Shoal Bay Borgles Island    NA      2019-05-30     2019-10-19
+#>   deployment_latitude deployment_longitude retrieval_latitude
+#> 1            44.77241            -62.72608           44.77241
+#> 2            44.77241            -62.72608           44.77241
+#> 3            44.77241            -62.72608           44.77241
+#>   retrieval_longitude     sensor_type sensor_serial_number sensor_depth_m
+#> 1           -62.72608     HOBO Pro V2             10755220              2
+#> 2           -62.72608 aquaMeasure DOT               670364              5
+#> 3           -62.72608           VR2AR               547109             15
+#>   string_configuration
+#> 1     sub-surface buoy
+#> 2     sub-surface buoy
+#> 3     sub-surface buoy
+```

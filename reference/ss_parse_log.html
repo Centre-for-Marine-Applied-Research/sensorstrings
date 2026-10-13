@@ -15,7 +15,7 @@ sensor_depth_m. Missing information will be filled in with NA."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">sensorstrings</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@ sensor_depth_m. Missing information will be filled in with NA."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -97,18 +98,17 @@ values are missing. Warnings will still be printed.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Returns a list with up to 4 elements. <code>deployment_dates</code> is a
   data frame with two columns: <code>start_date</code> and <code>end_date</code>.
-  <code>area_info</code> is a data frame with five columns: <code>county</code>,
-  <code>waterbody</code>, <code>latitude</code>, <code>longitude</code>, <code>station</code>, and
-  <code>lease</code>. <code>sn_table</code> is a data frame with three columns:
-  <code>log_sensor</code> (sensor name as recorded in the log),
+  <code>area_info</code> is a data frame with six columns: <code>region</code> or
+  <code>county</code>, <code>waterbody</code>, <code>latitude</code>, <code>longitude</code>,
+  <code>station</code>, and <code>lease</code>. <code>sn_table</code> is a data frame with
+  three columns: <code>log_sensor</code> (sensor name as recorded in the log),
   <code>sensor_serial_number</code>, and <code>depth</code>. <code>string_configuration</code>
   is a character string indicating how the sensor string was moored.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Old log column names will also be accepted.</p>
-<p>If <code>verbose = TRUE</code>, a message will be printed if there is more than one
-unique entry in <code>waterbody</code>, <code>station</code>, <code>deployment_date</code>,
+    <p>A Warning will be printed if there is more than one unique entry in
+<code>waterbody</code>, <code>station</code>, <code>deployment_date</code>,
 <code>retrieval_date</code>, <code>deployment_latitude</code>, or
 <code>deployment_longitude</code>.</p>
 <p>Entries in the <code>sensor_type</code> column must include the string
@@ -119,6 +119,47 @@ the log.</p>
 value.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"sensorstrings"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="ss_read_log.html">ss_read_log</a></span><span class="op">(</span><span class="va">path</span>, parse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log</span> <span class="op">&lt;-</span> <span class="fu">ss_parse_log</span><span class="op">(</span><span class="va">log_raw</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log</span><span class="op">$</span><span class="va">deployment_dates</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   start_date   end_date</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2019-05-30 2019-10-19</span>
+<span class="r-in"><span><span class="va">log</span><span class="op">$</span><span class="va">area_info</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   region  county waterbody latitude longitude        station lease</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     NA Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA</span>
+<span class="r-in"><span><span class="va">log</span><span class="op">$</span><span class="va">sn_table</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        log_sensor sensor_serial_number depth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     HOBO Pro V2             10755220     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 aquaMeasure DOT               670364     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           VR2AR               547109    15</span>
+<span class="r-in"><span><span class="va">log</span><span class="op">$</span><span class="va">string_configuration</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sub-surface buoy"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># only return the serial number table</span></span></span>
+<span class="r-in"><span><span class="fu">ss_parse_log</span><span class="op">(</span><span class="va">log_raw</span>, deployment_dates <span class="op">=</span> <span class="cn">FALSE</span>, area_info <span class="op">=</span> <span class="cn">FALSE</span>, config <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $deployment_dates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $area_info</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sn_table</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        log_sensor sensor_serial_number depth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     HOBO Pro V2             10755220     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 aquaMeasure DOT               670364     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           VR2AR               547109    15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $string_configuration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

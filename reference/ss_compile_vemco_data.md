@@ -1,7 +1,7 @@
-# Format temperature data from Vemco deployment
+# Format temperature, depth, and tilt data from Vemco deployment
 
-Compiles and formats temperature and seawater depth data from VR2AR
-sensors.
+Compiles and formats temperature, seawater depth, and device tilt data
+from VR2AR sensors processed with Vue software.
 
 ## Usage
 
@@ -51,7 +51,7 @@ ss_compile_vemco_data(
   only one "Seawater depth" observation, but a full deployment of
   "Average seawater depth" observations. In this case, force the code to
   compile the average seawater depth with
-  `depth_override = Average seawater depth`.
+  `depth_override = "Average seawater depth"`.
 
 ## Value
 
@@ -73,15 +73,36 @@ entries, but there are "Average seawater depth" entries, these will be
 extracted and compiled. Otherwise, the function will stop with an error
 message. (See argument `depth_override` for exception.)
 
-## See also
+## Examples
 
-Other compile:
-[`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
-[`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
-[`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
-[`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
-[`ss_compile_vdat_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vdat_data.md)
+``` r
+path <- system.file("extdata", package = "sensorstrings")
 
-## Author
+sn_table <- data.frame(
+  sensor_type = "VR2AR",
+  sensor_serial_number = 547109,
+  depth = 15
+)
 
-Danielle Dempsey
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+vemco <- ss_compile_vemco_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates
+)
+#> vemco data from sensor <<  547109  >> compiled: Temperature & Seawater depth
+head(vemco)
+#> # A tibble: 6 × 8
+#>   deployment_range          timestamp_utc       sensor_type sensor_serial_number
+#>   <chr>                     <dttm>              <chr>                      <dbl>
+#> 1 2019-May-30 to 2019-Oct-… 2019-05-30 18:10:00 vr2ar                     547109
+#> 2 2019-May-30 to 2019-Oct-… 2019-05-30 18:13:00 vr2ar                     547109
+#> 3 2019-May-30 to 2019-Oct-… 2019-05-30 18:17:00 vr2ar                     547109
+#> 4 2019-May-30 to 2019-Oct-… 2019-05-30 18:25:00 vr2ar                     547109
+#> 5 2019-May-30 to 2019-Oct-… 2019-05-30 18:28:00 vr2ar                     547109
+#> 6 2019-May-30 to 2019-Oct-… 2019-05-30 18:32:00 vr2ar                     547109
+#> # ℹ 4 more variables: sensor_depth_at_low_tide_m <dbl>,
+#> #   sensor_depth_measured_m <dbl>, temperature_degree_c <dbl>,
+#> #   tilt_degree <dbl>
+```

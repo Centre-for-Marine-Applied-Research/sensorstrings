@@ -1,6 +1,6 @@
-# Format temperature data from VR2AR deployment
+# Format temperature, depth, and tilt data from VR2AR (vdat) deployment
 
-Compiles and formats temperature and depth data from VR2AR data
+Compiles and formats temperature, depth, and tilt data from VR2AR data
 offloaded in the new .vdat format and exported with Fathom software.
 
 ## Usage
@@ -51,15 +51,40 @@ The device timestamp is used here. This may drift over time. Corrected
 time stamp is included in the .vdat file, but the date is not always
 appended.
 
-## See also
+## Examples
 
-Other compile:
-[`ss_compile_aquameasure_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_aquameasure_data.md),
-[`ss_compile_deployment_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_deployment_data.md),
-[`ss_compile_hobo_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_data.md),
-[`ss_compile_hobo_ph_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_hobo_ph_data.md),
-[`ss_compile_vemco_data()`](https://dempsey-cmar.github.io/sensorstrings/reference/ss_compile_vemco_data.md)
+``` r
+# full path to a VR2AR file processed with Fathom (vdat)
+path <- system.file(
+  "testdata", "vdat", "VR2AR-69_555438.csv", package = "sensorstrings"
+)
 
-## Author
+sn_table <- data.frame(
+  sensor_type = "VR2AR-69",
+  sensor_serial_number = 555438,
+  depth = 5
+)
 
-Danielle Dempsey
+deployment_dates <- data.frame(START = "2019-05-30", END = "2019-10-19")
+
+vdat <- ss_compile_vdat_data(
+  path,
+  sn_table = sn_table,
+  deployment_dates = deployment_dates,
+  trim = FALSE
+)
+#> vdat data from sensor <<  555438  >> compiled
+head(vdat)
+#> # A tibble: 6 × 8
+#>   deployment_range          timestamp_utc       sensor_type sensor_serial_number
+#>   <chr>                     <dttm>              <chr>                      <dbl>
+#> 1 2019-May-30 to 2019-Oct-… 2019-05-29 18:00:00 vr2ar-69                  555438
+#> 2 2019-May-30 to 2019-Oct-… 2019-05-30 19:00:00 vr2ar-69                  555438
+#> 3 2019-May-30 to 2019-Oct-… 2019-05-30 04:00:00 vr2ar-69                  555438
+#> 4 2019-May-30 to 2019-Oct-… 2019-10-30 05:00:00 vr2ar-69                  555438
+#> 5 2019-May-30 to 2019-Oct-… 2019-10-30 06:00:00 vr2ar-69                  555438
+#> 6 2019-May-30 to 2019-Oct-… 2019-10-19 07:00:00 vr2ar-69                  555438
+#> # ℹ 4 more variables: sensor_depth_at_low_tide_m <dbl>,
+#> #   sensor_depth_measured_m <dbl>, temperature_degree_c <dbl>,
+#> #   tilt_degree <dbl>
+```

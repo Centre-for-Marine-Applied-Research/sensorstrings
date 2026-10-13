@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">sensorstrings</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -46,169 +47,232 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="sensorstrings">sensorstrings<a class="anchor" aria-label="anchor" href="#sensorstrings"></a>
+<div class="page-header"><h1 id="sensorstrings-">sensorstrings <img src="reference/figures/2025_hex_sensorstrings.png" align="right" width="120"><a class="anchor" aria-label="anchor" href="#sensorstrings-"></a>
 </h1></div>
-<p><img src="reference/figures/2025_hex_sensorstrings.png" width="25%" style="display: block; margin: auto;"></p>
 <!-- badges: start -->
 
-<p><strong>This package replaces the <a href="https://github.com/Centre-for-Marine-Applied-Research/strings" class="external-link">strings</a> package.</strong></p>
-<p>New features:</p>
-<ul>
-<li>Cleaner code</li>
-<li>More straightforward workflow
-<ul>
-<li>don’t need to export intermediate “raw” and “trim” files</li>
-<li>few arguments to specify in templates</li>
-</ul>
-</li>
-<li>Additional functions (e.g., <code>ss_download_data()</code>)</li>
-<li>Variable names consistent with <a href="https://cfconventions.org/" class="external-link">Climate Forecast</a> conventions</li>
-<li>Formal tests</li>
-<li>More helpful <code>Error</code> and <code>Warning</code> messages</li>
-</ul>
-<p>Compile, format, and visualize Water Quality (temperature, dissolved oxygen, salinity) data measured by different sensors.</p>
+<p><code>sensorstrings</code> compiles, formats and visualizes Water Quality data collected on “sensor strings” by the Centre for Marine Applied Research (<a href="https://cmar.ca/" class="external-link">CMAR</a>). It reads the raw csv files exported from each sensor, combines them with the deployment log, and returns one tidy data frame per deployment, ready for quality control with <a href="https://github.com/Centre-for-Marine-Applied-Research/qaqcmar" class="external-link"><code>qaqcmar</code></a>.</p>
+<p><code>sensorstrings</code> replaces the <a href="https://github.com/Centre-for-Marine-Applied-Research/strings" class="external-link"><code>strings</code></a> package.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>sensorstrings</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>Install the development version from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dempsey-CMAR/sensorstrings"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
-</h2>
-<p>The function at the tip calls the function at the tail.</p>
-<p><img src="reference/figures/2022-10-18_ss_structure.png" width="100%" height="120%" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Centre-for-Marine-Applied-Research/sensorstrings"</span><span class="op">)</span></span></code></pre></div>
+<p>A few functions need extra packages that are not installed automatically. Install them if you use those functions:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>
+<code>sensorstrings</code> Function</th>
+<th>Needs</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<code><a href="reference/ss_map_stations.html">ss_map_stations()</a></code>, <code><a href="reference/ss_check_station_in_ocean.html">ss_check_station_in_ocean()</a></code>
+</td>
+<td>leaflet, sf</td>
+</tr>
+<tr>
+<td><code><a href="reference/ss_open_trimdates_app.html">ss_open_trimdates_app()</a></code></td>
+<td>shiny, plotly</td>
+</tr>
+<tr>
+<td><code><a href="reference/ss_model_mooring.html">ss_model_mooring()</a></code></td>
+<td>mooring (<code>remotes::install_github("dankelley/mooring")</code>)</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<p>The Centre for Marine Applied Research (<a href="https://cmar.ca/" class="external-link">CMAR</a>) coordinates an extensive <a href="https://cmar.ca/coastal-monitoring-program/" class="external-link">Coastal Monitoring Program</a> to measure <a href="https://www.goosocean.org/index.php?option=com_content&amp;view=article&amp;id=14&amp;Itemid=114" class="external-link">Essential Ocean Variables</a> from around the coast of Nova Scotia, Canada. There are three main branches of the program: <em>Water Quality</em>, <em>Currents</em>, and <em>Waves</em>. Processed data for each branch can be viewed and downloaded from several sources, as outlined in the <a href="https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf" class="external-link">CMAR Report &amp; Data Access Reference Sheet</a>.</p>
-<p>The <code>sensorstrings</code> package is the backbone of the data pipeline for the <em>Water Quality</em> branch of the Coastal Monitoring Program. It is used to organize, compile, format, and visualize data <em>Water Quality</em> data.</p>
-<p><em>Water Quality</em> data (temperature, dissolved oxygen, and salinity) is collected using stationary moorings referred to as “sensor strings”. A typical sensor string configuration consists of a rope attached to the seafloor by an anchor and suspended by a sub-surface buoy, with sensors attached at various depths (Figure 1). Alternatively, sensors may be attached to surface buoys, equipment, floating docks, or fixed structures (Figure 1).</p>
-<p><img src="reference/figures/sensor_configurations.png" width="2304" style="display: block; margin: auto;"> Figure 1: Sensor string configurations (not to scale).</p>
+<p>CMAR’s <a href="https://cmar.ca/coastal-monitoring-program/" class="external-link">Coastal Monitoring Program</a> measures <a href="https://www.goosocean.org/" class="external-link">Essential Ocean Variables</a> around the coast of Nova Scotia, Canada. The program has three branches: <em>Water Quality</em>, <em>Currents</em> and <em>Waves</em>. <code>sensorstrings</code> is the backbone of the Water Quality data pipeline. Processed data can be viewed and downloaded as described in the <a href="https://cmar.ca/wp-content/uploads/sites/22/2024/07/Report-Data-Access-2024-07-30.pdf" class="external-link">CMAR Data Access Reference Sheet</a>.</p>
+<p>Water Quality data are collected on vertical moorings called sensor strings. A typical string is a rope anchored to the seafloor and held up by a sub-surface buoy, with sensors attached at different depths. Sensors may also be attached to surface buoys, equipment, floating docks or fixed structures (Figure 1).</p>
+<p><img src="reference/figures/sensor_configurations.png" alt="" width="2304" style="display: block; margin: auto;"> Figure 1: Sensor string configurations (not to scale).</p>
 <p><br><br></p>
-<p>All sensor strings have at least one sensor that measures temperature, and most strings also have one dissolved oxygen sensor. Some strings also have a salinity sensor, typically upon request from shellfish aquaculture operators (Table 1). Strings are deployed at a station for several months and data are typically measured every 10 minutes to 1 hour, depending on the sensor.</p>
+<p>Every string has at least one temperature sensor, and most have a dissolved oxygen sensor. Sensors on a string may also measure salinity, pH, chlorophyll, and sensor depth and tilt. Strings are deployed at a location for several months and record every 10 minutes to 1 hour, depending on the sensor.</p>
+<div class="section level3">
+<h3 id="supported-sensors">Supported Sensors<a class="anchor" aria-label="anchor" href="#supported-sensors"></a>
+</h3>
 <table class="table">
 <colgroup>
-<col width="81%">
-<col width="18%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr>
 <th align="left">Sensor</th>
-<th align="left">Variable(s) Measured</th>
+<th align="left">Folder name</th>
+<th align="left">Variables</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left"><a href="https://www.onsetcomp.com/products/data-loggers/u22-001?srsltid=AfmBOoriI8QowHkQCbiLdFMNA12Lsbf-lYXC9vMDXgyhcHsibbLfWXDQ" class="external-link">HOBO Pro V2</a></td>
-<td align="left">Temperature</td>
+<td align="left">HOBO Pro V2</td>
+<td align="left">hobo</td>
+<td align="left">temperature</td>
 </tr>
 <tr>
-<td align="left"><a href="https://www.onsetcomp.com/products/data-loggers/u26-001?srsltid=AfmBOoqXHvl-Em6Y01MSXAGDPh8dYywwhD25xynKzm1GtEffJrl4ws8x" class="external-link">HOBO DO</a></td>
-<td align="left">Temperature, Dissolved Oxygen</td>
+<td align="left">HOBO U26</td>
+<td align="left">hobo</td>
+<td align="left">temperature, dissolved oxygen</td>
 </tr>
 <tr>
-<td align="left"><a href="https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf" class="external-link">aquaMeasure DOT</a></td>
-<td align="left">Temperature, Dissolved Oxygen</td>
+<td align="left">HOBO pH</td>
+<td align="left">hobo_ph</td>
+<td align="left">temperature, pH</td>
 </tr>
 <tr>
-<td align="left"><a href="https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Aquaculture-Intelligence-Spec-Sheet-060721.pdf" class="external-link">aquaMeasure SAL</a></td>
-<td align="left">Temperature, Salinity</td>
+<td align="left">TidbiT</td>
+<td align="left">tidbit</td>
+<td align="left">temperature</td>
 </tr>
 <tr>
-<td align="left"><a href="https://www.innovasea.com/wp-content/uploads/2021/06/Innovasea-Fish-Tracking-vr2ar-data-sheet-0621.pdf" class="external-link">VR2AR</a></td>
-<td align="left">Temperature</td>
+<td align="left">aquaMeasure (DOT, SAL, CHL)</td>
+<td align="left">aquameasure</td>
+<td align="left">temperature, dissolved oxygen, salinity, chlorophyll, sensor depth, tilt (by model)</td>
+</tr>
+<tr>
+<td align="left">VR2AR / VR2AR-X (csv from Vue)</td>
+<td align="left">vemco</td>
+<td align="left">temperature, sensor depth, tilt</td>
+</tr>
+<tr>
+<td align="left">VR2AR-69 / VR2AR-X-69 (csv from Fathom)</td>
+<td align="left">vdat</td>
+<td align="left">temperature, sensor depth, tilt</td>
 </tr>
 </tbody>
 </table>
-<p>After retrieval, data from each sensor is exported to a separate csv file using manufacturer-specific software. Each type of sensor generates a data file with unique columns and header fields, which poses a significant challenge for compiling all data from a deployment into a single format for analysis.</p>
-<p>The <code>sensorstrings</code> package offers functions to compile, format, convert units, and visualize sensor string data.</p>
-<p><code>sensorstrings</code> was developed specifically to streamline CMAR’s workflow, but is flexible enough that other users can apply it to process data from the accepted sensors (Table 1).</p>
-<p>For more information on <em>Water Quality</em> data collection and processing, visit the <a href="https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_Workflow.pdf" class="external-link">CMAR Water Quality Data Collection &amp; Processing Reference Sheet</a>.</p>
+<p>Each sensor type exports its data with different columns and headers. <code>sensorstrings</code> provides functions to organize, compile, format, and visualize the data.</p>
+<p><code>sensorstrings</code> was built for CMAR’s workflow, but anyone with data from the sensors above can use it.</p>
+<p>For more on how CMAR collects and processes Water Quality data, see the <a href="https://cmar.ca/wp-content/uploads/sites/22/2024/06/2024-06-17_CMAR_CMP_Workflow.pdf" class="external-link">CMAR Water Quality Data Collection &amp; Processing Reference Sheet</a>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Step</th>
+<th>Functions</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Set up a deployment</td>
+<td>
+<code><a href="reference/ss_set_up_folders.html">ss_set_up_folders()</a></code>, <code><a href="reference/ss_create_template.html">ss_create_template()</a></code>, <code><a href="reference/ss_create_log_from_metadata.html">ss_create_log_from_metadata()</a></code>
+</td>
+</tr>
+<tr>
+<td>Read the log</td>
+<td>
+<code><a href="reference/ss_read_log.html">ss_read_log()</a></code>, <code><a href="reference/ss_parse_log.html">ss_parse_log()</a></code>
+</td>
+</tr>
+<tr>
+<td>Read one raw file</td>
+<td>
+<code><a href="reference/ss_read_aquameasure_data.html">ss_read_aquameasure_data()</a></code>, <code><a href="reference/ss_read_hobo_data.html">ss_read_hobo_data()</a></code>, <code><a href="reference/ss_read_vemco_data.html">ss_read_vemco_data()</a></code>, <code><a href="reference/ss_read_vdat_data.html">ss_read_vdat_data()</a></code>
+</td>
+</tr>
+<tr>
+<td>Compile a deployment</td>
+<td>
+<code><a href="reference/ss_compile_deployment_data.html">ss_compile_deployment_data()</a></code> (calls the <code>ss_compile_*_data()</code> function for each sensor type)</td>
+</tr>
+<tr>
+<td>Check the station</td>
+<td>
+<code><a href="reference/ss_check_station_radius.html">ss_check_station_radius()</a></code>, <code><a href="reference/ss_check_station_drift.html">ss_check_station_drift()</a></code>, <code><a href="reference/ss_check_station_in_ocean.html">ss_check_station_in_ocean()</a></code>, <code><a href="reference/ss_map_stations.html">ss_map_stations()</a></code>
+</td>
+</tr>
+<tr>
+<td>Reshape</td>
+<td>
+<code><a href="reference/ss_pivot_longer.html">ss_pivot_longer()</a></code>, <code><a href="reference/ss_pivot_wider.html">ss_pivot_wider()</a></code>
+</td>
+</tr>
+<tr>
+<td>Plot</td>
+<td>
+<code><a href="reference/ss_ggplot_variables.html">ss_ggplot_variables()</a></code>, <code><a href="reference/ss_plot_variables.html">ss_plot_variables()</a></code>, <code><a href="reference/ss_open_trimdates_app.html">ss_open_trimdates_app()</a></code>
+</td>
+</tr>
+<tr>
+<td>Import, export and assemble</td>
+<td>
+<code><a href="reference/ss_import_data.html">ss_import_data()</a></code>, <code><a href="reference/ss_export_county_files.html">ss_export_county_files()</a></code>, <code>ss_assemble_region_data()</code>
+</td>
+</tr>
+<tr>
+<td>Report</td>
+<td><code><a href="reference/ss_write_report_table.html">ss_write_report_table()</a></code></td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/reference/" class="external-link">reference pages</a> for every function.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Centre-for-Marine-Applied-Research.github.io/sensorstrings/" class="external-link">sensorstrings</a></span><span class="op">)</span></span></code></pre></div>
-<p>Consider a string deployed from May 31, 2019 to October 19, 2019 with three sensors:</p>
+<p>This example uses a string deployed from May 30 to October 19, 2019 with three sensors. The data files ship with the package.</p>
 <table class="table">
 <thead><tr>
-<th style="text-align:left;">
-Sensor
-</th>
-<th style="text-align:center;">
-Serial Number
-</th>
-<th style="text-align:center;">
-Depth
-</th>
+<th align="left">Sensor</th>
+<th align="center">Serial number</th>
+<th align="center">Depth (m)</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-HOBO Pro V2
-</td>
-<td style="text-align:center;">
-10755220
-</td>
-<td style="text-align:center;">
-2
-</td>
+<td align="left">HOBO Pro V2</td>
+<td align="center">10755220</td>
+<td align="center">2</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-aquaMeasure DOT
-</td>
-<td style="text-align:center;">
-670364
-</td>
-<td style="text-align:center;">
-5
-</td>
+<td align="left">aquaMeasure DOT</td>
+<td align="center">670364</td>
+<td align="center">5</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-VR2AR
-</td>
-<td style="text-align:center;">
-547109
-</td>
-<td style="text-align:center;">
-15
-</td>
+<td align="left">VR2AR</td>
+<td align="center">547109</td>
+<td align="center">15</td>
 </tr>
 </tbody>
 </table>
 <div class="section level3">
-<h3 id="raw-data-files">Raw data files<a class="anchor" aria-label="anchor" href="#raw-data-files"></a>
+<h3 id="raw-data">Raw data<a class="anchor" aria-label="anchor" href="#raw-data"></a>
 </h3>
-<p>The data from each sensor is saved in separate csv file, each with manufacturer-specific columns.</p>
-<p>Import raw data files:</p>
+<p>Each sensor’s file has its own layout:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"sensorstrings"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">aquameasure_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ss_read_aquameasure_data.html">ss_read_aquameasure_data</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"/aquameasure"</span><span class="op">)</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"aquameasure"</span><span class="op">)</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"aquameasure-670364.csv"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">hobo_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ss_read_hobo_data.html">ss_read_hobo_data</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"/hobo"</span><span class="op">)</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"hobo"</span><span class="op">)</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"10755220.csv"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">vemco_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ss_read_vemco_data.html">ss_read_vemco_data</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"/vemco"</span><span class="op">)</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"vemco"</span><span class="op">)</span>,</span>
 <span>  file_name <span class="op">=</span> <span class="st">"vemco-547109.csv"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Examine the first rows of each raw data file:</p>
-<div class="section level4">
-<h4 id="aquameasure-data">AquaMeasure data<a class="anchor" aria-label="anchor" href="#aquameasure-data"></a>
-</h4>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aquameasure_raw</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aquameasure_raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                       Timestamp(UTC) Time Corrected(seconds)             Sensor</span></span>
 <span><span class="co">#&gt; 1  209s after startup (time not set)                      NA aquaMeasure-670364</span></span>
 <span><span class="co">#&gt; 2  353s after startup (time not set)                      NA aquaMeasure-670364</span></span>
@@ -229,13 +293,8 @@ VR2AR
 <span><span class="co">#&gt; 3      NA   NA   NA</span></span>
 <span><span class="co">#&gt; 4      NA   NA   NA</span></span>
 <span><span class="co">#&gt; 5      NA   NA   NA</span></span>
-<span><span class="co">#&gt; 6      NA   NA   NA</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="hobo-data">Hobo data<a class="anchor" aria-label="anchor" href="#hobo-data"></a>
-</h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hobo_raw</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6      NA   NA   NA</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hobo_raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    # Date Time, GMT+00:00 Temp, °C (LGR S/N: 10755220, SEN S/N: 10755220) V4</span></span>
 <span><span class="co">#&gt; 1  4     2019-05-30 21:00                                           6.661 NA</span></span>
 <span><span class="co">#&gt; 2  8      2019-05-31 1:00                                           7.695 NA</span></span>
@@ -256,13 +315,8 @@ VR2AR
 <span><span class="co">#&gt; 3                                                            </span></span>
 <span><span class="co">#&gt; 4                                                            </span></span>
 <span><span class="co">#&gt; 5                                                            </span></span>
-<span><span class="co">#&gt; 6</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="vemco-data">Vemco data<a class="anchor" aria-label="anchor" href="#vemco-data"></a>
-</h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vemco_raw</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vemco_raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Date and Time (UTC)     Receiver    Description  Data Units</span></span>
 <span><span class="co">#&gt; 1    2019-05-30 18:06 VR2AR-547109          Noise 207.6    mV</span></span>
 <span><span class="co">#&gt; 2    2019-05-30 18:10 VR2AR-547109     Tilt angle    89     °</span></span>
@@ -270,582 +324,288 @@ VR2AR
 <span><span class="co">#&gt; 4    2019-05-30 18:17 VR2AR-547109 Seawater depth     0     m</span></span>
 <span><span class="co">#&gt; 5    2019-05-30 18:21 VR2AR-547109          Noise 178.3    mV</span></span>
 <span><span class="co">#&gt; 6    2019-05-30 18:25 VR2AR-547109     Tilt angle    84     °</span></span></code></pre></div>
-<p>Data from each sensor is exported in a slightly different layout, making it difficult to work with and analyze all of the data from a single deployment.</p>
-</div>
 </div>
 <div class="section level3">
-<h3 id="compile-and-format-with-sensorstrings">Compile and format with <code>sensorstrings</code>
-<a class="anchor" aria-label="anchor" href="#compile-and-format-with-sensorstrings"></a>
+<h3 id="deployment-log">Deployment log<a class="anchor" aria-label="anchor" href="#deployment-log"></a>
 </h3>
-<p>The <code><a href="reference/ss_compile_deployment_data.html">ss_compile_deployment_data()</a></code> function makes it easy to compile these files into a single data frame, with additional information added from the deployment log.</p>
-<div class="section level4">
-<h4 id="deployment-log">Deployment Log<a class="anchor" aria-label="anchor" href="#deployment-log"></a>
-</h4>
-<p>The deployment log includes the deployment and retrieval dates, information on where the string was deployed, and the depth of each sensor.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>The log holds the deployment and retrieval dates, where the string was deployed, and the depth of each sensor:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ss_read_log.html">ss_read_log</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Reading from "STRING TRACKING".</span></span>
-<span><span class="co">#&gt; ✔ Range ''Area Info''.</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">log</span><span class="op">$</span><span class="va">deployment_dates</span></span>
+<span></span>
+<span><span class="va">log</span><span class="op">$</span><span class="va">deployment_dates</span></span>
 <span><span class="co">#&gt;   start_date   end_date</span></span>
-<span><span class="co">#&gt; 1 2019-05-30 2019-10-19</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">log</span><span class="op">$</span><span class="va">area_info</span></span>
-<span><span class="co">#&gt;    county waterbody latitude longitude        station lease</span></span>
-<span><span class="co">#&gt; 1 Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">log</span><span class="op">$</span><span class="va">sn_table</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span><span class="co">#&gt;   log_sensor      sensor_serial_number depth</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                          &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 HOBO Pro V2                 10755220     2</span></span>
+<span><span class="co">#&gt; 1 2019-05-30 2019-10-19</span></span>
+<span><span class="va">log</span><span class="op">$</span><span class="va">area_info</span></span>
+<span><span class="co">#&gt;   region  county waterbody latitude longitude        station lease</span></span>
+<span><span class="co">#&gt; 1     NA Halifax Shoal Bay 44.77241 -62.72608 Borgles Island    NA</span></span>
+<span><span class="va">log</span><span class="op">$</span><span class="va">sn_table</span></span>
+<span><span class="co">#&gt;        log_sensor sensor_serial_number depth</span></span>
+<span><span class="co">#&gt; 1     HOBO Pro V2             10755220     2</span></span>
 <span><span class="co">#&gt; 2 aquaMeasure DOT               670364     5</span></span>
-<span><span class="co">#&gt; 3 VR2AR                         547109    15</span></span></code></pre></div>
+<span><span class="co">#&gt; 3           VR2AR               547109    15</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="compile-data">Compile Data<a class="anchor" aria-label="anchor" href="#compile-data"></a>
-</h4>
-<p><code><a href="reference/ss_compile_deployment_data.html">ss_compile_deployment_data()</a></code> reads in the log and the data for each sensor and exports a single data frame.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="compile">Compile<a class="anchor" aria-label="anchor" href="#compile"></a>
+</h3>
+<p><code><a href="reference/ss_compile_deployment_data.html">ss_compile_deployment_data()</a></code> reads the log and every sensor file in the deployment folder, and returns one data frame:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ss_compile_deployment_data.html">ss_compile_deployment_data</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Reading from "STRING TRACKING".</span></span>
-<span><span class="co">#&gt; ✔ Range ''Area Info''.</span></span>
 <span><span class="co">#&gt; aquameasure data compiled</span></span>
 <span><span class="co">#&gt; hobo data compiled</span></span>
 <span><span class="co">#&gt; vemco data from sensor &lt;&lt;  547109  &gt;&gt; compiled: Temperature &amp; Seawater depth</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
+<colgroup>
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-county
-</th>
-<th style="text-align:left;">
-waterbody
-</th>
-<th style="text-align:left;">
-station
-</th>
-<th style="text-align:left;">
-lease
-</th>
-<th style="text-align:right;">
-latitude
-</th>
-<th style="text-align:right;">
-longitude
-</th>
-<th style="text-align:left;">
-deployment_range
-</th>
-<th style="text-align:left;">
-string_configuration
-</th>
-<th style="text-align:left;">
-sensor_type
-</th>
-<th style="text-align:right;">
-sensor_serial_number
-</th>
-<th style="text-align:left;">
-timestamp_utc
-</th>
-<th style="text-align:right;">
-sensor_depth_at_low_tide_m
-</th>
-<th style="text-align:right;">
-dissolved_oxygen_percent_saturation
-</th>
-<th style="text-align:right;">
-sensor_depth_measured_m
-</th>
-<th style="text-align:right;">
-temperature_degree_c
-</th>
+<th align="left">region</th>
+<th align="left">county</th>
+<th align="left">waterbody</th>
+<th align="left">station</th>
+<th align="left">lease</th>
+<th align="right">latitude</th>
+<th align="right">longitude</th>
+<th align="left">deployment_range</th>
+<th align="left">string_configuration</th>
+<th align="left">sensor_type</th>
+<th align="right">sensor_serial_number</th>
+<th align="left">timestamp_utc</th>
+<th align="right">sensor_depth_at_low_tide_m</th>
+<th align="right">dissolved_oxygen_percent_saturation</th>
+<th align="right">sensor_depth_measured_m</th>
+<th align="right">temperature_degree_c</th>
+<th align="right">tilt_degree</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-30 21:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.661
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-30 21:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.661</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 01:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.695
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 01:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">7.695</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 05:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.569
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 05:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">7.569</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 09:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.509
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 09:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.509</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 13:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.788
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 13:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.788</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 17:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.839
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 17:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.839</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-05-31 21:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.192
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-05-31 21:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">7.192</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 01:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.594
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-06-01 01:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">7.594</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 05:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-7.544
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-06-01 05:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">7.544</td>
+<td align="right">NA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Halifax
-</td>
-<td style="text-align:left;">
-Shoal Bay
-</td>
-<td style="text-align:left;">
-Borgles Island
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-44.77241
-</td>
-<td style="text-align:right;">
--62.72608
-</td>
-<td style="text-align:left;">
-2019-May-30 to 2019-Oct-19
-</td>
-<td style="text-align:left;">
-sub-surface buoy
-</td>
-<td style="text-align:left;">
-hobo
-</td>
-<td style="text-align:right;">
-10755220
-</td>
-<td style="text-align:left;">
-2019-06-01 09:00:00
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-6.661
-</td>
+<td align="left">NA</td>
+<td align="left">Halifax</td>
+<td align="left">Shoal Bay</td>
+<td align="left">Borgles Island</td>
+<td align="left">NA</td>
+<td align="right">44.77241</td>
+<td align="right">-62.72608</td>
+<td align="left">2019-May-30 to 2019-Oct-19</td>
+<td align="left">sub-surface buoy</td>
+<td align="left">hobo</td>
+<td align="right">10755220</td>
+<td align="left">2019-06-01 09:00:00</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.661</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
 <div class="section level3">
 <h3 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/ss_ggplot_variables.html">ss_ggplot_variables</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-fig1-1.png" width="100%"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/ss_ggplot_variables.html">ss_ggplot_variables</a></span><span class="op">(</span><span class="va">dat</span>, point_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-fig1-1.png"><!-- --></p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>Please report bugs or suggest features on the <a href="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/issues" class="external-link">issues page</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="ai-disclosure">AI Disclosure<a class="anchor" aria-label="anchor" href="#ai-disclosure"></a>
+</h2>
+<p>This README file was generated by Claude Opus 5.5. It was based on an earlier, human-written version of the README, and was reviewed and modified before publication.</p>
+<p>The original versions of <code>sensorstrings</code> were written without any AI. Since <code>sensorstrings v1.5.5</code>, Claude Opus 5.5 has been used to improve clarity and consistency between CMAR R packages.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -883,9 +643,8 @@ NA
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
-<li><a href="https://github.com/dempsey-cmar/sensorstrings" class="external-link"><img src="https://img.shields.io/badge/devel%20version-1.0.3-blue.svg"></a></li>
-<li><a href="https://www.codefactor.io/repository/github/dempsey-cmar/sensorstrings" class="external-link"><img src="https://www.codefactor.io/repository/github/dempsey-cmar/sensorstrings/badge" alt="CodeFactor"></a></li>
-<li><a href="https://github.com/dempsey-cmar/sensorstrings/actions" class="external-link"><img src="https://github.com/dempsey-cmar/sensorstrings/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings" class="external-link"><img src="https://img.shields.io/badge/devel%20version-1.5.5-blue.svg"></a></li>
+<li><a href="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/actions" class="external-link"><img src="https://github.com/Centre-for-Marine-Applied-Research/sensorstrings/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
 
