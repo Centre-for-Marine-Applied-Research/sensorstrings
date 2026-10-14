@@ -44,10 +44,10 @@ path <- file.path(tempdir(), "station_folders")
 dir.create(path, showWarnings = FALSE)
 
 ss_set_up_folders(station = "Borgles Island", depl_date = "2019-05-30", path_output = path)
-#> Created folder << borgles_island >> in << /tmp/Rtmp42waO7/station_folders >>
+#> Created folder << borgles_island >> in << /tmp/RtmpVlFBmm/station_folders >>
 
 ss_import_path("Borgles Island", "2019-05-30", path = path)
-#> [1] "/tmp/Rtmp42waO7/station_folders/borgles_island/borgles_island_2019-05-30"
+#> [1] "/tmp/RtmpVlFBmm/station_folders/borgles_island/borgles_island_2019-05-30"
 
 unlink(path, recursive = TRUE)
 ```
