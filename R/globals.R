@@ -14,9 +14,7 @@ utils::globalVariables(
     "sensor_type",
     "depth",
     "timestamp_",
-    "HOBO_dat",
     "deployment_range",
-    ".data",
 
     # ss_compile_aquameasure_data
     "Sensor",
@@ -24,11 +22,11 @@ utils::globalVariables(
     "Record Type",
     "Record Number",
 
-    #  "do_percent_saturation",
-    "dissolved_oxygen_percent_saturation",
+    # "do_percent_saturation",
+   # "dissolved_oxygen_percent_saturation",
     "temperature_degree_c",
     "sensor_depth_at_low_tide_m",
-    "sensor_depth_measured_m",
+   # "sensor_depth_measured_m",
 
     # ss_compile_vemco_date
     "Description",
@@ -44,15 +42,8 @@ utils::globalVariables(
     "longitude",
 
     # ss_read_log
-    "Logger_Model",
-    "Serial#",
-    "Sensor_Depth",
     "numeric_depth",
-    "detect_hobo",
-    "detect_am",
-    "detect_vemco",
     "log_sensor",
-    "Station_Name",
     "Waterbody",
     "string_configuration",
     "Depl_Date",
@@ -60,14 +51,8 @@ utils::globalVariables(
     # make_column_names
     "col_name",
 
-    # ss_convert_depth_to_ordered_factor
-    "depth",
-
     # ss_pivot
     "value",
-
-    # ss_plot_variables
-    "Date",
 
     # ss_create_variable_labels
     "variable_label",
@@ -82,44 +67,12 @@ utils::globalVariables(
     "Depl_Lon",
     "Recv_Date",
 
-    # dissolved oxygen corrections
-    "F_p",
-    "F_s",
-    "P_wv",
-    "T_Kelvin",
-    "T_s",
-    "alt_correction",
-    "pressure_atm",
-    "salinity_psu",
-    "theta",
-
-    # ss_import_data
-    "Notes",
-
     # ss_export
     "timestamp_utc",
-
-    # reformat_old_data
-    "COUNTY",
-    "DEPLOYMENT_PERIOD",
-    "DEPTH",
-    "LATITUDE",
-    "LEASE",
-    "LONGITUDE",
-    "MOORING",
-    "SENSOR",
-    "STATION",
-    "TIMESTAMP",
-    "UNITS",
-    "VALUE",
-    "VARIABLE",
-    "WATERBODY",
-    "sensor",
 
     # ss_write_report_table
     "Deployment Date",
     "Retrieval Date",
-    "Configuration",
     "Latitude",
     "Longitude",
     "Station",
@@ -130,30 +83,10 @@ utils::globalVariables(
     "retrieval_latitude",
     "retrieval_longitude",
 
-    # ss_create_log
-    "Deployment",
-    "Location_Description",
-    "Retrieval",
-    "Sounding",
-    "deployment_attendant",
-    "deployment_latitude",
-    "deployment_longitude",
-    "notes",
-    "retrieval_attendant",
-    "retrieval_date",
-    "sensor_depth_m",
-    "sounding_m",
-    "status",
-
     #ss_coords_to_dd
     "deployment_latitude_n_ddm",
     "deployment_longitude_w_ddm",
-    ".",
-    "coord_deg",
     "coord_dm",
-    "degree_decimal_minutes",
-    "retrieval_latitude_n_ddm",
-    "retrieval_longitude_w_ddm",
 
     ## ss_hobo_ph
     "ph_ph",
@@ -168,8 +101,7 @@ utils::globalVariables(
     "Model",
     "RECORD TYPE",
     "Serial Number",
-    "Time Correction (s)",
-    "timestamp_utc_uncorrected",
+
 
     "region",
 
@@ -179,6 +111,12 @@ utils::globalVariables(
     "deployment_date",
     "primary_buoy_type",
     "secondary_buoy_type",
-    "vr2ar_lug_height_above_seafloor_m"
+    "vr2ar_lug_height_above_seafloor_m",
+
+   # ss_create_log_from_metadata
+   "retrieval_date",
+   "deployment_latitude",
+   "deployment_longitude",
+   "sensor_depth_m"
   )
 )

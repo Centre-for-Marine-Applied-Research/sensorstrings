@@ -25,6 +25,7 @@
 #'   in.
 #'
 #' @importFrom dplyr all_of coalesce mutate select
+#' @importFrom rlang .data
 #'
 #' @export
 #'
