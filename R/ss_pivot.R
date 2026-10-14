@@ -25,6 +25,8 @@ ss_pivot_longer <- function(dat_wide) {
   dat_wide |>
     pivot_longer(
       any_of(ss_vars$variable), names_to = "variable", values_to = "value",
+      # do not change this to FALSE. Tests will pass, but
+      # there are downstream effects for compiled data and in qaqcmar
       values_drop_na = TRUE
     )
 }
