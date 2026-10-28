@@ -52,7 +52,7 @@ ss_write_report_table <- function(dat, keep_waterbody = FALSE, var_sep = "\n"){
     pivot_wider(
       values_from = "variable", names_from = "variable",
       names_sort = TRUE) |>
-    unite("Variables Measured", any_of(ss_vars$report_entry), sep = var_sep, na.rm = TRUE)
+    unite("Variables Measured", sort(any_of(ss_vars$report_entry)), sep = var_sep, na.rm = TRUE)
 
   if(isTRUE(keep_waterbody)) {
     table_out <- table_out |>
