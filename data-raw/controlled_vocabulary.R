@@ -43,7 +43,7 @@ ss_vars <- data.frame(
   report_entry = c(
     "temperature",
     "dissolved oxygen (% sat)",
-    "unccorrected dissolved oxygen (mg/L)",
+    "uncorrected dissolved oxygen (mg/L)",
     "dissolved oxygen (mg/L)",
     "pH",
     "salinity",
