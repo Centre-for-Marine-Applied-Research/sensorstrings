@@ -22,6 +22,14 @@
 #' unique(dat_long$variable)
 
 ss_pivot_longer <- function(dat_wide) {
+  if (!any(colnames(dat_wide) %in% ss_vars$variable)) {
+    stop(
+      "<< dat_wide >> has no variable columns. Expected at least one of: ",
+      paste(ss_vars$variable, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
   dat_wide |>
     pivot_longer(
       any_of(ss_vars$variable), names_to = "variable", values_to = "value",
