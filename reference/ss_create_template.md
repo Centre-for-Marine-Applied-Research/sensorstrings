@@ -48,12 +48,12 @@ template <- ss_create_template(
 )
 #> Created '.R' file
 #> '.R' contents copied
-#> Template created in /tmp/Rtmp7X9rgn
+#> Template created in /tmp/RtmpeOK1wy
 
 head(readLines(template), 20)
 #>  [1] "# DATE: 2026-10-28"                                                                  
 #>  [2] "# NAME: DD"                                                                          
-#>  [3] "# sensorstrings VERSION: 2.0.1"                                                      
+#>  [3] "# sensorstrings VERSION: 2.0.2"                                                      
 #>  [4] ""                                                                                    
 #>  [5] "# Template for compiling & formatting data extracted from a sensor string deployment"
 #>  [6] "# Exports compiled data as an rds file in the specified folder"                      
@@ -77,7 +77,7 @@ ss_create_template(
   station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
 )
 #> Warning: New template was not generated.
-#> File already exists: /tmp/Rtmp7X9rgn/compile_borgles_island_2019-05-30.R
+#> File already exists: /tmp/RtmpeOK1wy/compile_borgles_island_2019-05-30.R
 
 unlink(template)
 ```
