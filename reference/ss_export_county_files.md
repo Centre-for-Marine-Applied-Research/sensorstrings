@@ -68,11 +68,11 @@ dat <- ss_compile_deployment_data(system.file("extdata", package = "sensorstring
 output_path <- paste0(tempdir())
 
 ss_export_county_files(dat, county = "halifax", output_path = output_path)
-#> exporting csv for 2026-10-14_halifax
-#> exporting rds for 2026-10-14_halifax
+#> exporting csv for 2026-10-28_halifax
+#> exporting rds for 2026-10-28_halifax
 
 list.files(tempdir(), pattern = "halifax")
-#> [1] "2026-10-14_halifax.csv" "2026-10-14_halifax.rds"
+#> [1] "2026-10-28_halifax.csv" "2026-10-28_halifax.rds"
 
 unlink(list.files(tempdir(), pattern = "halifax", full.names = TRUE))
 ```
