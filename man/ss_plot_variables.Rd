@@ -10,9 +10,8 @@ ss_plot_variables(
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "\%Y-\%m-\%d",
-  standard_do_ylims = TRUE,
-  standard_ph_ylims = TRUE,
-  standard_sal_ylims = TRUE,
+  standard_ylims = TRUE,
+  ylims = NULL,
   yaxis_newline = FALSE,
   alpha = 1,
   legend_name = "Depth (m)",
@@ -34,20 +33,20 @@ ss_plot_variables(
 
 \item{date_labels_format}{Format for the date labels. Default is YYYY-mm-dd.}
 
-\item{standard_do_ylims}{If \code{TRUE}, the y-limits for dissolved oxygen
-are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
-are set to the \code{ggplot} default. Alternatively, a vector giving custom
-y-limits for the dissolved oxygen panel.}
+\item{standard_ylims}{Logical argument indicating whether to use the
+standard y-limits from the controlled vocabulary (e.g., c(60, 160) for
+dissolved oxygen (\% saturation), c(7.5, 8.5) for pH, and c(25, 34) for
+salinity). If \code{FALSE}, the y-limits are set to the \code{ggplot}
+default. Variables without standard limits (e.g., temperature) always use
+the \code{ggplot} default. Default is \code{TRUE}.}
 
-\item{standard_ph_ylims}{If \code{TRUE}, the y-limits for pH are set to
-c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
-\code{ggplot} default. Alternatively, a vector giving custom y-limits for
-the pH panel.}
-
-\item{standard_sal_ylims}{If \code{TRUE}, the y-limits for salinity are set
-to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the
-\code{ggplot} default. Alternatively, a vector giving custom y-limits for
-the salinity panel.}
+\item{ylims}{Optional named list of custom y-limits. Each name must be a
+variable name (e.g., \code{"ph_ph"}) and each value a numeric vector of
+length 2. Use \code{NA} for one end to let \code{ggplot} choose it
+(e.g., \code{c(0, NA)}), or \code{NULL} to use the \code{ggplot}
+default for that variable. Custom limits replace the limits chosen by
+\code{standard_ylims} for the named variables only. Variables that are
+not in \code{dat} are ignored. Default is \code{ylims = NULL}.}
 
 \item{yaxis_newline}{Logical argument indicating whether the units in the
 y-axis label should be on a new line. Default is \code{FALSE}.}
@@ -79,6 +78,8 @@ ss_plot_variables(
   dat,
   legend_position = "bottom",
   yaxis_newline = TRUE,
-  standard_do_ylims = c(70, 150)
+  ylims = list("dissolved_oxygen_percent_saturation" = c(100, 250))
 )
+# ggplot default y-limits for every variable
+ss_plot_variables(dat, standard_ylims = FALSE)
 }

@@ -186,3 +186,52 @@ create_variable_labels <- function(dat, new_line = FALSE) {
    select(-c(label_new_line, label_no_new_line))
 }
 
+#' Check the y-limit arguments of ss_plot_variables()
+#'
+#' @param standard_ylims Value of \code{standard_ylims}.
+#' @param ylims Value of \code{ylims}.
+#'
+#' @return Returns \code{NULL} invisibly, or stops with an error.
+#'
+#' @noRd
+
+check_ylims <- function(standard_ylims, ylims) {
+
+  if (!isTRUE(standard_ylims) && !isFALSE(standard_ylims)) {
+    stop("`standard_ylims` must be TRUE or FALSE.")
+  }
+
+  if (is.null(ylims)) return(invisible(NULL))
+
+  if (!is.list(ylims) || is.null(names(ylims)) || any(names(ylims) == "")) {
+    stop(
+      "`ylims` must be a named list, e.g., ",
+      "list(ph_ph = c(7, 9), salinity_psu = c(20, 35))."
+    )
+  }
+
+  bad_names <- setdiff(names(ylims), ss_vars$variable)
+  if (length(bad_names) > 0) {
+    stop(
+      "Names in `ylims` must be variable names. Not recognized: ",
+      paste(bad_names, collapse = ", "), ".\nValid names: ",
+      paste(ss_vars$variable, collapse = ", ")
+    )
+  }
+
+  ok <- vapply(
+    ylims,
+    function(x) is.null(x) ||
+      (length(x) == 2 && (is.numeric(x) || all(is.na(x)))),
+    logical(1)
+  )
+  if (!all(ok)) {
+    stop(
+      "Each element of `ylims` must be NULL or a numeric vector of length 2. ",
+      "Check: ", paste(names(ylims)[!ok], collapse = ", ")
+    )
+  }
+
+  invisible(NULL)
+}
+

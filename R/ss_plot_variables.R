@@ -17,20 +17,20 @@
 #'
 #' @param date_labels_format Format for the date labels. Default is YYYY-mm-dd.
 #'
-#' @param standard_do_ylims If \code{TRUE}, the y-limits for dissolved oxygen
-#'   are set to c(60, 160) \% or c(0, 15) mg/L. If \code{FALSE}, the y-limits
-#'   are set to the \code{ggplot} default. Alternatively, a vector giving custom
-#'   y-limits for the dissolved oxygen panel.
+#' @param standard_ylims Logical argument indicating whether to use the
+#'   standard y-limits from the controlled vocabulary (e.g., c(60, 160) for
+#'   dissolved oxygen (\% saturation), c(7.5, 8.5) for pH, and c(25, 34) for
+#'   salinity). If \code{FALSE}, the y-limits are set to the \code{ggplot}
+#'   default. Variables without standard limits (e.g., temperature) always use
+#'   the \code{ggplot} default. Default is \code{TRUE}.
 #'
-#' @param standard_ph_ylims If \code{TRUE}, the y-limits for pH are set to
-#'   c(7.5, 8.5) pH units. If \code{FALSE}, the y-limits are set to the
-#'   \code{ggplot} default. Alternatively, a vector giving custom y-limits for
-#'   the pH panel.
-#'
-#' @param standard_sal_ylims If \code{TRUE}, the y-limits for salinity are set
-#'   to c(25, 34) PSU. If \code{FALSE}, the y-limits are set to the
-#'   \code{ggplot} default. Alternatively, a vector giving custom y-limits for
-#'   the salinity panel.
+#' @param ylims Optional named list of custom y-limits. Each name must be a
+#'   variable name (e.g., \code{"ph_ph"}) and each value a numeric vector of
+#'   length 2. Use \code{NA} for one end to let \code{ggplot} choose it
+#'   (e.g., \code{c(0, NA)}), or \code{NULL} to use the \code{ggplot}
+#'   default for that variable. Custom limits replace the limits chosen by
+#'   \code{standard_ylims} for the named variables only. Variables that are
+#'   not in \code{dat} are ignored. Default is \code{ylims = NULL}.
 #'
 #' @param yaxis_newline Logical argument indicating whether the units in the
 #'   y-axis label should be on a new line. Default is \code{FALSE}.
@@ -63,8 +63,11 @@
 #'   dat,
 #'   legend_position = "bottom",
 #'   yaxis_newline = TRUE,
-#'   standard_do_ylims = c(70, 150)
+#'   ylims = list("dissolved_oxygen_percent_saturation" = c(100, 250))
 #' )
+
+#' # ggplot default y-limits for every variable
+#' ss_plot_variables(dat, standard_ylims = FALSE)
 
 ss_plot_variables <- function(
     dat,
@@ -74,9 +77,8 @@ ss_plot_variables <- function(
     date_breaks_minor = NULL,
     date_labels_format = "%Y-%m-%d",
 
-    standard_do_ylims = TRUE,
-    standard_ph_ylims = TRUE,
-    standard_sal_ylims = TRUE,
+    standard_ylims = TRUE,
+    ylims = NULL,
 
     yaxis_newline = FALSE,
 
@@ -85,6 +87,8 @@ ss_plot_variables <- function(
     legend_name = "Depth (m)",
     legend_position = "right"
 ){
+
+  check_ylims(standard_ylims, ylims)
 
   dat <- dat |>
     select(-contains("flag"))
@@ -162,53 +166,16 @@ ss_plot_variables <- function(
 
     y_lab <- unique(dat_i$variable_label)
 
-    #y_limits <- NULL
-
-    # TODO: move this to ss_vars
-    y_limits <- c(ss_vars[ss_vars$variable == var_i, ]$ylims_min,
-      ss_vars[ss_vars$variable == var_i, ]$ylims_max)
-
-    if (all(is.na(y_limits))) y_limits <- NULL
-
-    # if(var_i == "dissolved_oxygen_percent_saturation") {
-    #   if(isTRUE(standard_do_ylims)) {
-    #     y_limits <- c(60, 160)
-    #   } else if(isFALSE(standard_do_ylims)) {
-    #     y_limits <- NULL
-    #   } else y_limits <- standard_do_ylims
-    # }
-    #
-    # if(var_i == "dissolved_oxygen_mg_per_l") {
-    #   if(isTRUE(standard_do_ylims)) {
-    #     y_limits <- c(0, 15)
-    #   } else if(isFALSE(standard_do_ylims)) {
-    #     y_limits <- NULL
-    #   } else y_limits <- standard_do_ylims
-    # }
-    #
-    # if(var_i == "dissolved_oxygen_uncorrected_mg_per_l") {
-    #   if(isTRUE(standard_do_ylims)) {
-    #     y_limits <- c(0, 15)
-    #   } else if(isFALSE(standard_do_ylims)) {
-    #     y_limits <- NULL
-    #   } else y_limits <- standard_do_ylims
-    # }
-    #
-    # if(var_i == "ph_ph") {
-    #   if(isTRUE(standard_ph_ylims)) {
-    #     y_limits <- c(7.5, 8.5)
-    #   } else if(isFALSE(standard_ph_ylims)) {
-    #     y_limits <- NULL
-    #   } else y_limits <- standard_ph_ylims
-    # }
-    #
-    # if(var_i == "salinity_psu") {
-    #   if(isTRUE(standard_sal_ylims)) {
-    #     y_limits <- c(25, 34)
-    #   } else if(isFALSE(standard_sal_ylims)) {
-    #     y_limits <- NULL
-    #   } else y_limits <- standard_sal_ylims
-    # }
+    # y-limits: standard (controlled vocab), then custom, else ggplot default
+    y_limits <- NULL
+    if (isTRUE(standard_ylims)) {
+      var_vocab <- ss_vars[ss_vars$variable == var_i, ]
+      y_limits <- c(var_vocab$ylims_min, var_vocab$ylims_max)
+      if (all(is.na(y_limits))) y_limits <- NULL
+    }
+    if (as.character(var_i) %in% names(ylims)) {
+      y_limits <- ylims[[as.character(var_i)]]
+    }
 
     # plot var.i
     plot_i <- ggplot(
