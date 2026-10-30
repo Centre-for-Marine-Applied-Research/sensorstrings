@@ -1,6 +1,24 @@
-# October 6, 2026
+# October 30, 2026
 
-ss_vars <- data.frame(
+library(tibble)
+library(dplyr)
+
+
+ss_ylimits <- tribble(
+  ~variable,                                ~ylims_min, ~ylims_max,
+  "temperature_degree_c",                   NA,         NA,
+  "dissolved_oxygen_percent_saturation",    60,         160,
+  "dissolved_oxygen_uncorrected_mg_per_l",  0,          15,
+  "dissolved_oxygen_mg_per_l",              0,          15,
+  "ph_ph",                                  7.5,        8.5,
+  "salinity_psu",                           25,         34,
+  "chlorophyll_blue_ug_per_l",              NA,         NA,
+  "chlorophyll_red_ug_per_l",               NA,         NA,
+  "sensor_depth_measured_m",                NA,         NA,
+  "tilt_degree",                            NA,         NA
+)
+
+ss_labels <- tibble(
   variable = c(
     "temperature_degree_c",
     "dissolved_oxygen_percent_saturation",
@@ -53,5 +71,7 @@ ss_vars <- data.frame(
     "tilt"
   )
 )
+
+ss_vars <- left_join(ss_labels, ss_ylimits, by = "variable")
 
 usethis::use_data(ss_vars, internal = TRUE, overwrite = TRUE)

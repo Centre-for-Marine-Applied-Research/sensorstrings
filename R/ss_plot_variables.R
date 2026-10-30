@@ -122,7 +122,6 @@ ss_plot_variables <- function(
 
   # theme
   string_theme <- theme(
-  #  axis.title.x = element_blank(),
     axis.text = element_text(size = 9, colour = "black"),    # axis text size & color
     legend.title = element_text(size = 10) ,                 # legend title size
     legend.text = element_text(size = 10)                   # legend text size
@@ -163,53 +162,59 @@ ss_plot_variables <- function(
 
     y_lab <- unique(dat_i$variable_label)
 
-    y_limits <- NULL
+    #y_limits <- NULL
 
-    if(var_i == "dissolved_oxygen_percent_saturation") {
-      if(isTRUE(standard_do_ylims)) {
-        y_limits <- c(60, 160)
-      } else if(isFALSE(standard_do_ylims)) {
-        y_limits <- NULL
-      } else y_limits <- standard_do_ylims
-    }
+    # TODO: move this to ss_vars
+    y_limits <- c(ss_vars[ss_vars$variable == var_i, ]$ylims_min,
+      ss_vars[ss_vars$variable == var_i, ]$ylims_max)
 
-    if(var_i == "dissolved_oxygen_mg_per_l") {
-      if(isTRUE(standard_do_ylims)) {
-        y_limits <- c(0, 15)
-      } else if(isFALSE(standard_do_ylims)) {
-        y_limits <- NULL
-      } else y_limits <- standard_do_ylims
-    }
+    if (all(is.na(y_limits))) y_limits <- NULL
 
-    if(var_i == "dissolved_oxygen_uncorrected_mg_per_l") {
-      if(isTRUE(standard_do_ylims)) {
-        y_limits <- c(0, 15)
-      } else if(isFALSE(standard_do_ylims)) {
-        y_limits <- NULL
-      } else y_limits <- standard_do_ylims
-    }
-
-    if(var_i == "ph_ph") {
-      if(isTRUE(standard_ph_ylims)) {
-        y_limits <- c(7.5, 8.5)
-      } else if(isFALSE(standard_ph_ylims)) {
-        y_limits <- NULL
-      } else y_limits <- standard_ph_ylims
-    }
-
-    if(var_i == "salinity_psu") {
-      if(isTRUE(standard_sal_ylims)) {
-        y_limits <- c(25, 34)
-      } else if(isFALSE(standard_sal_ylims)) {
-        y_limits <- NULL
-      } else y_limits <- standard_sal_ylims
-    }
+    # if(var_i == "dissolved_oxygen_percent_saturation") {
+    #   if(isTRUE(standard_do_ylims)) {
+    #     y_limits <- c(60, 160)
+    #   } else if(isFALSE(standard_do_ylims)) {
+    #     y_limits <- NULL
+    #   } else y_limits <- standard_do_ylims
+    # }
+    #
+    # if(var_i == "dissolved_oxygen_mg_per_l") {
+    #   if(isTRUE(standard_do_ylims)) {
+    #     y_limits <- c(0, 15)
+    #   } else if(isFALSE(standard_do_ylims)) {
+    #     y_limits <- NULL
+    #   } else y_limits <- standard_do_ylims
+    # }
+    #
+    # if(var_i == "dissolved_oxygen_uncorrected_mg_per_l") {
+    #   if(isTRUE(standard_do_ylims)) {
+    #     y_limits <- c(0, 15)
+    #   } else if(isFALSE(standard_do_ylims)) {
+    #     y_limits <- NULL
+    #   } else y_limits <- standard_do_ylims
+    # }
+    #
+    # if(var_i == "ph_ph") {
+    #   if(isTRUE(standard_ph_ylims)) {
+    #     y_limits <- c(7.5, 8.5)
+    #   } else if(isFALSE(standard_ph_ylims)) {
+    #     y_limits <- NULL
+    #   } else y_limits <- standard_ph_ylims
+    # }
+    #
+    # if(var_i == "salinity_psu") {
+    #   if(isTRUE(standard_sal_ylims)) {
+    #     y_limits <- c(25, 34)
+    #   } else if(isFALSE(standard_sal_ylims)) {
+    #     y_limits <- NULL
+    #   } else y_limits <- standard_sal_ylims
+    # }
 
     # plot var.i
     plot_i <- ggplot(
       dat_i, aes(x = timestamp_, y = value, colour = sensor_depth_at_low_tide_m)
     ) +
-      geom_point(size = 0.25, alpha = alpha) +
+      geom_point(size = 0.25, alpha = alpha, show.legend = TRUE) +
       scale_y_continuous(name = y_lab, limits = y_limits) +
       string_colour_scale +
       x_axis_date +
