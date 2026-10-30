@@ -48,9 +48,8 @@ ss_ggplot_variables() to work with those functions."></head><body>
 <span>  date_breaks_major <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date_breaks_minor <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date_labels_format <span class="op">=</span> <span class="st">"%Y-%m-%d"</span>,</span>
-<span>  standard_do_ylims <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  standard_ph_ylims <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  standard_sal_ylims <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  standard_ylims <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ylims <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  yaxis_newline <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  legend_name <span class="op">=</span> <span class="st">"Depth (m)"</span>,</span>
@@ -86,25 +85,23 @@ ss_ggplot_variables() to work with those functions."></head><body>
 <dd><p>Format for the date labels. Default is YYYY-mm-dd.</p></dd>
 
 
-<dt id="arg-standard-do-ylims">standard_do_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-do-ylims"></a></dt>
-<dd><p>If <code>TRUE</code>, the y-limits for dissolved oxygen
-are set to c(60, 160) % or c(0, 15) mg/L. If <code>FALSE</code>, the y-limits
-are set to the <code>ggplot</code> default. Alternatively, a vector giving custom
-y-limits for the dissolved oxygen panel.</p></dd>
+<dt id="arg-standard-ylims">standard_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-ylims"></a></dt>
+<dd><p>Logical argument indicating whether to use the
+standard y-limits from the controlled vocabulary (e.g., c(60, 160) for
+dissolved oxygen (% saturation), c(7.5, 8.5) for pH, and c(25, 34) for
+salinity). If <code>FALSE</code>, the y-limits are set to the <code>ggplot</code>
+default. Variables without standard limits (e.g., temperature) always use
+the <code>ggplot</code> default. Default is <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-standard-ph-ylims">standard_ph_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-ph-ylims"></a></dt>
-<dd><p>If <code>TRUE</code>, the y-limits for pH are set to
-c(7.5, 8.5) pH units. If <code>FALSE</code>, the y-limits are set to the
-<code>ggplot</code> default. Alternatively, a vector giving custom y-limits for
-the pH panel.</p></dd>
-
-
-<dt id="arg-standard-sal-ylims">standard_sal_ylims<a class="anchor" aria-label="anchor" href="#arg-standard-sal-ylims"></a></dt>
-<dd><p>If <code>TRUE</code>, the y-limits for salinity are set
-to c(25, 34) PSU. If <code>FALSE</code>, the y-limits are set to the
-<code>ggplot</code> default. Alternatively, a vector giving custom y-limits for
-the salinity panel.</p></dd>
+<dt id="arg-ylims">ylims<a class="anchor" aria-label="anchor" href="#arg-ylims"></a></dt>
+<dd><p>Optional named list of custom y-limits. Each name must be a
+variable name (e.g., <code>"ph_ph"</code>) and each value a numeric vector of
+length 2. Use <code>NA</code> for one end to let <code>ggplot</code> choose it
+(e.g., <code>c(0, NA)</code>), or <code>NULL</code> to use the <code>ggplot</code>
+default for that variable. Custom limits replace the limits chosen by
+<code>standard_ylims</code> for the named variables only. Variables that are
+not in <code>dat</code> are ignored. Default is <code>ylims = NULL</code>.</p></dd>
 
 
 <dt id="arg-yaxis-newline">yaxis_newline<a class="anchor" aria-label="anchor" href="#arg-yaxis-newline"></a></dt>
@@ -148,9 +145,14 @@ Default is <code>legend_position = "right"</code>.</p></dd>
 <span class="r-in"><span>  <span class="va">dat</span>,</span></span>
 <span class="r-in"><span>  legend_position <span class="op">=</span> <span class="st">"bottom"</span>,</span></span>
 <span class="r-in"><span>  yaxis_newline <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  standard_do_ylims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">70</span>, <span class="fl">150</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  ylims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"dissolved_oxygen_percent_saturation"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 84 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
 <span class="r-plt img"><img src="ss_plot_variables-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># ggplot default y-limits for every variable</span></span></span>
+<span class="r-in"><span><span class="fu">ss_plot_variables</span><span class="op">(</span><span class="va">dat</span>, standard_ylims <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ss_plot_variables-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

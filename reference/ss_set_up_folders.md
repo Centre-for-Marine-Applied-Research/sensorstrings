@@ -45,7 +45,7 @@ dir.create(path, showWarnings = FALSE)
 
 # station folder + deployment folder
 ss_set_up_folders(station = "Borgles Island", depl_date = "2019-05-30", path_output = path)
-#> Created folder << borgles_island >> in << /tmp/RtmpcbFS9g/station_folders >>
+#> Created folder << borgles_island >> in << /tmp/RtmpYZ0r32/station_folders >>
 
 # also add the log, aquameasure, hobo, and vemco folders
 ss_set_up_folders(

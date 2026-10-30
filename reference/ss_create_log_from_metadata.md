@@ -81,7 +81,7 @@ ss_create_log_from_metadata(
   deployment_date = "2019-05-30",
   path = system.file("extdata/metadata_tracking_example.xlsx", package = "sensorstrings")
 )
-#> borgles_island_2019-05-30_log.csv exported to /tmp/RtmpcbFS9g/borgles_island_2019-05-30/log
+#> borgles_island_2019-05-30_log.csv exported to /tmp/RtmpYZ0r32/borgles_island_2019-05-30/log
 
 # the new log can be read with ss_read_log()
 ss_read_log(output_path, parse = FALSE)

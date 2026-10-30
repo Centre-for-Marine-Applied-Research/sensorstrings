@@ -48,7 +48,7 @@ template <- ss_create_template(
 )
 #> Created '.R' file
 #> '.R' contents copied
-#> Template created in /tmp/RtmpcbFS9g
+#> Template created in /tmp/RtmpYZ0r32
 
 head(readLines(template), 20)
 #>  [1] "# DATE: 2026-10-30"                                                                  
@@ -77,7 +77,7 @@ ss_create_template(
   station = "Borgles Island", depl_date = "2019-05-30", path = tempdir()
 )
 #> Warning: New template was not generated.
-#> File already exists: /tmp/RtmpcbFS9g/compile_borgles_island_2019-05-30.R
+#> File already exists: /tmp/RtmpYZ0r32/compile_borgles_island_2019-05-30.R
 
 unlink(template)
 ```

@@ -52,5 +52,5 @@ path <- file.path(tempdir(), "deployment_data")
 dir.create(file.path(path, "halifax", "new"), recursive = TRUE, showWarnings = FALSE)
 
 ss_export_path(dat, path = path)
-#> [1] "/tmp/RtmpcbFS9g/deployment_data/halifax/new/borgles_island_2019-05-30.rds"
+#> [1] "/tmp/RtmpYZ0r32/deployment_data/halifax/new/borgles_island_2019-05-30.rds"
 ```

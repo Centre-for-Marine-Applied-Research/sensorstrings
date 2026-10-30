@@ -13,9 +13,8 @@ ss_plot_variables(
   date_breaks_major = NULL,
   date_breaks_minor = NULL,
   date_labels_format = "%Y-%m-%d",
-  standard_do_ylims = TRUE,
-  standard_ph_ylims = TRUE,
-  standard_sal_ylims = TRUE,
+  standard_ylims = TRUE,
+  ylims = NULL,
   yaxis_newline = FALSE,
   alpha = 1,
   legend_name = "Depth (m)",
@@ -47,24 +46,24 @@ ss_plot_variables(
 
   Format for the date labels. Default is YYYY-mm-dd.
 
-- standard_do_ylims:
+- standard_ylims:
 
-  If `TRUE`, the y-limits for dissolved oxygen are set to c(60, 160) %
-  or c(0, 15) mg/L. If `FALSE`, the y-limits are set to the `ggplot`
-  default. Alternatively, a vector giving custom y-limits for the
-  dissolved oxygen panel.
+  Logical argument indicating whether to use the standard y-limits from
+  the controlled vocabulary (e.g., c(60, 160) for dissolved oxygen (%
+  saturation), c(7.5, 8.5) for pH, and c(25, 34) for salinity). If
+  `FALSE`, the y-limits are set to the `ggplot` default. Variables
+  without standard limits (e.g., temperature) always use the `ggplot`
+  default. Default is `TRUE`.
 
-- standard_ph_ylims:
+- ylims:
 
-  If `TRUE`, the y-limits for pH are set to c(7.5, 8.5) pH units. If
-  `FALSE`, the y-limits are set to the `ggplot` default. Alternatively,
-  a vector giving custom y-limits for the pH panel.
-
-- standard_sal_ylims:
-
-  If `TRUE`, the y-limits for salinity are set to c(25, 34) PSU. If
-  `FALSE`, the y-limits are set to the `ggplot` default. Alternatively,
-  a vector giving custom y-limits for the salinity panel.
+  Optional named list of custom y-limits. Each name must be a variable
+  name (e.g., `"ph_ph"`) and each value a numeric vector of length 2.
+  Use `NA` for one end to let `ggplot` choose it (e.g., `c(0, NA)`), or
+  `NULL` to use the `ggplot` default for that variable. Custom limits
+  replace the limits chosen by `standard_ylims` for the named variables
+  only. Variables that are not in `dat` are ignored. Default is
+  `ylims = NULL`.
 
 - yaxis_newline:
 
@@ -107,6 +106,11 @@ ss_plot_variables(
   dat,
   legend_position = "bottom",
   yaxis_newline = TRUE,
-  standard_do_ylims = c(70, 150)
+  ylims = list("dissolved_oxygen_percent_saturation" = c(100, 250))
 )
+#> Warning: Removed 84 rows containing missing values or values outside the scale range
+#> (`geom_point()`).
+
+# ggplot default y-limits for every variable
+ss_plot_variables(dat, standard_ylims = FALSE)
 ```
